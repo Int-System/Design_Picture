@@ -203,6 +203,36 @@ button,.card,.tool{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 .sheet-pdf{display:flex;align-items:center;gap:12px;padding:16px;border-radius:12px;background:var(--surface-2);font-size:15px;word-break:break-all}
 .sheet-pdf i{font-size:40px;color:#ff6b6b}
 
+input[type=text]{width:100%;height:38px;padding:0 10px;border:1px solid var(--border-2);border-radius:10px;background:var(--surface-2);outline:none}
+input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,108,255,.25)}
+
+/* รายการเลเยอร์ (เพิ่มคนหรือสิ่งของ) */
+.layers{display:flex;flex-direction:column;gap:6px}
+.layers:empty{display:none}
+.lrow{display:flex;align-items:center;gap:6px;padding:5px;border:1px solid var(--border);border-radius:10px;background:var(--bg-2);cursor:pointer}
+.lrow.on{border-color:var(--accent);background:var(--accent-bg)}
+.lrow canvas{flex:none;width:44px;height:44px;border-radius:6px;background-color:#f2f2f6;background-image:conic-gradient(#d5d6de 25%,#f2f2f6 0 50%,#d5d6de 0 75%,#f2f2f6 0);background-size:12px 12px}
+.lname{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;font-size:13px}
+.lrow button{flex:none;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border:0;border-radius:7px;background:transparent;color:var(--text-2);font-size:16px;cursor:pointer}
+.lrow button:hover{background:var(--surface-3);color:var(--text)}
+
+/* หน้าจอแก้หลายรูป */
+#overlay{position:absolute;inset:0;z-index:3;overflow:auto;padding:20px;touch-action:pan-y;display:flex;flex-direction:column;gap:18px}
+.bempty{margin:auto;display:flex;flex-direction:column;align-items:center;gap:8px;padding:40px 48px;border:1.5px dashed rgba(123,108,255,.5);border-radius:20px;background:var(--surface);color:var(--text);font-size:16px;cursor:pointer}
+.bempty .ic-circle{width:68px;height:68px;margin-bottom:6px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--grad);color:#fff;font-size:32px}
+.bprev-card{display:flex;flex-direction:column;align-items:center;gap:8px}
+#bprev{max-width:100%;max-height:52vh;border-radius:10px;box-shadow:var(--shadow-lg)}
+.bgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(120px,1fr));gap:10px}
+.bf{position:relative;display:flex;flex-direction:column;gap:2px;padding:6px;border:1px solid var(--border);border-radius:12px;background:var(--surface);cursor:pointer;font-size:12px;color:var(--text-2)}
+.bf.on{border-color:var(--accent);box-shadow:0 0 0 2px rgba(123,108,255,.35)}
+.bf img{width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:8px;background:var(--surface-2)}
+.bname{overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--text)}
+.bdel{position:absolute;top:10px;right:10px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border:0;border-radius:50%;background:rgba(0,0,0,.65);color:#fff;font-size:13px;cursor:pointer}
+.bdone{position:absolute;top:10px;left:10px;width:24px;height:24px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--ok);color:#06210f;font-size:14px}
+.badd{align-items:center;justify-content:center;min-height:120px;border-style:dashed;font-size:14px}
+.badd i{font-size:26px;color:var(--accent-text)}
+@media (max-width:900px){#overlay{padding:12px}.bgrid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+
 /* รายการหน้าที่สแกนแล้ว */
 .pages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
 .pg{position:relative;overflow:hidden;border:1px solid var(--border-2);border-radius:10px;background:#fff}
@@ -336,6 +366,7 @@ button,.card,.tool{touch-action:manipulation;-webkit-tap-highlight-color:transpa
         <span class="vsep"></span>
         <button class="ibtn" id="zfit" title="พอดีหน้าจอ (กด 0)"><i class="ti ti-arrows-maximize"></i></button>
       </div>
+      <div id="overlay" hidden></div>
       <div id="busy" hidden><div class="spin"></div><span id="busy-msg"></span></div>
     </div>
     <aside id="panel">
@@ -377,6 +408,8 @@ button,.card,.tool{touch-action:manipulation;-webkit-tap-highlight-color:transpa
 
 <div id="toast"></div>
 <input type="file" id="file" accept="image/*" hidden>
+<input type="file" id="file2" accept="image/*" multiple hidden>
+<input type="file" id="file3" accept="image/*" hidden>
 
 <script>
 'use strict';
@@ -490,11 +523,16 @@ function pushHist() { S.hist.push(cloneCanvas(S.img)); trimHist(); S.fut = []; }
 // ใช้เมื่อได้รูปผลลัพธ์ใหม่ทั้งรูป
 function commit(c) { S.hist.push(S.img); trimHist(); S.fut = []; S.img = c; afterChange(); }
 function undo() {
-  if (!S.hist.length || S.busy) return;
+  if (S.busy) return;
+  // โหมดที่มีประวัติของตัวเอง (เช่น เลเยอร์) ย้อนกลับในโหมดก่อน
+  if (S.mode && S.mode.undo && S.mode.undo()) return;
+  if (!S.hist.length) return;
   S.fut.push(S.img); S.img = S.hist.pop(); S.done = false; afterChange();
 }
 function redo() {
-  if (!S.fut.length || S.busy) return;
+  if (S.busy) return;
+  if (S.mode && S.mode.redo && S.mode.redo()) return;
+  if (!S.fut.length) return;
   S.hist.push(S.img); S.img = S.fut.pop(); afterChange();
 }
 function afterChange() {
@@ -741,7 +779,185 @@ function cvInpaint(cv, img, m, grow, method) {
     return out;
   } finally { src.delete(); rgb.delete(); dst.delete(); mk.delete(); if (k) k.delete(); }
 }
+/* ---------- ลบแบบคัดลอกลวดลาย (PatchMatch) ----------
+   แทนที่จะเกลี่ยสีจากขอบ (ซึ่งเป็นรอยเบลอบนพื้นที่มีลวดลาย) จะหาชิ้นส่วนขนาด 7×7 ที่คล้ายที่สุด
+   จากบริเวณรอบๆ มาปะแทน ทำซ้ำจากรูปย่อไปรูปเต็ม ตามวิธีของ Wexler et al. (2007) และ PatchMatch
+   (Barnes et al. 2009) ซึ่งเป็นหลักการเดียวกับ Content-Aware Fill */
+const PR = 3;
+function pmLevel(w, h, px, hole) {
+  const n = w * h, I = new Int32Array((w + 1) * (h + 1));
+  for (let y = 0; y < h; y++) {
+    let row = 0;
+    for (let x = 0; x < w; x++) { row += hole[y * w + x] ? 1 : 0; I[(y + 1) * (w + 1) + x + 1] = I[y * (w + 1) + x + 1] + row; }
+  }
+  // จุดต้นทางที่ใช้ได้: ชิ้นส่วนรอบจุดนั้นอยู่ในรูปทั้งหมดและไม่มีพื้นที่ที่ลบอยู่เลย
+  const valid = new Uint8Array(n), list = [];
+  for (let y = PR; y < h - PR; y++) for (let x = PR; x < w - PR; x++) {
+    const a = (y - PR) * (w + 1) + x - PR, b = (y + PR + 1) * (w + 1) + x + PR + 1;
+    if (I[b] - I[(y - PR) * (w + 1) + x + PR + 1] - I[(y + PR + 1) * (w + 1) + x - PR] + I[a] === 0) { valid[y * w + x] = 1; list.push(y * w + x); }
+  }
+  const tm = dilate(hole, w, h, PR), targets = [];
+  for (let i = 0; i < n; i++) if (tm[i]) targets.push(i);
+  return { w, h, px, hole, valid, vlist: Int32Array.from(list), targets: Int32Array.from(targets),
+    nnf: new Int32Array(n).fill(-1), dist: new Float32Array(n) };
+}
+function pmHalve(L) {
+  const w = Math.ceil(L.w / 2), h = Math.ceil(L.h / 2), px = new Float32Array(w * h * 3), hole = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let r = 0, g = 0, b = 0, c = 0, any = 0;
+    for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) {
+      const sx = x * 2 + dx, sy = y * 2 + dy;
+      if (sx >= L.w || sy >= L.h) continue;
+      const i = sy * L.w + sx;
+      if (L.hole[i]) { any = 1; continue; }
+      r += L.px[i * 3]; g += L.px[i * 3 + 1]; b += L.px[i * 3 + 2]; c++;
+    }
+    const o = y * w + x;
+    hole[o] = any;
+    if (c) { px[o * 3] = r / c; px[o * 3 + 1] = g / c; px[o * 3 + 2] = b / c; }
+  }
+  return pmLevel(w, h, px, hole);
+}
+// ระดับหยาบสุด: เติมพื้นที่ว่างแบบเกลี่ยจากขอบไว้เป็นจุดเริ่มต้น
+function pmDiffuse(L) {
+  const { w, h, px, hole } = L, known = new Uint8Array(w * h);
+  let todo = [];
+  for (let i = 0; i < w * h; i++) { if (hole[i]) todo.push(i); else known[i] = 1; }
+  while (todo.length) {
+    const fill = [], rest = [];
+    for (const i of todo) {
+      const x = i % w, y = (i / w) | 0;
+      let r = 0, g = 0, b = 0, c = 0;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const j = ny * w + nx;
+        if (known[j]) { r += px[j * 3]; g += px[j * 3 + 1]; b += px[j * 3 + 2]; c++; }
+      }
+      if (c) fill.push([i, r / c, g / c, b / c]); else rest.push(i);
+    }
+    if (!fill.length) break;
+    for (const [i, r, g, b] of fill) { px[i * 3] = r; px[i * 3 + 1] = g; px[i * 3 + 2] = b; known[i] = 1; }
+    todo = rest;
+  }
+}
+// ผลต่างของชิ้นส่วนรอบจุด p (ปลายทาง) กับรอบจุด q (ต้นทาง) หยุดคำนวณทันทีเมื่อเกินค่าที่ดีที่สุดแล้ว
+function pmDist(L, p, q, max) {
+  const { w, h, px } = L, x = p % w, y = (p / w) | 0, qx = q % w, qy = (q / w) | 0;
+  let s = 0;
+  for (let dy = -PR; dy <= PR; dy++) {
+    const ty = y + dy; if (ty < 0 || ty >= h) continue;
+    const ra = ty * w, rb = (qy + dy) * w + qx - x;
+    for (let dx = -PR; dx <= PR; dx++) {
+      const tx = x + dx; if (tx < 0 || tx >= w) continue;
+      const a = (ra + tx) * 3, b = (rb + tx) * 3;
+      const d0 = px[a] - px[b], d1 = px[a + 1] - px[b + 1], d2 = px[a + 2] - px[b + 2];
+      s += d0 * d0 + d1 * d1 + d2 * d2;
+    }
+    if (s >= max) return s;
+  }
+  return s;
+}
+function pmRandomValid(L) { return L.vlist[(Math.random() * L.vlist.length) | 0]; }
+function pmInitNNF(L, P) {
+  const { w, h, nnf, dist, valid } = L;
+  for (const p of L.targets) {
+    let q = -1;
+    if (P) {
+      const x = p % w, y = (p / w) | 0, pc = Math.min(y >> 1, P.h - 1) * P.w + Math.min(x >> 1, P.w - 1), qc = P.nnf[pc];
+      if (qc >= 0) {
+        const qx = clamp((qc % P.w) * 2 + (x & 1), 0, w - 1), qy = clamp(((qc / P.w) | 0) * 2 + (y & 1), 0, h - 1);
+        if (valid[qy * w + qx]) q = qy * w + qx;
+      }
+    }
+    nnf[p] = q >= 0 ? q : pmRandomValid(L);
+    dist[p] = pmDist(L, p, nnf[p], Infinity);
+  }
+}
+function pmSearch(L, it) {
+  const { w, h, nnf, dist, valid, targets } = L, dir = it % 2 ? -1 : 1, T = targets.length;
+  for (let k = 0; k < T; k++) dist[targets[k]] = pmDist(L, targets[k], nnf[targets[k]], Infinity);
+  for (let k = 0; k < T; k++) {
+    const p = targets[dir > 0 ? k : T - 1 - k], x = p % w, y = (p / w) | 0;
+    let best = nnf[p], bd = dist[p];
+    // ส่งต่อคำตอบดีๆ จากจุดข้างเคียง (ซ้าย/บน หรือ ขวา/ล่าง สลับกันทุกรอบ)
+    const nxp = x - dir, nyp = y - dir;
+    if (nxp >= 0 && nxp < w) {
+      const a = nnf[p - dir];
+      if (a >= 0) { const c = a + dir, cx = (a % w) + dir; if (cx >= 0 && cx < w && valid[c] && c !== best) { const d = pmDist(L, p, c, bd); if (d < bd) { bd = d; best = c; } } }
+    }
+    if (nyp >= 0 && nyp < h) {
+      const a = nnf[p - dir * w];
+      if (a >= 0) { const c = a + dir * w; if (c >= 0 && c < w * h && valid[c] && c !== best) { const d = pmDist(L, p, c, bd); if (d < bd) { bd = d; best = c; } } }
+    }
+    // สุ่มหาในรัศมีที่แคบลงเรื่อยๆ รอบคำตอบปัจจุบัน
+    const bx = best % w, by = (best / w) | 0;
+    for (let r = Math.max(w, h); r >= 1; r >>= 1) {
+      const cx = bx + Math.round((Math.random() * 2 - 1) * r), cy = by + Math.round((Math.random() * 2 - 1) * r);
+      if (cx < 0 || cy < 0 || cx >= w || cy >= h) continue;
+      const c = cy * w + cx;
+      if (!valid[c] || c === best) continue;
+      const d = pmDist(L, p, c, bd);
+      if (d < bd) { bd = d; best = c; }
+    }
+    nnf[p] = best; dist[p] = bd;
+  }
+}
+// สร้างสีของพื้นที่ที่ลบใหม่ จากค่าเฉลี่ยถ่วงน้ำหนักของทุกชิ้นส่วนที่ทับจุดนั้น (ชิ้นที่เหมือนมากได้น้ำหนักมาก)
+function pmVote(L) {
+  const { w, h, px, hole, nnf, dist, targets } = L, acc = new Float32Array(w * h * 3), ws = new Float32Array(w * h);
+  let mean = 0;
+  for (const p of targets) mean += dist[p];
+  mean = mean / Math.max(1, targets.length) + 1e-6;
+  for (const p of targets) {
+    const q = nnf[p], wt = Math.exp(-dist[p] / mean), x = p % w, y = (p / w) | 0, off = q - p;
+    for (let dy = -PR; dy <= PR; dy++) {
+      const ty = y + dy; if (ty < 0 || ty >= h) continue;
+      for (let dx = -PR; dx <= PR; dx++) {
+        const tx = x + dx; if (tx < 0 || tx >= w) continue;
+        const t = ty * w + tx;
+        if (!hole[t]) continue;
+        const s = (t + off) * 3;
+        acc[t * 3] += wt * px[s]; acc[t * 3 + 1] += wt * px[s + 1]; acc[t * 3 + 2] += wt * px[s + 2]; ws[t] += wt;
+      }
+    }
+  }
+  for (let t = 0; t < w * h; t++) if (hole[t] && ws[t] > 0) { px[t * 3] = acc[t * 3] / ws[t]; px[t * 3 + 1] = acc[t * 3 + 1] / ws[t]; px[t * 3 + 2] = acc[t * 3 + 2] / ws[t]; }
+}
+function patchInpaint(img, hole) {
+  const W = img.width, H = img.height, n = W * H, px = new Float32Array(n * 3), d = img.data;
+  for (let i = 0; i < n; i++) { px[i * 3] = d[i * 4]; px[i * 3 + 1] = d[i * 4 + 1]; px[i * 3 + 2] = d[i * 4 + 2]; }
+  const extent = L => {
+    let x0 = L.w, x1 = -1, y0 = L.h, y1 = -1;
+    for (let i = 0; i < L.w * L.h; i++) if (L.hole[i]) { const x = i % L.w, y = (i / L.w) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+    return Math.max(x1 - x0, y1 - y0);
+  };
+  const pyr = [pmLevel(W, H, px, hole)];
+  while (Math.min(pyr[pyr.length - 1].w, pyr[pyr.length - 1].h) > 48 && extent(pyr[pyr.length - 1]) > 16) pyr.push(pmHalve(pyr[pyr.length - 1]));
+  let prev = null;
+  for (let li = pyr.length - 1; li >= 0; li--) {
+    const L = pyr[li];
+    if (prev) {
+      // ขยายผลจากระดับหยาบมาเป็นค่าเริ่มต้นของระดับนี้
+      for (let i = 0; i < L.w * L.h; i++) if (L.hole[i]) {
+        const x = i % L.w, y = (i / L.w) | 0, j = (Math.min(y >> 1, prev.h - 1) * prev.w + Math.min(x >> 1, prev.w - 1)) * 3;
+        L.px[i * 3] = prev.px[j]; L.px[i * 3 + 1] = prev.px[j + 1]; L.px[i * 3 + 2] = prev.px[j + 2];
+      }
+    } else pmDiffuse(L);
+    if (!L.vlist.length) { prev = null; pmDiffuse(L); continue; }
+    pmInitNNF(L, prev && prev.vlist.length ? prev : null);
+    const iters = !prev ? 8 : li === 0 ? 3 : 5;
+    for (let it = 0; it < iters; it++) { pmSearch(L, it); pmVote(L); }
+    prev = L;
+  }
+  const out = new ImageData(W, H), od = out.data, fin = pyr[0].px;
+  od.set(d);
+  for (let i = 0; i < n; i++) if (hole[i]) { od[i * 4] = fin[i * 3]; od[i * 4 + 1] = fin[i * 3 + 1]; od[i * 4 + 2] = fin[i * 3 + 2]; }
+  return out;
+}
+
 // ลบพื้นที่ใน mask แล้วเติมให้กลืนกับรอบข้าง ประมวลผลเฉพาะกรอบรอบ mask เพื่อความเร็ว
+// method: 'patch' = คัดลอกลวดลาย (ค่าเริ่มต้น) / 'telea', 'ns' = เกลี่ยสีด้วย OpenCV เหมาะกับพื้นเรียบ
 async function inpaintImage(mask, grow, method) {
   const W = imgW(), H = imgH();
   let x0 = W, y0 = H, x1 = -1, y1 = -1;
@@ -749,7 +965,8 @@ async function inpaintImage(mask, grow, method) {
     if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
   }
   if (x1 < 0) return null;
-  const pad = grow + 24;
+  // แบบคัดลอกลวดลายต้องมีบริเวณรอบๆ กว้างพอให้หาชิ้นส่วนมาปะ
+  const pad = method === 'patch' ? Math.max(64, Math.round(Math.max(x1 - x0, y1 - y0) * 1.2)) + grow : grow + 24;
   x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad);
   x1 = Math.min(W - 1, x1 + pad); y1 = Math.min(H - 1, y1 + pad);
   const w = x1 - x0 + 1, h = y1 - y0 + 1;
@@ -757,7 +974,10 @@ async function inpaintImage(mask, grow, method) {
   const m = new Uint8Array(w * h);
   for (let y = 0; y < h; y++) m.set(mask.subarray((y + y0) * W + x0, (y + y0) * W + x0 + w), y * w);
   let res;
-  try {
+  if (method === 'patch') {
+    setBusyMsg('กำลังลบและเติมลวดลาย...'); await nextFrame();
+    res = patchInpaint(img, dilate(m, w, h, grow));
+  } else try {
     if (cvState !== 'ready') setBusyMsg('กำลังเตรียมเครื่องมือลบ (ครั้งแรกประมาณ 10 MB)...');
     const { cv } = await loadCV();
     setBusyMsg('กำลังลบ...'); await nextFrame();
@@ -1113,9 +1333,9 @@ MODES.rem = {
     { id: 'erase', icon: 'ti-eraser', label: 'ยางลบ', brush: true, hint: 'ลบสีแดงตรงที่ระบายเกิน' },
     { id: 'clone', icon: 'ti-rubber-stamp', label: 'โคลน', brush: true, hint: 'ซ่อมจุดที่ยังไม่เนียน: กด "เลือกจุดต้นแบบ" แล้วแตะจุดที่สวย (หรือกด <b>Alt</b> ค้างแล้วคลิก) จากนั้นระบายทับจุดที่ต้องการซ่อม' },
     PAN],
-  o: { grow: 6, method: 'telea' },
+  o: { grow: 6, method: 'patch' },
   actLabel: 'ลบเลย',
-  enter() { this.src = null; loadCV().catch(() => {}); },
+  enter() { this.src = null; },
   changed() { this.src = null; },
   panel() {
     return brushField()
@@ -1123,8 +1343,8 @@ MODES.rem = {
       + clearBtn
       + `<button class="btn sm" id="setsrc"><i class="ti ti-target"></i>เลือกจุดต้นแบบ (สำหรับโคลน)</button>`
       + `<details class="adv"><summary>ตั้งค่าเพิ่มเติม</summary>
-          ${field('วิธีลบ', seg('meth', [['telea', 'แบบเร็ว'], ['ns', 'แบบเรียบ']], this.o.method))}
-          <p class="note"><i class="ti ti-info-circle"></i>ลบได้เนียนที่สุดเมื่อพื้นหลังเรียบ เช่น ท้องฟ้า ผนัง พื้นถนน ถ้าพื้นหลังซับซ้อนให้ใช้ "โคลน" ซ่อมต่อ</p>
+          ${field('วิธีลบ', seg('meth', [['patch', 'คัดลอกลวดลาย'], ['telea', 'เกลี่ยสี']], this.o.method))}
+          <p class="note"><i class="ti ti-info-circle"></i>"คัดลอกลวดลาย" เอาชิ้นส่วนจริงจากรอบๆ มาปะ เหมาะกับพื้นที่มีลวดลาย เช่น หญ้า กล่อง พื้นกระเบื้อง · "เกลี่ยสี" เหมาะกับพื้นเรียบ เช่น ท้องฟ้า ผนัง ถ้ายังมีจุดไม่เนียน ระบายซ้ำแล้วลบอีกครั้ง หรือใช้ "โคลน" ซ่อม</p>
         </details>`
       + cvStatusHTML();
   },
@@ -1198,9 +1418,9 @@ MODES.wm = {
     { id: 'brush', icon: 'ti-brush', label: 'ระบาย', brush: true, hint: 'ระบายเพิ่มตรงที่ระบบหาไม่เจอ' },
     { id: 'erase', icon: 'ti-eraser', label: 'ยางลบ', brush: true, hint: 'ลบสีแดงตรงที่ไม่ใช่ลายน้ำ' },
     PAN],
-  o: { sens: 50, type: 'light', tol: 30, grow: 3, method: 'telea' },
+  o: { sens: 50, type: 'light', tol: 30, grow: 3, method: 'patch' },
   actLabel: 'ลบลายน้ำ',
-  enter() { this.box = null; this.pick = null; loadCV().catch(() => {}); },
+  enter() { this.box = null; this.pick = null; },
   changed() { this.box = null; this.pick = null; },
   escape() { this.box = null; drawGuide(); },
   panel() {
@@ -1212,7 +1432,7 @@ MODES.wm = {
       + clearBtn
       + `<details class="adv"><summary>ตั้งค่าเพิ่มเติม</summary>
           ${slider('wgrow', 'ขยายขอบที่ลบ', 0, 20, o.grow, ['พอดี', 'กว้าง'])}
-          ${field('วิธีลบ', seg('wmeth', [['telea', 'แบบเร็ว'], ['ns', 'แบบเรียบ']], o.method))}
+          ${field('วิธีลบ', seg('wmeth', [['patch', 'คัดลอกลวดลาย'], ['telea', 'เกลี่ยสี']], o.method))}
           <p class="note"><i class="ti ti-info-circle"></i>ลายน้ำขนาดเล็ก เช่น วันที่ ชื่อ โลโก้มุมรูป จะลบได้เนียน ลายน้ำที่ทับเต็มรูปจะทำให้รูปเบลอ</p>
         </details>`
       + `<p class="note"><i class="ti ti-shield-check"></i>ใช้กับรูปที่คุณมีสิทธิ์ใช้งาน เช่น รูปของบริษัทหรือรูปของคุณเอง</p>`
@@ -1312,7 +1532,8 @@ MODES.blur = {
   changed() { this.fx = null; },
   pending() { return this.has; },
   panel() {
-    return field('แบบการปิด', seg('btype', [['mosaic', 'โมเสก'], ['blur', 'เบลอ'], ['bar', 'แถบดำ']], this.o.type))
+    return `<button class="btn" id="bfaces"><i class="ti ti-face-id"></i>หาใบหน้าอัตโนมัติ</button>`
+      + field('แบบการปิด', seg('btype', [['mosaic', 'โมเสก'], ['blur', 'เบลอ'], ['bar', 'แถบดำ']], this.o.type))
       + slider('bstr', 'ความแรง', 0, 100, this.o.str, ['น้อย', 'มาก'])
       + brushField() + clearBtn
       + `<p class="note"><i class="ti ti-shield-lock"></i>เลขบัตรประชาชนหรือเลขบัญชี แนะนำ "แถบดำ" เพราะปลอดภัยที่สุด</p>`;
@@ -1321,6 +1542,21 @@ MODES.blur = {
     onSeg('btype', v => { this.o.type = v; render(); });
     onSlider('bstr', v => { this.o.str = v; render(); });
     bindBrush(); bindClear(() => { this.has = false; });
+    $('#bfaces').onclick = () => this.autoFaces();
+  },
+  // หาใบหน้าทั้งหมดแล้วเพิ่มเป็นพื้นที่ที่จะปิด (ผู้ใช้ใช้ยางลบเอาหน้าที่ไม่ต้องการปิดออกได้)
+  async autoFaces() {
+    let faces;
+    try { faces = await busy('กำลังหาใบหน้า (ครั้งแรกต้องโหลดโมเดล)...', () => detectFaces(S.img)); }
+    catch (e) { console.warn(e); return toast('หาใบหน้าไม่ได้ (ครั้งแรกต้องต่ออินเทอร์เน็ต) ใช้การลากกรอบแทนได้', 'err'); }
+    if (!faces.length) return toast('ไม่พบใบหน้าในรูป ลองลากกรอบเอง');
+    mctx.fillStyle = '#ff2020';
+    for (const b of faces) {
+      const r = faceRect(b);
+      mctx.beginPath(); mctx.ellipse(r.x + r.w / 2, r.y + r.h / 2, r.w / 2, r.h / 2, 0, 0, Math.PI * 2); mctx.fill();
+    }
+    this.has = true; S.done = false; updateUI(); render();
+    toast(`พบใบหน้า ${faces.length} คน ถ้ามีหน้าที่ไม่ต้องปิด ใช้ยางลบเอาออก ถ้ายังขาดให้ลากกรอบเพิ่ม`);
   },
   effect() {
     const key = [this.o.type, this.o.str, S.ver].join();
@@ -1662,24 +1898,10 @@ MODES.adj = {
     $$('#fgrid .fitem').forEach(x => x.classList.toggle('on', x.dataset.f === 'none'));
     render();
   },
-  // ปรับอัตโนมัติจาก histogram: ยืดช่วงแสง 1%–99% ดึงค่ากลางให้อยู่ตรงกลาง และเพิ่มความสดเล็กน้อย
   auto() {
-    const s = Math.min(1, 300 / Math.max(imgW(), imgH()));
-    const c = newCanvas(Math.max(1, Math.round(imgW() * s)), Math.max(1, Math.round(imgH() * s))), x = ctxOf(c);
-    x.drawImage(S.img, 0, 0, c.width, c.height);
-    const d = x.getImageData(0, 0, c.width, c.height).data, hist = new Uint32Array(256);
-    let n = 0;
-    for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 128) { hist[(.299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]) | 0]++; n++; }
-    if (!n) return;
-    let acc = 0, lo = 0, hi = 255;
-    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n * .01) { lo = v; break; } }
-    acc = 0;
-    for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= n * .01) { hi = v; break; } }
-    const cf = clamp(220 / Math.max(hi - lo, 1), .8, 1.6);
-    const mid = ((lo + hi) / 2 - 128) * cf + 128;
-    setSlider('a_exposure', Math.round(clamp(Math.log2(128 / Math.max(mid, 1)) / 1.2 * 100, -60, 60)));
-    setSlider('a_contrast', Math.round(clamp((cf - 1) / .8 * 100, -30, 60)));
-    setSlider('a_vib', 20);
+    const a = autoLevels(S.img);
+    if (!a) return;
+    setSlider('a_exposure', a.exposure); setSlider('a_contrast', a.contrast); setSlider('a_vib', a.vib);
     toast('ปรับอัตโนมัติแล้ว เลื่อนแถบหรือเลือกฟิลเตอร์เพิ่มได้');
   },
   user() {
@@ -1724,7 +1946,594 @@ MODES.adj = {
 };
 
 /* ----- ฟีเจอร์ที่จะทำในรอบถัดไป ----- */
-MODES.add = { id: 'add', title: 'เพิ่มคนหรือสิ่งของ', icon: 'ti-photo-plus', color: '#7b6cff', desc: 'วางรูปอื่นเพิ่มลงไปในรูป', soon: true };
+/* ----- ตัวช่วย AI (MediaPipe ของ Google ทำงานในเครื่อง โหลดโมเดลครั้งแรกจากอินเทอร์เน็ต) ----- */
+const MP_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+const MP_MODELS = {
+  person: 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite',
+  object: 'https://storage.googleapis.com/mediapipe-models/image_segmenter/deeplab_v3/float32/1/deeplab_v3.tflite',
+  face: 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',
+};
+let mpP = null;
+const mpTasks = {};
+function loadVision() {
+  if (!mpP) {
+    mpP = (async () => {
+      const v = await import(`${MP_BASE}/vision_bundle.mjs`);
+      return { v, fs: await v.FilesetResolver.forVisionTasks(`${MP_BASE}/wasm`) };
+    })();
+    mpP.catch(() => { mpP = null; });
+  }
+  return mpP;
+}
+function getTask(kind) {
+  if (!mpTasks[kind]) {
+    mpTasks[kind] = (async () => {
+      const { v, fs } = await loadVision(), baseOptions = { modelAssetPath: MP_MODELS[kind] };
+      return kind === 'face'
+        ? v.FaceDetector.createFromOptions(fs, { baseOptions, runningMode: 'IMAGE', minDetectionConfidence: .5 })
+        : v.ImageSegmenter.createFromOptions(fs, { baseOptions, runningMode: 'IMAGE', outputCategoryMask: false, outputConfidenceMasks: true });
+    })();
+    mpTasks[kind].catch(() => { delete mpTasks[kind]; });
+  }
+  return mpTasks[kind];
+}
+// ตัดพื้นหลัง: คืน canvas ที่ alpha = โอกาสที่จุดนั้นไม่ใช่พื้นหลัง และสัดส่วนพื้นที่ที่เจอ
+async function segmentAlpha(src, kind) {
+  const r = (await getTask(kind)).segment(src);
+  try {
+    const m = r.confidenceMasks[0], w = m.width, h = m.height, bg = m.getAsFloat32Array();
+    const im = new ImageData(w, h), d = im.data;
+    let cover = 0;
+    for (let i = 0; i < w * h; i++) {
+      const a = clamp((1 - bg[i] - .25) / .5, 0, 1);
+      d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = 255; d[i * 4 + 3] = a * 255; cover += a;
+    }
+    const c = newCanvas(w, h);
+    ctxOf(c).putImageData(im, 0, 0);
+    return { canvas: c, cover: cover / (w * h) };
+  } finally { if (r.close) r.close(); }
+}
+function boxOverlap(a, b) {
+  const w = Math.min(a.x + a.w, b.x + b.w) - Math.max(a.x, b.x), h = Math.min(a.y + a.h, b.y + b.h) - Math.max(a.y, b.y);
+  return w > 0 && h > 0 ? w * h / Math.min(a.w * a.h, b.w * b.h) : 0;
+}
+// หาใบหน้า: ตรวจทั้งรูป แล้วตรวจซ้ำทีละส่วนเพื่อให้เจอใบหน้าเล็กๆ ในรูปหมู่
+async function detectFaces(c) {
+  const fd = await getTask('face'), boxes = [];
+  const run = (img, ox, oy) => {
+    for (const d of fd.detect(img).detections) {
+      const b = d.boundingBox;
+      boxes.push({ x: ox + b.originX, y: oy + b.originY, w: b.width, h: b.height });
+    }
+  };
+  run(c, 0, 0);
+  const W = c.width, H = c.height;
+  if (Math.max(W, H) > 640) {
+    const tw = Math.round(W / 2), th = Math.round(H / 2), t = newCanvas(tw, th), x = t.getContext('2d');
+    for (const fy of [0, .25, .5]) for (const fx of [0, .25, .5]) {
+      const ox = Math.round(W * fx), oy = Math.round(H * fy);
+      x.clearRect(0, 0, tw, th); x.drawImage(c, ox, oy, tw, th, 0, 0, tw, th);
+      run(t, ox, oy);
+    }
+  }
+  boxes.sort((a, b) => b.w * b.h - a.w * a.h);
+  const keep = [];
+  for (const b of boxes) if (!keep.some(k => boxOverlap(k, b) > .3)) keep.push(b);
+  return keep;
+}
+// ขยายกรอบใบหน้าให้คลุมหน้าผากและคาง
+function faceRect(b) { return { x: b.x - b.w * .2, y: b.y - b.h * .35, w: b.w * 1.4, h: b.h * 1.6 }; }
+// ปิดบริเวณ r ในรูปแบบวงรี (โมเสก / เบลอ / ทึบดำ)
+function obscure(ctx, src, r, style) {
+  const x = Math.max(0, Math.floor(r.x)), y = Math.max(0, Math.floor(r.y));
+  const w = Math.min(src.width - x, Math.ceil(r.w)), h = Math.min(src.height - y, Math.ceil(r.h));
+  if (w < 2 || h < 2) return;
+  ctx.save();
+  ctx.beginPath(); ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2); ctx.clip();
+  if (style === 'bar') { ctx.fillStyle = '#000'; ctx.fillRect(x, y, w, h); }
+  else {
+    const t = newCanvas(w, h);
+    t.getContext('2d').drawImage(src, x, y, w, h, 0, 0, w, h);
+    if (style === 'blur') {
+      const b = newCanvas(w, h);
+      softBlur(ctxOf(b), t, Math.max(4, Math.min(w, h) / 6));
+      ctx.drawImage(b, x, y);
+    } else {
+      const bs = Math.max(4, Math.round(Math.min(w, h) / 7)), sm = newCanvas(Math.ceil(w / bs), Math.ceil(h / bs));
+      sm.getContext('2d').drawImage(t, 0, 0, sm.width, sm.height);
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(sm, 0, 0, sm.width, sm.height, x, y, sm.width * bs, sm.height * bs);
+    }
+  }
+  ctx.restore();
+}
+// ค่าปรับแสงอัตโนมัติจาก histogram (หน่วยเดียวกับแถบเลื่อน -100..100)
+function autoLevels(img) {
+  const s = Math.min(1, 300 / Math.max(img.width, img.height));
+  const c = newCanvas(Math.max(1, Math.round(img.width * s)), Math.max(1, Math.round(img.height * s))), x = ctxOf(c);
+  x.drawImage(img, 0, 0, c.width, c.height);
+  const d = x.getImageData(0, 0, c.width, c.height).data, hist = new Uint32Array(256);
+  let n = 0;
+  for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 128) { hist[(.299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]) | 0]++; n++; }
+  if (!n) return null;
+  let acc = 0, lo = 0, hi = 255;
+  for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n * .01) { lo = v; break; } }
+  acc = 0;
+  for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= n * .01) { hi = v; break; } }
+  const cf = clamp(220 / Math.max(hi - lo, 1), .8, 1.6), mid = ((lo + hi) / 2 - 128) * cf + 128;
+  return {
+    exposure: Math.round(clamp(Math.log2(128 / Math.max(mid, 1)) / 1.2 * 100, -60, 60)),
+    contrast: Math.round(clamp((cf - 1) / .8 * 100, -30, 60)),
+    vib: 20,
+  };
+}
+// ปรับแสงอัตโนมัติและใส่ฟิลเตอร์ลงใน canvas c โดยตรง
+function applyLook(c, auto, fid, fi) {
+  const F = FILTERS.find(f => f[0] === fid), useF = F && fid !== 'none' && fi > 0;
+  if (!auto && !useF) return;
+  const w = c.width, h = c.height, x = ctxOf(c), im = x.getImageData(0, 0, w, h), d = im.data, g = Math.max(1, Math.max(w, h) / 1200);
+  if (auto) { const a = autoLevels(c); if (a) develop(d, w, h, { exposure: a.exposure / 100, contrast: a.contrast / 100, vib: a.vib / 100 }, g); }
+  if (useF) {
+    const fd = new Uint8ClampedArray(d), k = fi / 100;
+    develop(fd, w, h, F[2], g);
+    for (let i = 0; i < d.length; i++) if ((i & 3) !== 3) d[i] += (fd[i] - d[i]) * k;
+  }
+  x.putImageData(im, 0, 0);
+}
+function esc(s) { return String(s).replace(/[&"<>]/g, ch => ({ '&': '&amp;', '"': '&quot;', '<': '&lt;', '>': '&gt;' }[ch])); }
+async function fileToImage(file) {
+  const url = URL.createObjectURL(file);
+  try { return await loadImg(url); } finally { URL.revokeObjectURL(url); }
+}
+
+/* ----- 8) เพิ่มคนหรือสิ่งของ (ระบบเลเยอร์) ----- */
+const LAYER_MAX = IS_IOS || IS_TOUCH ? 1400 : 2000;
+const ADD_ADJ = ['exposure', 'contrast', 'temp', 'sat'];
+MODES.add = {
+  id: 'add', file: 'composite', title: 'เพิ่มคนหรือสิ่งของ', icon: 'ti-photo-plus', color: '#7b6cff', desc: 'วางรูปอื่นเพิ่มลงไปในรูป',
+  tools: [
+    { id: 'move', icon: 'ti-arrows-move', label: 'จัดวาง', cursor: 'default', hint: 'แตะรูปที่เพิ่มเพื่อเลือก ลากตรงกลางเพื่อย้าย ลากมุมเพื่อย่อ/ขยาย ลากจุดกลมด้านบนเพื่อหมุน' },
+    { id: 'erase', icon: 'ti-eraser', label: 'ยางลบ', brush: true, hint: 'ระบายลบส่วนที่ไม่ต้องการออกจากรูปที่เพิ่ม (ลบแบบย้อนคืนได้ด้วย "คืนส่วนที่ลบ")' },
+    { id: 'restore', icon: 'ti-brush', label: 'คืนส่วนที่ลบ', brush: true, hint: 'ระบายเพื่อเอาส่วนที่ลบเกินกลับมา' },
+    { id: 'wand', icon: 'ti-wand', label: 'ไม้กายสิทธิ์', cursor: 'crosshair', hint: 'แตะที่พื้นหลังของรูปที่เพิ่ม ระบบจะลบทุกจุดที่สีใกล้เคียงกันและติดกัน เหมาะกับพื้นหลังสีเรียบ' },
+    { id: 'blend', icon: 'ti-color-swatch', label: 'ให้กลืน', cursor: 'default', hint: 'ปรับสีให้เข้ากับรูปหลัก ทำขอบให้นุ่ม และเพิ่มเงา เพื่อให้ดูเหมือนอยู่ในรูปจริง' },
+    PAN],
+  o: { kind: 'person', tol: 30 },
+  actLabel() { return this.layers.length ? 'รวมเป็นรูปเดียว' : 'เพิ่มรูปคนหรือสิ่งของ'; },
+  enter() { this.layers = []; this.sel = -1; this.lh = []; this.lf = []; this.op = null; this.nid = 1; },
+  pending() { return this.layers.length > 0; },
+  onFiles(files) { files.filter(f => /^image\//.test(f.type)).forEach(f => this.addFile(f)); },
+  selL() { return this.layers[this.sel]; },
+
+  /* --- ประวัติ (ย้อนกลับเฉพาะงานเลเยอร์) --- */
+  snap() {
+    return { sel: this.sel, layers: this.layers.map(L => ({ ...L, adj: { ...L.adj }, mask: cloneCanvas(L.mask), cache: null, ck: null, sil: null, adjC: null })) };
+  },
+  push() { this.lh.push(this.snap()); if (this.lh.length > 20) this.lh.shift(); this.lf = []; updateUI(); },
+  restoreSnap(s) { this.layers = s.layers; this.sel = s.sel; this.layers.forEach(L => L.maskV++); this.syncPanel(); render(); updateUI(); },
+  canUndo() { return this.lh.length > 0; },
+  canRedo() { return this.lf.length > 0; },
+  undo() { if (!this.lh.length) return false; this.lf.push(this.snap()); this.restoreSnap(this.lh.pop()); return true; },
+  redo() { if (!this.lf.length) return false; this.lh.push(this.snap()); this.restoreSnap(this.lf.pop()); return true; },
+
+  /* --- เพิ่มรูปเป็นเลเยอร์ใหม่ --- */
+  async addFile(file) {
+    let img;
+    try { img = await fileToImage(file); } catch (e) { return toast(e.message, 'err'); }
+    const w0 = img.naturalWidth, h0 = img.naturalHeight, s0 = Math.min(1, LAYER_MAX / Math.max(w0, h0));
+    const src = newCanvas(Math.round(w0 * s0), Math.round(h0 * s0));
+    const sx = ctxOf(src); sx.imageSmoothingQuality = 'high'; sx.drawImage(img, 0, 0, src.width, src.height);
+    const mask = newCanvas(src.width, src.height), mx = ctxOf(mask);
+    mx.fillStyle = '#fff'; mx.fillRect(0, 0, mask.width, mask.height);
+    const s = Math.min(.55 * imgH() / src.height, .6 * imgW() / src.width, 1);
+    this.push();
+    const L = {
+      id: this.nid++, name: (file.name || 'รูป').replace(/\.[^.]+$/, ''), src, mask, cx: imgW() / 2, cy: imgH() / 2, s, rot: 0, flip: 1,
+      op: 100, feather: 0, adj: { exposure: 0, contrast: 0, temp: 0, sat: 0 }, adjV: 0, maskV: 0,
+      shadow: 'none', shStr: 50, shDir: 30, vis: true,
+    };
+    this.layers.push(L); this.sel = this.layers.length - 1;
+    S.done = false;
+    if (S.tool !== 'move') setTool('move');
+    this.syncPanel(); render(); updateUI();
+    if (!hasAlpha(src)) await this.autoCut();
+  },
+  // ตัดพื้นหลังอัตโนมัติ: ลองโมเดลคนก่อน ถ้าไม่เจออะไรค่อยลองโมเดลสัตว์/สิ่งของ
+  async autoCut() {
+    const L = this.selL(); if (!L) return toast('เลือกรูปที่เพิ่มก่อน', 'err');
+    const order = this.o.kind === 'person' ? ['person', 'object'] : ['object', 'person'];
+    let res = null;
+    try {
+      await busy('กำลังตัดพื้นหลังด้วย AI (ครั้งแรกต้องโหลดโมเดล)...', async () => {
+        for (const k of order) { res = await segmentAlpha(L.src, k); if (res.cover > .03) break; }
+      });
+    } catch (e) {
+      console.warn(e);
+      return toast('ตัดพื้นหลังอัตโนมัติไม่ได้ (ครั้งแรกต้องต่ออินเทอร์เน็ต) ใช้ไม้กายสิทธิ์หรือยางลบแทนได้', 'err');
+    }
+    if (!res || res.cover <= .03) return toast('ไม่พบคนหรือสิ่งของในรูปนี้ ลองใช้ไม้กายสิทธิ์แตะที่พื้นหลังแทน');
+    this.push();
+    const x = ctxOf(L.mask);
+    x.clearRect(0, 0, L.mask.width, L.mask.height);
+    x.imageSmoothingQuality = 'high'; x.drawImage(res.canvas, 0, 0, L.mask.width, L.mask.height);
+    L.maskV++; this.syncPanel(); render();
+    toast('ตัดพื้นหลังแล้ว ใช้ยางลบหรือ "คืนส่วนที่ลบ" เก็บรายละเอียดได้');
+  },
+
+  /* --- การวาด --- */
+  // ภาพของเลเยอร์หลังปรับสีและตัดตาม mask (เก็บ cache ไว้ คำนวณใหม่เมื่อมีการเปลี่ยนแปลง)
+  piece(L) {
+    const key = `${L.adjV}:${L.maskV}:${L.feather}:${this.live ? 1 : 0}`;
+    if (L.cache && L.ck === key) return L.cache;
+    const w = L.src.width, h = L.src.height;
+    let base = L.src;
+    if (ADD_ADJ.some(k => L.adj[k])) {
+      if (!L.adjC || L.adjCk !== L.adjV) {
+        const c = newCanvas(w, h), x = ctxOf(c);
+        x.drawImage(L.src, 0, 0);
+        const im = x.getImageData(0, 0, w, h), q = {};
+        ADD_ADJ.forEach(k => q[k] = L.adj[k] / 100);
+        develop(im.data, w, h, q, 1); x.putImageData(im, 0, 0);
+        L.adjC = c; L.adjCk = L.adjV;
+      }
+      base = L.adjC;
+    }
+    let m = L.mask;
+    if (L.feather > 0 && !this.live) {
+      // ขอบนุ่ม: เบลอ mask แล้วดึงกลับเข้าด้านใน ไม่ให้เห็นขอบพื้นหลังเดิม
+      const r = L.feather * Math.max(w, h) / 600, b = newCanvas(w, h), bx = ctxOf(b);
+      softBlur(bx, L.mask, r);
+      const im = bx.getImageData(0, 0, w, h), d = im.data;
+      for (let i = 3; i < d.length; i += 4) d[i] = clamp((d[i] - 90) / 165, 0, 1) * 255;
+      bx.putImageData(im, 0, 0);
+      m = b;
+    }
+    const out = L.cache && L.cache.width === w && L.cache.height === h ? L.cache : newCanvas(w, h), x = out.getContext('2d');
+    x.globalCompositeOperation = 'copy'; x.drawImage(base, 0, 0);
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(m, 0, 0);
+    x.globalCompositeOperation = 'source-over';
+    L.cache = out; L.ck = key;
+    return out;
+  },
+  // เงาแบบเบลอ: ย่อภาพเงาลงมากๆ แล้วขยายกลับ ได้เงานุ่มโดยไม่ต้องใช้ฟิลเตอร์ (ใช้ได้ทุกเบราว์เซอร์)
+  silhouette(L) {
+    const p = this.piece(L);
+    if (L.sil && L.silK === L.ck) return L.sil;
+    const f = 8, s = newCanvas(Math.max(1, Math.round(p.width / f)), Math.max(1, Math.round(p.height / f))), x = s.getContext('2d');
+    x.drawImage(p, 0, 0, s.width, s.height);
+    x.globalCompositeOperation = 'source-in'; x.fillStyle = '#000'; x.fillRect(0, 0, s.width, s.height);
+    L.sil = s; L.silK = L.ck;
+    return s;
+  },
+  corners(L) {
+    const w = L.src.width, h = L.src.height;
+    return [[0, 0], [w, 0], [w, h], [0, h]].map(([x, y]) => this.toWorld(L, x, y));
+  },
+  toWorld(L, lx, ly) {
+    const x = (lx - L.src.width / 2) * L.s * L.flip, y = (ly - L.src.height / 2) * L.s, c = Math.cos(L.rot), s = Math.sin(L.rot);
+    return { x: L.cx + x * c - y * s, y: L.cy + x * s + y * c };
+  },
+  toLocal(L, p) {
+    const dx = p.x - L.cx, dy = p.y - L.cy, c = Math.cos(L.rot), s = Math.sin(L.rot);
+    return { x: (dx * c + dy * s) / (L.s * L.flip) + L.src.width / 2, y: (-dx * s + dy * c) / L.s + L.src.height / 2 };
+  },
+  drawShadow(c, L) {
+    if (L.shadow === 'none' || !L.shStr) return;
+    const k = this.corners(L), by = Math.max(...k.map(p => p.y)), bx = L.cx;
+    const w = L.src.width * L.s, a = L.shStr / 100;
+    c.save();
+    if (L.shadow === 'contact') {
+      const rx = w * .38, ry = Math.max(4, w * .07), g = c.createRadialGradient(0, 0, 0, 0, 0, 1);
+      g.addColorStop(0, `rgba(0,0,0,${.75 * a})`); g.addColorStop(1, 'rgba(0,0,0,0)');
+      c.translate(bx, by); c.scale(rx, ry);
+      c.fillStyle = g; c.beginPath(); c.arc(0, 0, 1, 0, Math.PI * 2); c.fill();
+    } else {
+      // เงาทอดยาว: เอาเงาของวัตถุมาแบนลงกับพื้นแล้วเอียงตามทิศแสง
+      c.globalAlpha = .55 * a;
+      c.translate(bx, by);
+      c.transform(1, 0, -Math.tan(L.shDir * Math.PI / 180), .38, 0, 0);
+      c.scale(L.s * L.flip, L.s);
+      c.drawImage(this.silhouette(L), -L.src.width / 2, -L.src.height, L.src.width, L.src.height);
+    }
+    c.restore();
+  },
+  compose(c) {
+    c.drawImage(S.img, 0, 0);
+    for (const L of this.layers) {
+      if (!L.vis) continue;
+      this.drawShadow(c, L);
+      c.save();
+      c.globalAlpha = L.op / 100;
+      c.translate(L.cx, L.cy); c.rotate(L.rot); c.scale(L.s * L.flip, L.s);
+      c.drawImage(this.piece(L), -L.src.width / 2, -L.src.height / 2);
+      c.restore();
+    }
+  },
+  render(c) { this.compose(c); },
+  guide(g) {
+    const L = this.selL();
+    if (!L || !L.vis || S.tool === 'pan') return;
+    const px = 1 / S.z, k = this.corners(L), hs = (S.ptype === 'touch' ? 14 : 9) * px;
+    g.save();
+    g.lineWidth = 2 * px; g.strokeStyle = '#7b6cff'; g.setLineDash([7 * px, 5 * px]);
+    g.beginPath(); k.forEach((p, i) => i ? g.lineTo(p.x, p.y) : g.moveTo(p.x, p.y)); g.closePath(); g.stroke();
+    g.setLineDash([]);
+    if (S.tool === 'move') {
+      const r = this.rotHandle(L), top = this.toWorld(L, L.src.width / 2, 0);
+      g.beginPath(); g.moveTo(top.x, top.y); g.lineTo(r.x, r.y); g.stroke();
+      g.fillStyle = '#fff';
+      k.forEach(p => { g.fillRect(p.x - hs, p.y - hs, hs * 2, hs * 2); g.strokeRect(p.x - hs, p.y - hs, hs * 2, hs * 2); });
+      g.beginPath(); g.arc(r.x, r.y, hs * 1.1, 0, Math.PI * 2); g.fill(); g.stroke();
+    }
+    g.restore();
+  },
+  rotHandle(L) {
+    const t = this.toWorld(L, L.src.width / 2, 0), d = 36 / S.z;
+    return { x: t.x + Math.sin(L.rot) * d, y: t.y - Math.cos(L.rot) * d };
+  },
+  hitLayer(p) {
+    for (let i = this.layers.length - 1; i >= 0; i--) {
+      const L = this.layers[i];
+      if (!L.vis) continue;
+      const l = this.toLocal(L, p);
+      if (l.x >= 0 && l.y >= 0 && l.x <= L.src.width && l.y <= L.src.height) return i;
+    }
+    return -1;
+  },
+  hitHandle(p) {
+    const L = this.selL(); if (!L || !L.vis) return null;
+    const r = (S.ptype === 'touch' ? 28 : 16) / S.z, rh = this.rotHandle(L);
+    if (Math.hypot(p.x - rh.x, p.y - rh.y) < r) return 'rot';
+    if (this.corners(L).some(c => Math.hypot(p.x - c.x, p.y - c.y) < r)) return 'scale';
+    return null;
+  },
+
+  /* --- เมาส์/นิ้ว --- */
+  down(p, e) {
+    const t = S.tool;
+    if (t === 'move' || t === 'blend') {
+      const h = t === 'move' ? this.hitHandle(p) : null;
+      if (!h) {
+        const i = this.hitLayer(p);
+        if (i !== this.sel) { this.sel = i; this.syncPanel(); }
+        if (i < 0 || t === 'blend') { drawGuide(); return; }
+      }
+      const L = this.selL();
+      this.push();
+      this.op = { type: h || 'move', p0: p, cx: L.cx, cy: L.cy, s: L.s, rot: L.rot };
+      return;
+    }
+    const L = this.selL();
+    if (!L) return toast('แตะเลือกรูปที่เพิ่มก่อน (ใช้เครื่องมือ "จัดวาง")');
+    if (t === 'wand') { this.push(); this.wandAt(L, this.toLocal(L, p)); return; }
+    this.push(); this.live = true;
+    this.strokeMask(L, p, p);
+  },
+  move(p, last, e) {
+    const L = this.selL(); if (!L) return;
+    if (this.op) {
+      const o = this.op;
+      if (o.type === 'move') { L.cx = o.cx + p.x - o.p0.x; L.cy = o.cy + p.y - o.p0.y; }
+      else if (o.type === 'scale') {
+        const d0 = Math.hypot(o.p0.x - o.cx, o.p0.y - o.cy) || 1;
+        L.s = clamp(o.s * Math.hypot(p.x - o.cx, p.y - o.cy) / d0, .02, 20);
+      } else {
+        let r = o.rot + Math.atan2(p.y - o.cy, p.x - o.cx) - Math.atan2(o.p0.y - o.cy, o.p0.x - o.cx);
+        if (e && e.shiftKey) r = Math.round(r / (Math.PI / 12)) * (Math.PI / 12);
+        L.rot = r;
+      }
+      render(); return;
+    }
+    if (this.live) this.strokeMask(L, last, p);
+  },
+  up() {
+    if (this.op) { this.op = null; S.done = false; updateUI(); }
+    if (this.live) { this.live = false; const L = this.selL(); if (L) { L.maskV++; this.syncThumbs(); } render(); }
+  },
+  hover(p) {
+    if (S.tool !== 'move' || S.space) return;
+    const h = this.hitHandle(p);
+    stage.style.cursor = h === 'rot' ? 'grab' : h === 'scale' ? 'nwse-resize' : this.hitLayer(p) >= 0 ? 'move' : 'default';
+  },
+  strokeMask(L, a, b) {
+    const la = this.toLocal(L, a), lb = this.toLocal(L, b), x = ctxOf(L.mask);
+    x.save();
+    x.globalCompositeOperation = S.tool === 'erase' ? 'destination-out' : 'source-over';
+    x.strokeStyle = '#fff'; x.lineWidth = Brush.size / L.s; x.lineCap = x.lineJoin = 'round';
+    x.beginPath(); x.moveTo(la.x, la.y); x.lineTo(lb.x + .01, lb.y); x.stroke();
+    x.restore();
+    L.maskV++; render();
+  },
+  // ไม้กายสิทธิ์: ลบบริเวณที่สีใกล้เคียงกันและติดกันจากจุดที่แตะ
+  wandAt(L, l) {
+    const w = L.src.width, h = L.src.height, x0 = Math.floor(l.x), y0 = Math.floor(l.y);
+    if (x0 < 0 || y0 < 0 || x0 >= w || y0 >= h) return toast('แตะในกรอบของรูปที่เพิ่ม');
+    const d = ctxOf(L.src).getImageData(0, 0, w, h).data, mx = ctxOf(L.mask), mi = mx.getImageData(0, 0, w, h), md = mi.data;
+    const s0 = (y0 * w + x0) * 4, th = (8 + this.o.tol * 1.6) ** 2;
+    const seen = new Uint8Array(w * h), q = new Int32Array(w * h);
+    let qh = 0, qt = 0, n = 0;
+    q[qt++] = y0 * w + x0; seen[y0 * w + x0] = 1;
+    while (qh < qt) {
+      const p = q[qh++], px = p % w, py = (p / w) | 0;
+      md[p * 4 + 3] = 0; n++;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = px + dx, ny = py + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const j = ny * w + nx;
+        if (seen[j]) continue;
+        const dr = d[j * 4] - d[s0], dg = d[j * 4 + 1] - d[s0 + 1], db = d[j * 4 + 2] - d[s0 + 2];
+        if (dr * dr + dg * dg + db * db <= th) { seen[j] = 1; q[qt++] = j; }
+      }
+    }
+    mx.putImageData(mi, 0, 0);
+    L.maskV++; this.syncThumbs(); render();
+    toast(`ลบพื้นที่ ${Math.round(n / (w * h) * 100)}% ของรูป ถ้าลบเกินกด Ctrl+Z หรือลด "ความกว้างของสี"`);
+  },
+  // ปรับสีอัตโนมัติ: เทียบความสว่างและโทนสีของวัตถุกับบริเวณรอบๆ ในรูปหลัก
+  matchColor() {
+    const L = this.selL(); if (!L) return;
+    const stats = (c, sx, sy, sw, sh, useAlpha) => {
+      const k = Math.min(1, 160 / Math.max(sw, sh)), w = Math.max(1, Math.round(sw * k)), h = Math.max(1, Math.round(sh * k));
+      const t = newCanvas(w, h), x = ctxOf(t); x.drawImage(c, sx, sy, sw, sh, 0, 0, w, h);
+      const d = x.getImageData(0, 0, w, h).data;
+      let r = 0, g = 0, b = 0, s = 0, sat = 0;
+      for (let i = 0; i < d.length; i += 4) {
+        const a = useAlpha ? d[i + 3] / 255 : 1; if (a < .5) continue;
+        r += d[i]; g += d[i + 1]; b += d[i + 2]; s++;
+        sat += Math.max(d[i], d[i + 1], d[i + 2]) - Math.min(d[i], d[i + 1], d[i + 2]);
+      }
+      if (!s) return null;
+      r /= s; g /= s; b /= s;
+      return { L: .299 * r + .587 * g + .114 * b, warm: (r - b) / 255, sat: sat / s };
+    };
+    const p = this.piece(L), obj = stats(p, 0, 0, p.width, p.height, true);
+    const k = this.corners(L), xs = k.map(q => q.x), ys = k.map(q => q.y);
+    const bw = Math.max(...xs) - Math.min(...xs), bh = Math.max(...ys) - Math.min(...ys);
+    const x0 = clamp(Math.min(...xs) - bw * .4, 0, imgW() - 1), y0 = clamp(Math.min(...ys) - bh * .4, 0, imgH() - 1);
+    const x1 = clamp(Math.max(...xs) + bw * .4, x0 + 1, imgW()), y1 = clamp(Math.max(...ys) + bh * .4, y0 + 1, imgH());
+    const bg = stats(S.img, x0, y0, x1 - x0, y1 - y0, false);
+    if (!obj || !bg) return;
+    // ปรับเข้าหาค่าของพื้นหลังราวครึ่งทาง ไม่ให้วัตถุจืดหรือเปลี่ยนไปมากเกิน
+    const set = (k, v) => setSlider('l_' + k, Math.round(v));
+    set('exposure', clamp(Math.log2(Math.max(bg.L, 8) / Math.max(obj.L, 8)) / 1.2 * 100 * .6, -60, 60));
+    set('temp', clamp((bg.warm - obj.warm) / .36 * 100 * .6, -60, 60));
+    set('sat', clamp((bg.sat / Math.max(obj.sat, 4) - 1) * 50, -50, 40));
+    if (!L.feather) setSlider('l_feather', 25);
+    toast('ปรับสีให้เข้ากับรูปหลักแล้ว ปรับแถบเพิ่มได้');
+  },
+
+  /* --- แผงตั้งค่า --- */
+  panel() {
+    const sl = (k, label, ends, min = -100, max = 100) => slider('l_' + k, label, min, max, 0, ends);
+    return `<div class="field">
+        <div class="fl"><span>รูปที่เพิ่ม</span><b id="lcount"></b></div>
+        <div class="layers" id="layers"></div>
+        <button class="btn" id="addlayer"><i class="ti ti-photo-plus"></i>เพิ่มรูปคนหรือสิ่งของ</button>
+      </div>
+      <div class="sec" id="l-none"><p class="note"><i class="ti ti-info-circle"></i>ลากรูปมาวาง วางจากคลิปบอร์ด หรือกดปุ่มด้านบนเพื่อเพิ่มรูป ถ้ารูปมีพื้นหลัง ระบบจะตัดพื้นหลังให้อัตโนมัติ</p></div>
+      <div class="sec" id="l-props">
+        <div class="sec" data-tools="move">
+          <div class="row2">
+            <button class="btn sm" id="lflip"><i class="ti ti-flip-vertical"></i>พลิกซ้าย-ขวา</button>
+            <button class="btn sm" id="ldup"><i class="ti ti-copy"></i>ทำสำเนา</button>
+          </div>
+          ${slider('l_op', 'ความทึบ', 0, 100, 100, ['ใส', 'ทึบ'])}
+        </div>
+        <div class="sec" data-tools="erase,restore,wand,move">
+          ${field('ในรูปที่เพิ่มเป็น', seg('lkind', [['person', 'คน'], ['object', 'สัตว์ / สิ่งของ']], this.o.kind))}
+          <button class="btn" id="lcut"><i class="ti ti-sparkles"></i>ตัดพื้นหลังอัตโนมัติ (AI)</button>
+        </div>
+        <div class="sec" data-tools="erase,restore">${brushField()}</div>
+        <div class="sec" data-tools="wand">${slider('ltol', 'ความกว้างของสี', 0, 100, this.o.tol, ['เฉพาะสีเดียว', 'สีใกล้เคียง'])}</div>
+        <div class="sec" data-tools="blend">
+          <button class="btn" id="lmatch"><i class="ti ti-wand"></i>ปรับสีให้กลืนอัตโนมัติ</button>
+          ${sl('exposure', 'ความสว่าง', ['มืด', 'สว่าง'])}${sl('contrast', 'คอนทราสต์', ['นุ่ม', 'จัด'])}
+          ${sl('temp', 'อุณหภูมิสี', ['เย็น', 'อุ่น'])}${sl('sat', 'ความอิ่มสี', ['จืด', 'จัด'])}
+          ${sl('feather', 'ขอบนุ่ม', ['คม', 'นุ่ม'], 0)}
+          ${field('เงา', seg('lshadow', [['none', 'ไม่มี'], ['contact', 'ใต้เท้า'], ['cast', 'ทอดยาว']], 'none'))}
+          <div id="lsh-wrap">${slider('l_shStr', 'ความเข้มเงา', 0, 100, 50, ['จาง', 'เข้ม'])}
+            <div id="lshdir-wrap">${slider('l_shDir', 'ทิศของเงา', -60, 60, 30, ['ซ้าย', 'ขวา'])}</div></div>
+        </div>
+      </div>`;
+  },
+  bind() {
+    $('#addlayer').onclick = () => $('#file2').click();
+    $('#lflip').onclick = () => { const L = this.selL(); if (!L) return; this.push(); L.flip *= -1; render(); };
+    $('#ldup').onclick = () => {
+      const L = this.selL(); if (!L) return;
+      this.push();
+      const c = { ...L, id: this.nid++, adj: { ...L.adj }, mask: cloneCanvas(L.mask), cache: null, ck: null, sil: null, adjC: null, cx: L.cx + 30 / S.z, cy: L.cy + 30 / S.z };
+      this.layers.splice(this.sel + 1, 0, c); this.sel++;
+      this.syncPanel(); render();
+    };
+    $('#lcut').onclick = () => this.autoCut();
+    $('#lmatch').onclick = () => this.matchColor();
+    onSeg('lkind', v => this.o.kind = v);
+    onSlider('ltol', v => this.o.tol = v);
+    bindBrush();
+    const sg = v => (v > 0 ? '+' : '') + v;
+    onSlider('l_op', v => { const L = this.selL(); if (L) { L.op = v; render(); } }, v => v + '%');
+    for (const k of ADD_ADJ) onSlider('l_' + k, v => { const L = this.selL(); if (L) { L.adj[k] = v; L.adjV++; render(); } }, sg);
+    onSlider('l_feather', v => { const L = this.selL(); if (L) { L.feather = v; render(); } });
+    onSeg('lshadow', v => { const L = this.selL(); if (L) { L.shadow = v; this.syncShadow(); render(); } });
+    onSlider('l_shStr', v => { const L = this.selL(); if (L) { L.shStr = v; render(); } });
+    onSlider('l_shDir', v => { const L = this.selL(); if (L) { L.shDir = v; render(); } }, v => v + '°');
+    $('#layers').onclick = e => {
+      const b = e.target.closest('button'), row = e.target.closest('.lrow'); if (!row) return;
+      const i = +row.dataset.i, L = this.layers[i];
+      if (!b) { this.sel = i; this.syncPanel(); drawGuide(); return; }
+      const a = b.dataset.a;
+      this.push();
+      if (a === 'vis') L.vis = !L.vis;
+      else if (a === 'del') { this.layers.splice(i, 1); this.sel = Math.min(this.sel, this.layers.length - 1); }
+      else {
+        const j = a === 'up' ? i + 1 : i - 1;
+        if (j < 0 || j >= this.layers.length) return;
+        [this.layers[i], this.layers[j]] = [this.layers[j], this.layers[i]];
+        if (this.sel === i) this.sel = j; else if (this.sel === j) this.sel = i;
+      }
+      this.syncPanel(); render(); updateUI();
+    };
+    this.syncPanel();
+  },
+  onTool(id) { this.lastTool = id; this.syncPanel(); },
+  onKey(e) {
+    if ((e.key === 'Delete' || e.key === 'Backspace') && this.selL()) {
+      this.push(); this.layers.splice(this.sel, 1); this.sel = Math.min(this.sel, this.layers.length - 1);
+      this.syncPanel(); render(); updateUI(); return true;
+    }
+    return false;
+  },
+  escape() { this.sel = -1; this.syncPanel(); drawGuide(); },
+  syncShadow() {
+    const L = this.selL(); if (!L) return;
+    $('#lsh-wrap').hidden = L.shadow === 'none';
+    $('#lshdir-wrap').hidden = L.shadow !== 'cast';
+  },
+  // ให้แผงตั้งค่าแสดงค่าของเลเยอร์ที่เลือก และแสดงเฉพาะส่วนที่เกี่ยวกับเครื่องมือปัจจุบัน
+  syncPanel() {
+    if (!$('#layers')) return;
+    const L = this.selL();
+    $('#l-none').hidden = !!this.layers.length;
+    $('#l-props').hidden = !L;
+    const tool = S.tool === 'pan' ? (this.lastTool || 'move') : S.tool;
+    $$('#controls [data-tools]').forEach(el => el.hidden = !el.dataset.tools.split(',').includes(tool));
+    if (L) {
+      const set = (id, v) => { const el = $('#' + id); el.value = v; $('#' + id + '-v').textContent = el.value; fillRange(el); };
+      set('l_op', L.op); ADD_ADJ.forEach(k => set('l_' + k, L.adj[k])); set('l_feather', L.feather);
+      set('l_shStr', L.shStr); set('l_shDir', L.shDir);
+      $('#l_op-v').textContent = L.op + '%'; $('#l_shDir-v').textContent = L.shDir + '°';
+      $$('[data-seg="lshadow"] button').forEach(b => b.classList.toggle('on', b.dataset.v === L.shadow));
+      this.syncShadow();
+    }
+    this.syncThumbs();
+    setAct();
+  },
+  syncThumbs() {
+    const box = $('#layers'); if (!box) return;
+    $('#lcount').textContent = this.layers.length ? this.layers.length + ' รูป' : '';
+    // แสดงเลเยอร์บนสุดไว้ด้านบนของรายการ
+    const rows = this.layers.map((L, i) => ({ L, i })).reverse();
+    box.innerHTML = rows.map(({ L, i }) => `<div class="lrow${i === this.sel ? ' on' : ''}" data-i="${i}">
+        <canvas width="44" height="44"></canvas><span class="lname">${esc(L.name)}</span>
+        <button data-a="up" aria-label="ขึ้นบน"><i class="ti ti-chevron-up"></i></button>
+        <button data-a="down" aria-label="ลงล่าง"><i class="ti ti-chevron-down"></i></button>
+        <button data-a="vis" aria-label="ซ่อน/แสดง"><i class="ti ${L.vis ? 'ti-eye' : 'ti-eye-off'}"></i></button>
+        <button data-a="del" aria-label="ลบ"><i class="ti ti-trash"></i></button></div>`).join('');
+    $$('#layers canvas').forEach((cv, n) => {
+      const L = rows[n].L, p = this.piece(L), s = 44 / Math.max(p.width, p.height), x = cv.getContext('2d');
+      x.drawImage(p, (44 - p.width * s) / 2, (44 - p.height * s) / 2, p.width * s, p.height * s);
+    });
+  },
+  async apply() {
+    if (!this.layers.length) return $('#file2').click();
+    const out = newCanvas(imgW(), imgH());
+    this.compose(out.getContext('2d'));
+    this.enter();
+    commit(out); this.syncPanel(); S.done = true; updateUI();
+    toast('รวมเป็นรูปเดียวแล้ว กด "บันทึกรูป" ได้เลย');
+  },
+};
 /* ----- 7) สแกนเอกสาร ----- */
 // เรียงจุดเป็น บนซ้าย บนขวา ล่างขวา ล่างซ้าย
 function orderQuad(pts) {
@@ -2130,27 +2939,310 @@ MODES.scan = {
     deliver(blob, `scan_${ymd()}.pdf`);
   },
 };
-MODES.batch = { id: 'batch', title: 'แก้หลายรูปพร้อมกัน', icon: 'ti-stack-2', color: '#a3e635', desc: 'ย่อ ใส่ลายน้ำ ทีเดียว', soon: true };
+/* ----- 9) แก้หลายรูปพร้อมกัน ----- */
+const CRC_T = (() => {
+  const t = new Uint32Array(256);
+  for (let n = 0; n < 256; n++) { let c = n; for (let k = 0; k < 8; k++) c = c & 1 ? 0xEDB88320 ^ (c >>> 1) : c >>> 1; t[n] = c >>> 0; }
+  return t;
+})();
+function crc32(u8) {
+  let c = 0xFFFFFFFF;
+  for (let i = 0; i < u8.length; i++) c = CRC_T[(c ^ u8[i]) & 255] ^ (c >>> 8);
+  return (c ^ 0xFFFFFFFF) >>> 0;
+}
+// สร้างไฟล์ ZIP แบบไม่บีบอัด (รูป JPG/PNG บีบอัดอยู่แล้ว) ชื่อไฟล์ภาษาไทยใช้ได้ (UTF-8)
+async function makeZip(entries) {
+  const enc = new TextEncoder(), parts = [], central = [], d = new Date();
+  const dt = (d.getHours() << 11) | (d.getMinutes() << 5) | (d.getSeconds() >> 1);
+  const dd = ((d.getFullYear() - 1980) << 9) | ((d.getMonth() + 1) << 5) | d.getDate();
+  let off = 0;
+  for (const e of entries) {
+    const data = new Uint8Array(await e.blob.arrayBuffer()), name = enc.encode(e.name), crc = crc32(data);
+    const h = new DataView(new ArrayBuffer(30));
+    h.setUint32(0, 0x04034b50, true); h.setUint16(4, 20, true); h.setUint16(6, 0x0800, true);
+    h.setUint16(10, dt, true); h.setUint16(12, dd, true); h.setUint32(14, crc, true);
+    h.setUint32(18, data.length, true); h.setUint32(22, data.length, true); h.setUint16(26, name.length, true);
+    parts.push(h.buffer, name, data);
+    const c = new DataView(new ArrayBuffer(46));
+    c.setUint32(0, 0x02014b50, true); c.setUint16(4, 20, true); c.setUint16(6, 20, true); c.setUint16(8, 0x0800, true);
+    c.setUint16(12, dt, true); c.setUint16(14, dd, true); c.setUint32(16, crc, true);
+    c.setUint32(20, data.length, true); c.setUint32(24, data.length, true); c.setUint16(28, name.length, true);
+    c.setUint32(42, off, true);
+    central.push(c.buffer, name);
+    off += 30 + name.length + data.length;
+  }
+  const size = central.reduce((s, b) => s + b.byteLength, 0), end = new DataView(new ArrayBuffer(22));
+  end.setUint32(0, 0x06054b50, true); end.setUint16(8, entries.length, true); end.setUint16(10, entries.length, true);
+  end.setUint32(12, size, true); end.setUint32(16, off, true);
+  return new Blob([...parts, ...central, end.buffer], { type: 'application/zip' });
+}
+function wmAnchor(pos, W, H, w, h) {
+  const m = Math.min(W, H) * .03;
+  return { x: pos === 'bl' ? m : pos === 'c' ? (W - w) / 2 : W - w - m, y: pos === 'tr' ? m : pos === 'c' ? (H - h) / 2 : H - h - m };
+}
+// ใส่ลายน้ำ (ข้อความหรือโลโก้) ที่มุมใดมุมหนึ่ง หรือซ้ำเต็มภาพแบบเอียง
+async function drawWatermark(ctx, W, H, o, logo) {
+  const useLogo = o.wmType === 'logo' && logo;
+  if (!useLogo && !o.wmText.trim()) return;
+  ctx.save();
+  ctx.globalAlpha = o.wmOp / 100;
+  let w, h, draw;
+  if (useLogo) {
+    w = W * o.wmSize * 2.5 / 100; h = w * logo.height / logo.width;
+    draw = (x, y) => ctx.drawImage(logo, x, y, w, h);
+  } else {
+    const fs = Math.max(10, W * o.wmSize / 100), font = `600 ${fs}px Prompt, 'IBM Plex Sans Thai', sans-serif`;
+    try { await document.fonts.load(font, o.wmText); } catch (e) { /* ใช้ฟอนต์สำรองของเครื่องแทน */ }
+    ctx.font = font; ctx.textBaseline = 'top';
+    ctx.fillStyle = o.wmColor === 'black' ? '#000' : '#fff';
+    ctx.shadowColor = o.wmColor === 'black' ? 'rgba(255,255,255,.45)' : 'rgba(0,0,0,.5)'; ctx.shadowBlur = fs * .15;
+    w = ctx.measureText(o.wmText).width; h = fs * 1.25;
+    draw = (x, y) => ctx.fillText(o.wmText, x, y);
+  }
+  if (o.wmPos === 'tile') {
+    const R = Math.hypot(W, H) / 2, sx = w * 1.7, sy = h * 3.2;
+    ctx.translate(W / 2, H / 2); ctx.rotate(-Math.PI / 6);
+    for (let y = -R, row = 0; y < R; y += sy, row++) for (let x = -R + (row % 2) * sx / 2; x < R; x += sx) draw(x, y);
+  } else { const p = wmAnchor(o.wmPos, W, H, w, h); draw(p.x, p.y); }
+  ctx.restore();
+}
+function fmtSize(b) { return b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB'; }
+
+MODES.batch = {
+  id: 'batch', file: 'photos', title: 'แก้หลายรูปพร้อมกัน', icon: 'ti-stack-2', color: '#a3e635', desc: 'ย่อ ใส่ลายน้ำ เบลอหน้า ทีเดียว',
+  noImage: true, keepAct: true,
+  tools: [
+    { id: 'resize', icon: 'ti-dimensions', label: 'ขนาด', cursor: 'default', hint: 'เลือกรูปหลายรูป ตั้งค่าที่ต้องการ แล้วกด "เริ่มทำทั้งหมด" จะได้ไฟล์ ZIP รวมทุกรูป แตะรูปในรายการเพื่อดูตัวอย่างผลลัพธ์' },
+    { id: 'mark', icon: 'ti-copyright', label: 'ลายน้ำ', cursor: 'default', hint: 'ใส่ข้อความหรือโลโก้ทุกรูป เช่น "© ชื่อบริษัท" หรือ "สำเนา" ป้องกันการนำรูปไปใช้' },
+    { id: 'look', icon: 'ti-palette', label: 'สี/ใบหน้า', cursor: 'default', hint: 'ปรับแสงอัตโนมัติ ใส่ฟิลเตอร์เดียวกันทุกรูป หรือเบลอใบหน้าอัตโนมัติก่อนเผยแพร่ (PDPA)' },
+    { id: 'out', icon: 'ti-file-zip', label: 'ไฟล์', cursor: 'default', hint: 'เลือกนามสกุลไฟล์ คุณภาพ และการตั้งชื่อไฟล์' }],
+  o: {
+    resize: true, maxSide: 1600, wm: false, wmType: 'text', wmText: '', wmPos: 'br', wmSize: 4, wmOp: 60, wmColor: 'white',
+    auto: false, filter: 'none', fi: 100, face: false, faceStyle: 'mosaic', fmt: 'jpg', q: 85, naming: 'keep', prefix: 'photo',
+  },
+  files: [], cur: 0, logo: null,
+  actLabel() { return this.files.length ? `เริ่มทำทั้งหมด (${this.files.length} รูป)` : 'เลือกรูปหลายรูป'; },
+  enter() { this.renderOverlay(); },
+  onFiles(files) {
+    const imgs = files.filter(f => /^image\//.test(f.type));
+    if (!imgs.length) return toast('ไม่พบไฟล์รูปภาพ', 'err');
+    for (const f of imgs) this.files.push({ file: f, url: URL.createObjectURL(f), done: false });
+    S.done = false; updateUI();
+    this.renderOverlay();
+  },
+  panel() {
+    const o = this.o;
+    return `<div class="sec" data-sec="resize">
+        <label class="chk"><input type="checkbox" id="b_resize" ${o.resize ? 'checked' : ''}>ย่อขนาดรูป</label>
+        ${field('ด้านที่ยาวที่สุดไม่เกิน', `<div class="chips" id="b_sizes">${[800, 1200, 1600, 2048, 3000].map(v =>
+          `<button data-v="${v}" class="${v === o.maxSide ? 'on' : ''}">${v}px</button>`).join('')}</div>`)}
+        <p class="note"><i class="ti ti-info-circle"></i>รูปที่เล็กกว่านี้จะไม่ถูกขยาย · 1200px เหมาะกับอีเมลและ LINE · 2048px เหมาะกับ Facebook</p>
+      </div>
+      <div class="sec" data-sec="mark">
+        <label class="chk"><input type="checkbox" id="b_wm" ${o.wm ? 'checked' : ''}>ใส่ลายน้ำ</label>
+        ${field('แบบ', seg('b_wmtype', [['text', 'ข้อความ'], ['logo', 'โลโก้']], o.wmType))}
+        <div id="b_text_wrap"><input type="text" id="b_wmtext" value="${esc(o.wmText)}" placeholder="© ชื่อบริษัท"></div>
+        <div id="b_logo_wrap"><button class="btn sm" id="b_logo"><i class="ti ti-photo-up"></i><span id="b_logo_lbl">เลือกไฟล์โลโก้ (แนะนำ PNG พื้นใส)</span></button></div>
+        ${field('ตำแหน่ง', seg('b_wmpos', [['br', 'ขวาล่าง'], ['bl', 'ซ้ายล่าง'], ['tr', 'ขวาบน'], ['c', 'กลาง'], ['tile', 'เต็มภาพ']], o.wmPos))}
+        ${slider('b_wmsize', 'ขนาด', 1, 12, o.wmSize, ['เล็ก', 'ใหญ่'])}
+        ${slider('b_wmop', 'ความชัด', 10, 100, o.wmOp, ['จาง', 'ชัด'])}
+        <div id="b_color_wrap">${field('สีตัวอักษร', seg('b_wmcolor', [['white', 'ขาว'], ['black', 'ดำ']], o.wmColor))}</div>
+      </div>
+      <div class="sec" data-sec="look">
+        <label class="chk"><input type="checkbox" id="b_auto" ${o.auto ? 'checked' : ''}>ปรับแสงอัตโนมัติทุกรูป</label>
+        ${field('ฟิลเตอร์', `<select id="b_filter">${FILTERS.map(([k, l]) => `<option value="${k}" ${k === o.filter ? 'selected' : ''}>${l}</option>`).join('')}</select>`)}
+        <div id="b_fi_wrap">${slider('b_fi', 'ความเข้มของฟิลเตอร์', 0, 100, o.fi, ['อ่อน', 'เข้ม'])}</div>
+        <label class="chk"><input type="checkbox" id="b_face" ${o.face ? 'checked' : ''}>เบลอใบหน้าอัตโนมัติ (PDPA)</label>
+        <div id="b_face_wrap">
+          ${field('แบบการปิดหน้า', seg('b_facestyle', [['mosaic', 'โมเสก'], ['blur', 'เบลอ'], ['bar', 'ทึบดำ']], o.faceStyle))}
+          <p class="note warn"><i class="ti ti-alert-triangle"></i>ระบบอาจหาใบหน้าไม่ครบ เช่น หน้าที่เล็กมาก หันข้าง หรือถูกบัง ควรตรวจรูปก่อนเผยแพร่</p>
+        </div>
+      </div>
+      <div class="sec" data-sec="out">
+        ${field('นามสกุลไฟล์', seg('b_fmt', [['jpg', 'JPG'], ['png', 'PNG'], ['webp', 'WEBP']], o.fmt))}
+        <div id="b_q_wrap">${slider('b_q', 'คุณภาพ', 50, 100, o.q, ['ไฟล์เล็ก', 'ชัดที่สุด'])}</div>
+        ${field('ชื่อไฟล์', seg('b_naming', [['keep', 'ใช้ชื่อเดิม'], ['new', 'ตั้งชื่อใหม่']], o.naming))}
+        <div id="b_prefix_wrap"><input type="text" id="b_prefix" value="${esc(o.prefix)}" placeholder="photo">
+          <p class="note" style="margin-top:6px"><i class="ti ti-info-circle"></i><span id="b_prefix_eg"></span></p></div>
+      </div>`;
+  },
+  bind() {
+    const o = this.o, ch = () => { this.syncVis(); this.dirty(); };
+    const chk = (id, k) => { $('#' + id).onchange = e => { o[k] = e.target.checked; ch(); }; };
+    chk('b_resize', 'resize'); chk('b_wm', 'wm'); chk('b_auto', 'auto'); chk('b_face', 'face');
+    $('#b_sizes').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      $$('#b_sizes button').forEach(x => x.classList.toggle('on', x === b));
+      o.maxSide = +b.dataset.v; o.resize = true; $('#b_resize').checked = true; ch();
+    };
+    onSeg('b_wmtype', v => { o.wmType = v; o.wm = true; $('#b_wm').checked = true; ch(); });
+    $('#b_wmtext').oninput = e => { o.wmText = e.target.value; o.wm = true; $('#b_wm').checked = true; ch(); };
+    $('#b_logo').onclick = () => $('#file3').click();
+    onSeg('b_wmpos', v => { o.wmPos = v; ch(); });
+    onSlider('b_wmsize', v => { o.wmSize = v; ch(); });
+    onSlider('b_wmop', v => { o.wmOp = v; ch(); }, v => v + '%');
+    onSeg('b_wmcolor', v => { o.wmColor = v; ch(); });
+    $('#b_filter').onchange = e => { o.filter = e.target.value; ch(); };
+    onSlider('b_fi', v => { o.fi = v; ch(); }, v => v + '%');
+    onSeg('b_facestyle', v => { o.faceStyle = v; ch(); });
+    onSeg('b_fmt', v => { o.fmt = v; ch(); });
+    onSlider('b_q', v => { o.q = v; });
+    onSeg('b_naming', v => { o.naming = v; ch(); });
+    $('#b_prefix').oninput = e => { o.prefix = e.target.value; this.syncVis(); };
+    this.syncVis();
+  },
+  syncVis() {
+    const o = this.o;
+    $('#b_text_wrap').hidden = $('#b_color_wrap').hidden = o.wmType !== 'text';
+    $('#b_logo_wrap').hidden = o.wmType !== 'logo';
+    $('#b_logo_lbl').textContent = this.logo ? 'เปลี่ยนโลโก้' : 'เลือกไฟล์โลโก้ (แนะนำ PNG พื้นใส)';
+    $('#b_fi_wrap').hidden = o.filter === 'none';
+    $('#b_face_wrap').hidden = !o.face;
+    $('#b_q_wrap').hidden = o.fmt === 'png';
+    $('#b_prefix_wrap').hidden = o.naming !== 'new';
+    $('#b_prefix_eg').textContent = `จะได้ชื่อ ${this.fileName(0, 'x')}, ${this.fileName(1, 'x')} ...`;
+  },
+  setLogo(file) {
+    fileToImage(file).then(img => {
+      const s = Math.min(1, 1200 / Math.max(img.naturalWidth, img.naturalHeight));
+      this.logo = newCanvas(Math.round(img.naturalWidth * s), Math.round(img.naturalHeight * s));
+      this.logo.getContext('2d').drawImage(img, 0, 0, this.logo.width, this.logo.height);
+      this.o.wm = true; this.o.wmType = 'logo';
+      buildPanel(); setTool('mark'); this.dirty();
+    }, e => toast(e.message, 'err'));
+  },
+  fileName(i, orig) {
+    const o = this.o, ext = o.fmt;
+    if (o.naming === 'new') return `${(o.prefix || 'photo').replace(/[\\/:*?"<>|]/g, '')}_${String(i + 1).padStart(3, '0')}.${ext}`;
+    return `${orig.replace(/\.[^.]+$/, '')}.${ext}`;
+  },
+  // แก้รูปหนึ่งรูปตามค่าที่ตั้งไว้ (previewMax = ย่อเพื่อแสดงตัวอย่างให้เร็ว)
+  async processOne(file, previewMax) {
+    const o = this.o, img = await fileToImage(file), W = img.naturalWidth, H = img.naturalHeight;
+    let s = o.resize ? Math.min(1, o.maxSide / Math.max(W, H)) : 1;
+    s = Math.min(s, Math.sqrt(MAX_PIXELS / (W * H)));
+    if (previewMax) s = Math.min(s, previewMax / Math.max(W, H));
+    const w = Math.max(1, Math.round(W * s)), h = Math.max(1, Math.round(H * s));
+    const c = resizeCanvas(img, w, h);
+    applyLook(c, o.auto, o.filter, o.fi);
+    if (o.face) {
+      try {
+        const faces = await detectFaces(c), snap = cloneCanvas(c), x = c.getContext('2d');
+        faces.forEach(b => obscure(x, snap, faceRect(b), o.faceStyle));
+        c.faces = faces.length;
+      } catch (e) { console.warn(e); this.faceErr = true; }
+    }
+    if (o.wm) await drawWatermark(c.getContext('2d'), w, h, o, this.logo);
+    return c;
+  },
+  async encode(c) {
+    const o = this.o, type = { jpg: 'image/jpeg', png: 'image/png', webp: 'image/webp' }[o.fmt];
+    let src = c;
+    if (o.fmt === 'jpg') { src = newCanvas(c.width, c.height); const x = src.getContext('2d'); x.fillStyle = '#fff'; x.fillRect(0, 0, c.width, c.height); x.drawImage(c, 0, 0); }
+    return new Promise(r => src.toBlob(r, type, o.q / 100));
+  },
+  // แสดงตัวอย่างผลลัพธ์ของรูปที่เลือก (หน่วงเวลาเล็กน้อยเวลาเลื่อนแถบ)
+  dirty() {
+    clearTimeout(this.pt);
+    this.pt = setTimeout(async () => {
+      const f = this.files[this.cur], pv = $('#bprev');
+      if (!f || !pv) return;
+      const token = this.pt;
+      try {
+        const c = await this.processOne(f.file, IS_TOUCH ? 700 : 1000);
+        if (token !== this.pt || !$('#bprev')) return;
+        pv.width = c.width; pv.height = c.height; pv.getContext('2d').drawImage(c, 0, 0);
+        $('#bprev-cap').textContent = `ตัวอย่าง: ${f.file.name}` + (this.o.face && c.faces !== undefined ? ` · พบใบหน้า ${c.faces} คน` : '');
+      } catch (e) { console.warn(e); }
+    }, 250);
+  },
+  renderOverlay() {
+    const ov = $('#overlay');
+    if (!this.files.length) {
+      ov.innerHTML = `<button class="bempty" id="bpick"><span class="ic-circle"><i class="ti ti-photos"></i></span>
+        <b>เลือกหลายรูปพร้อมกัน</b><span class="muted">หรือลากรูปหลายรูปมาวางตรงนี้</span></button>`;
+      $('#bpick').onclick = () => $('#file2').click();
+      return;
+    }
+    ov.innerHTML = `<div class="bprev-card"><canvas id="bprev" class="bg-checker"></canvas><p class="note" id="bprev-cap">กำลังสร้างตัวอย่าง...</p></div>
+      <div class="bgrid" id="bgrid">${this.files.map((f, i) => `<div class="bf${i === this.cur ? ' on' : ''}" data-i="${i}">
+          <img src="${f.url}" alt="">${f.done ? '<span class="bdone"><i class="ti ti-check"></i></span>' : ''}
+          <button class="bdel" data-del="${i}" aria-label="เอาออก"><i class="ti ti-x"></i></button>
+          <span class="bname">${esc(f.file.name)}</span><span class="bsize">${fmtSize(f.file.size)}</span></div>`).join('')}
+        <button class="bf badd" id="badd"><i class="ti ti-plus"></i><span>เพิ่มรูป</span></button></div>`;
+    $('#badd').onclick = () => $('#file2').click();
+    $('#bgrid').onclick = e => {
+      const del = e.target.closest('[data-del]');
+      if (del) {
+        const i = +del.dataset.del;
+        URL.revokeObjectURL(this.files[i].url); this.files.splice(i, 1);
+        this.cur = Math.min(this.cur, Math.max(0, this.files.length - 1));
+        this.renderOverlay(); setAct(); return;
+      }
+      const t = e.target.closest('.bf[data-i]'); if (!t) return;
+      this.cur = +t.dataset.i; this.renderOverlay();
+    };
+    this.dirty();
+  },
+  async apply() {
+    if (!this.files.length) return $('#file2').click();
+    const o = this.o, out = [], used = new Set();
+    this.faceErr = false;
+    if (o.face) {
+      try { await busy('กำลังโหลดตัวหาใบหน้า...', () => getTask('face')); }
+      catch (e) { toast('โหลดตัวหาใบหน้าไม่ได้ (ต้องต่ออินเทอร์เน็ตครั้งแรก) จะข้ามการเบลอหน้า', 'err'); }
+    }
+    let faces = 0;
+    await busy('', async () => {
+      for (let i = 0; i < this.files.length; i++) {
+        setBusyMsg(`กำลังทำรูปที่ ${i + 1} จาก ${this.files.length}`);
+        await nextFrame();
+        const f = this.files[i], c = await this.processOne(f.file, 0);
+        faces += c.faces || 0;
+        const blob = await this.encode(c);
+        // Safari บางรุ่นสร้าง WEBP ไม่ได้ จะได้ PNG แทน จึงตั้งนามสกุลตามไฟล์ที่ได้จริง
+        let name = this.fileName(i, f.file.name);
+        if (blob.type === 'image/png' && o.fmt !== 'png') name = name.replace(/\.[^.]+$/, '.png');
+        for (let k = 2; used.has(name.toLowerCase()); k++) name = name.replace(/(\(\d+\))?(\.[^.]+)$/, `(${k})$2`);
+        used.add(name.toLowerCase());
+        out.push({ name, blob });
+        f.done = true;
+      }
+    });
+    this.renderOverlay();
+    S.done = true; updateUI();
+    if (this.faceErr) toast('บางรูปหาใบหน้าไม่ได้ ตรวจรูปก่อนเผยแพร่', 'err');
+    else toast(`เสร็จ ${out.length} รูป` + (o.face ? ` · เบลอใบหน้า ${faces} จุด` : ''));
+    if (out.length === 1) return deliver(out[0].blob, out[0].name);
+    const zip = await busy('กำลังรวมเป็นไฟล์ ZIP...', () => makeZip(out));
+    deliver(zip, `${o.naming === 'new' && o.prefix ? o.prefix : 'photos'}_${ymd()}.zip`,
+      out.map(e => new File([e.blob], e.name, { type: e.blob.type })));
+  },
+};
 const ORDER = ['sig', 'adj', 'scan', 'rem', 'wm', 'blur', 'crop', 'add', 'batch'];
 
 /* ================= การทำงานของหน้าจอ ================= */
 function openMode(k) {
   const m = MODES[k];
   if (m.soon) return toast(`"${m.title}" จะมาในเวอร์ชันถัดไป`);
-  if (!S.img) { S.pendingMode = k; $('#file').click(); return; }
+  if (!S.img && !m.noImage) { S.pendingMode = k; $('#file').click(); return; }
   if (S.mode && S.mode.leave) S.mode.leave();
   S.mode = m; S.done = false;
   $('#home').hidden = true; $('#editor').hidden = false;
   $('#title').textContent = m.title;
   $('#title-ic').className = 'ti ' + m.icon;
   $('#title-tile').style.setProperty('--mc', m.color);
-  sizeLayers(); clearMask();
+  // โหมดที่ไม่ได้แก้รูปเดียว (แก้หลายรูป) ใช้พื้นที่แสดงผลของตัวเองแทนรูป
+  const solo = !!m.noImage;
+  world.hidden = $('.zoombar').hidden = $('.save').hidden = $('#cmp').hidden = solo;
+  $('#overlay').hidden = !solo;
+  if (S.img) { sizeLayers(); clearMask(); }
   if (m.enter) m.enter();
   buildPanel();
   $('#tools').innerHTML = m.tools.map(t =>
     `<button class="tool" data-t="${t.id}" title="${t.label}"><i class="ti ${t.icon}"></i><span>${t.label}</span></button>`).join('');
   setTool(m.tools[0].id);
-  requestAnimationFrame(() => { fit(); render(); });
+  if (!solo) requestAnimationFrame(() => { fit(); render(); });
   updateUI();
 }
 function buildPanel() { $('#controls').innerHTML = S.mode.panel(); S.mode.bind(); }
@@ -2183,8 +3275,9 @@ function updateUI() {
   $('#s1').className = 'step ok';
   $('#s2').className = 'step ' + (S.done ? 'ok' : 'on');
   $('#s3').className = 'step' + (S.done ? ' on' : '');
-  $('#undo').disabled = !S.hist.length;
-  $('#redo').disabled = !S.fut.length;
+  const m = S.mode;
+  $('#undo').disabled = !S.hist.length && !(m.canUndo && m.canUndo());
+  $('#redo').disabled = !S.fut.length && !(m.canRedo && m.canRedo());
   setAct();
 }
 
@@ -2215,18 +3308,19 @@ async function save() {
   deliver(blob, name);
 }
 // คอมพิวเตอร์: ดาวน์โหลดทันที / มือถือ: เปิดหน้าต่างบันทึก
-function deliver(blob, name) {
-  if (IS_IOS || IS_TOUCH) return showSheet(blob, name);
+// shareFiles: บนมือถือให้ปุ่มแชร์ส่งรูปทีละไฟล์ (บันทึกลงอัลบั้มได้) แทนไฟล์ ZIP
+function deliver(blob, name, shareFiles) {
+  if (IS_IOS || IS_TOUCH) return showSheet(blob, name, shareFiles);
   const a = document.createElement('a');
   a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(a.href), 4000);
 }
 // มือถือ: แสดงรูปให้กดค้างบันทึก หรือส่งเข้าแอปรูปภาพ/ไฟล์ผ่านปุ่มแชร์ของระบบ
-function showSheet(blob, name) {
+function showSheet(blob, name, shareFiles) {
   const url = URL.createObjectURL(blob);
-  const file = new File([blob], name, { type: blob.type });
-  const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+  const files = shareFiles || [new File([blob], name, { type: blob.type })];
+  const canShare = !!(navigator.canShare && navigator.canShare({ files }));
   const isImg = blob.type.startsWith('image/');
   $('#sheet-img').hidden = !isImg;
   if (isImg) $('#sheet-img').src = url;
@@ -2234,11 +3328,12 @@ function showSheet(blob, name) {
   $('#sheet-pdf-name').textContent = name;
   $('#sheet-title').textContent = isImg ? 'รูปพร้อมบันทึกแล้ว' : 'ไฟล์พร้อมบันทึกแล้ว';
   $('#sheet-tip').hidden = !isImg;
-  $('#sheet-share').innerHTML = isImg ? '<i class="ti ti-share"></i>บันทึกลงรูปภาพ / แชร์' : '<i class="ti ti-share"></i>บันทึกลงไฟล์ / แชร์';
+  $('#sheet-share').innerHTML = '<i class="ti ti-share"></i>' + (shareFiles ? `บันทึกรูปทั้ง ${files.length} รูป / แชร์`
+    : isImg ? 'บันทึกลงรูปภาพ / แชร์' : 'บันทึกลงไฟล์ / แชร์');
   $('#sheet-dl').href = url; $('#sheet-dl').download = name;
   $('#sheet-share').hidden = !canShare;
   $('#sheet-share').onclick = async () => {
-    try { await navigator.share({ files: [file] }); }
+    try { await navigator.share({ files }); }
     catch (e) { if (e.name !== 'AbortError') toast('แชร์ไม่ได้ ลองกดค้างที่รูปแล้วเลือก "บันทึกรูปภาพ"', 'err'); }
   };
   $('#sheet-x').onclick = () => { $('#sheet').hidden = true; $('#sheet-img').removeAttribute('src'); URL.revokeObjectURL(url); };
@@ -2279,7 +3374,7 @@ function pinchInfo() {
   return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, m: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 } };
 }
 stage.addEventListener('pointerdown', e => {
-  if (!S.img || !S.mode || S.busy || e.target.closest('.zoombar')) return;
+  if (!S.img || !S.mode || S.busy || e.target.closest('.zoombar, #overlay')) return;
   try { stage.setPointerCapture(e.pointerId); } catch (err) { /* บางเบราว์เซอร์ไม่ยอมจับ pointer นี้ ใช้งานต่อได้ */ }
   S.ptype = e.pointerType;
   touches.set(e.pointerId, stagePos(e));
@@ -2335,7 +3430,7 @@ stage.addEventListener('pointerup', endDrag);
 stage.addEventListener('pointercancel', endDrag);
 stage.addEventListener('pointerleave', () => { if (!drag) { S.cursor = null; drawGuide(); } });
 stage.addEventListener('wheel', e => {
-  if (!S.img) return;
+  if (!S.img || e.target.closest('#overlay')) return;
   e.preventDefault();
   const r = stage.getBoundingClientRect();
   zoomAt(Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
@@ -2364,6 +3459,7 @@ document.addEventListener('keydown', e => {
     return;
   }
   if (inField || !S.mode) return;
+  if (S.mode.onKey && S.mode.onKey(e)) { e.preventDefault(); return; }
   if (e.code === 'Space') { e.preventDefault(); if (!S.space) { S.space = true; if (!drag) stage.style.cursor = 'grab'; } }
   else if (e.key === '[' || e.key === ']') {
     Brush.size = clamp(Math.round(Brush.size * (e.key === ']' ? 1.15 : 1 / 1.15)), 2, 2000);
@@ -2379,16 +3475,21 @@ document.addEventListener('keyup', e => {
 });
 document.addEventListener('paste', e => {
   const it = [...(e.clipboardData ? e.clipboardData.items : [])].find(i => i.type.startsWith('image/'));
-  if (it) { e.preventDefault(); openFile(it.getAsFile()); }
+  if (it) { e.preventDefault(); takeFiles([it.getAsFile()]); }
 });
+// โหมดที่รับหลายรูป (เพิ่มเลเยอร์ / แก้หลายรูป) รับไฟล์เอง ไม่งั้นเปิดเป็นรูปหลัก
+function takeFiles(files) {
+  if (S.mode && S.mode.onFiles && !$('#editor').hidden) S.mode.onFiles(files);
+  else openFile(files[0]);
+}
 let dragDepth = 0;
 document.addEventListener('dragenter', e => { e.preventDefault(); dragDepth++; document.body.classList.add('dragging'); });
 document.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); } });
 document.addEventListener('dragover', e => e.preventDefault());
 document.addEventListener('drop', e => {
   e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
-  const f = e.dataTransfer && e.dataTransfer.files[0];
-  if (f) openFile(f);
+  const files = e.dataTransfer ? [...e.dataTransfer.files] : [];
+  if (files.length) takeFiles(files);
 });
 
 /* ---------- ผูกปุ่ม ---------- */
@@ -2402,7 +3503,9 @@ $('#cards').innerHTML = ORDER.map(k => {
 $('#cards').onclick = e => { const c = e.target.closest('.card'); if (c) openMode(c.dataset.k); };
 $('#drop').onclick = () => { S.pendingMode = null; $('#file').click(); };
 $('#file').onchange = e => { openFile(e.target.files[0]); e.target.value = ''; };
-$('#open2').onclick = () => $('#file').click();
+$('#file2').onchange = e => { const f = [...e.target.files]; e.target.value = ''; if (f.length && S.mode && S.mode.onFiles) S.mode.onFiles(f); };
+$('#file3').onchange = e => { const f = e.target.files[0]; e.target.value = ''; if (f && S.mode && S.mode.setLogo) S.mode.setLogo(f); };
+$('#open2').onclick = () => (S.mode && S.mode.noImage ? $('#file2') : $('#file')).click();
 $('#home-btn').onclick = goHome;
 $('#tools').onclick = e => { const b = e.target.closest('.tool'); if (b) setTool(b.dataset.t); };
 $('#undo').onclick = undo;
