@@ -4,12 +4,18 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="แต่งรูปง่าย">
 <meta name="theme-color" content="#0d0e14">
+<meta name="description" content="แต่งรูปง่ายๆ ตัดลายเซ็น ลบคนหรือลายน้ำ สแกนเอกสาร ปิดหน้า PDPA ใส่ฟิลเตอร์ ทำงานในเครื่อง รูปไม่ถูกอัปโหลด">
 <title>แต่งรูปง่าย</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500&family=Prompt:wght@500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<!-- ฟอนต์และไอคอนเก็บไว้ในเว็บเอง ใช้ได้แม้ไม่มีอินเทอร์เน็ตหรือเครือข่ายบริษัทบล็อกเว็บภายนอก -->
+<link rel="stylesheet" href="vendor/fonts/fonts.css">
+<link rel="stylesheet" href="vendor/tabler/tabler-icons.min.css">
 <style>
 :root{
   --bg:#0d0e14;--bg-2:#11131b;--surface:#161822;--surface-2:#1d202c;--surface-3:#272a39;
@@ -195,7 +201,7 @@ details.adv[open]{display:flex;flex-direction:column;gap:14px}
 button,.card,.tool{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
 
 /* หน้าต่างบันทึกรูปบนมือถือ */
-#sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+#sheet,.sheet-wrap{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
 .sheet-card{width:100%;max-width:520px;max-height:92vh;max-height:92dvh;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:16px 16px calc(16px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0;background:var(--surface);border:1px solid var(--border-2);box-shadow:var(--shadow-lg)}
 .sheet-head{display:flex;align-items:center;justify-content:space-between;font-family:'Prompt','IBM Plex Sans Thai',sans-serif;font-size:17px;font-weight:500}
 #sheet-img{align-self:center;max-width:100%;max-height:50vh;max-height:50dvh;object-fit:contain;border-radius:12px}
@@ -242,7 +248,10 @@ input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,
 .pg-act{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:3px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
 .pg-act button{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:0;border-radius:6px;background:rgba(0,0,0,.5);color:#fff;font-size:14px;cursor:pointer}
 @media (max-width:900px){.pages{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media (min-width:701px){#sheet{align-items:center}.sheet-card{border-radius:20px}}
+@media (min-width:701px){#sheet,.sheet-wrap{align-items:center}.sheet-card{border-radius:20px}}
+.ios-steps{margin:0;padding-left:22px;display:flex;flex-direction:column;gap:10px;font-size:15px;line-height:1.6}
+.ios-steps i{font-size:18px;vertical-align:-3px;color:var(--accent-text)}
+#install{margin-left:0}
 
 /* แท็บเล็ตและมือถือ */
 @media (max-width:900px){
@@ -294,6 +303,7 @@ input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,
   <header class="hd">
     <div class="brand"><span class="logo"><i class="ti ti-photo-edit"></i></span>แต่งรูปง่าย</div>
     <span class="pill-safe"><i class="ti ti-shield-lock"></i>รูปอยู่ในเครื่องคุณ ไม่ถูกอัปโหลด</span>
+    <button class="btn sm" id="install" hidden><i class="ti ti-download"></i>ติดตั้งแอป</button>
   </header>
   <main class="home-main">
     <section class="hero">
@@ -323,7 +333,7 @@ input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,
     </div>
     <div id="cards" class="cards"></div>
     <div class="features">
-      <div class="feat"><i class="ti ti-download-off"></i><div><b>ไม่ต้องติดตั้ง</b>เปิดไฟล์นี้ในเบราว์เซอร์ได้เลย</div></div>
+      <div class="feat"><i class="ti ti-wifi-off"></i><div><b>ใช้ได้แม้ไม่มีเน็ต</b>ติดตั้งเป็นแอปบนคอมหรือมือถือได้</div></div>
       <div class="feat"><i class="ti ti-lock"></i><div><b>ปลอดภัย</b>รูปไม่ถูกส่งออกจากเครื่อง</div></div>
       <div class="feat"><i class="ti ti-arrow-back-up"></i><div><b>ย้อนกลับได้</b>กด Ctrl+Z ได้ทุกขั้นตอน</div></div>
     </div>
@@ -406,6 +416,18 @@ input[type=text]:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,
   </div>
 </div>
 
+<div id="ios-help" class="sheet-wrap" hidden>
+  <div class="sheet-card">
+    <div class="sheet-head"><span>ติดตั้งบน iPhone / iPad</span><button class="ibtn" id="ios-x" aria-label="ปิด"><i class="ti ti-x"></i></button></div>
+    <ol class="ios-steps">
+      <li>เปิดหน้านี้ใน <b>Safari</b></li>
+      <li>แตะปุ่ม <b>แชร์</b> <i class="ti ti-share-2"></i> ที่แถบด้านล่าง</li>
+      <li>เลื่อนลงแล้วเลือก <b>"เพิ่มไปยังหน้าจอโฮม"</b></li>
+      <li>แตะ <b>"เพิ่ม"</b> จะมีไอคอนแอปบนหน้าจอโฮม ใช้งานได้แม้ไม่มีเน็ต</li>
+    </ol>
+  </div>
+</div>
+
 <div id="toast"></div>
 <input type="file" id="file" accept="image/*" hidden>
 <input type="file" id="file2" accept="image/*" multiple hidden>
@@ -419,7 +441,11 @@ const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches;
 const MAX_SIDE = IS_IOS || IS_TOUCH ? 2560 : 4000;
 const MAX_PIXELS = IS_IOS ? 16e6 : 64e6;
 const HIST_BUDGET = IS_IOS || IS_TOUCH ? 40e6 : 150e6;
-const CV_URL = 'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js';
+// เปิดผ่านเว็บ: ใช้ไลบรารีที่เก็บไว้ในเว็บเอง (โฟลเดอร์ vendor) / เปิดเป็นไฟล์ในเครื่อง: โหลดจาก CDN แทน
+// เพราะเบราว์เซอร์ไม่ยอมโหลดโมดูลและไฟล์ wasm จาก file://
+const LOCAL = /^https?:$/.test(location.protocol);
+const asset = p => new URL(p, location.href).href;
+const CV_URL = LOCAL ? asset('vendor/opencv/opencv.js') : 'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js';
 
 const $ = s => document.querySelector(s);
 const $$ = s => [...document.querySelectorAll(s)];
@@ -783,7 +809,10 @@ function cvInpaint(cv, img, m, grow, method) {
    แทนที่จะเกลี่ยสีจากขอบ (ซึ่งเป็นรอยเบลอบนพื้นที่มีลวดลาย) จะหาชิ้นส่วนขนาด 7×7 ที่คล้ายที่สุด
    จากบริเวณรอบๆ มาปะแทน ทำซ้ำจากรูปย่อไปรูปเต็ม ตามวิธีของ Wexler et al. (2007) และ PatchMatch
    (Barnes et al. 2009) ซึ่งเป็นหลักการเดียวกับ Content-Aware Fill */
-const PR = 3;
+// ข้อมูลแต่ละพิกเซลมี 5 ช่อง: R G B และ "ความแรงของลวดลาย" แนวนอน/แนวตั้ง
+// ช่องลวดลายคำนวณจากรูปเต็มแล้วเฉลี่ยลงไปทุกระดับ จึงไม่หายไปตอนย่อรูป (ตามวิธีของ Newson et al. 2017)
+// ช่วยไม่ให้ระบบเลือกพื้นเรียบ (เช่น กระดาษลัง พื้นปูน) มาปะแทนบริเวณที่มีลวดลาย
+const PR = 3, PC = 5, TEX_W = 2;
 function pmLevel(w, h, px, hole) {
   const n = w * h, I = new Int32Array((w + 1) * (h + 1));
   for (let y = 0; y < h; y++) {
@@ -798,67 +827,140 @@ function pmLevel(w, h, px, hole) {
   }
   const tm = dilate(hole, w, h, PR), targets = [];
   for (let i = 0; i < n; i++) if (tm[i]) targets.push(i);
-  return { w, h, px, hole, valid, vlist: Int32Array.from(list), targets: Int32Array.from(targets),
+  // ความน่าเชื่อถือของแต่ละพิกเซล: พิกเซลจริง = 1 ส่วนที่ลบลดลงตามระยะห่างจากขอบ
+  const conf = new Float32Array(n), dq = new Int32Array(n), dd = new Int32Array(n).fill(-1);
+  let qh = 0, qt = 0;
+  for (let i = 0; i < n; i++) if (!hole[i]) { dd[i] = 0; dq[qt++] = i; }
+  while (qh < qt) {
+    const p = dq[qh++], x = p % w;
+    for (const j of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, p - w, p + w]) {
+      if (j < 0 || j >= n || dd[j] >= 0) continue;
+      dd[j] = dd[p] + 1; dq[qt++] = j;
+    }
+  }
+  for (let i = 0; i < n; i++) conf[i] = dd[i] === 0 ? 1 : dd[i] < 0 ? .05 : Math.pow(1.3, -dd[i]);
+  return { w, h, px, hole, conf, valid, vlist: Int32Array.from(list), targets: Int32Array.from(targets),
     nnf: new Int32Array(n).fill(-1), dist: new Float32Array(n) };
 }
 function pmHalve(L) {
-  const w = Math.ceil(L.w / 2), h = Math.ceil(L.h / 2), px = new Float32Array(w * h * 3), hole = new Uint8Array(w * h);
+  const w = Math.ceil(L.w / 2), h = Math.ceil(L.h / 2), px = new Float32Array(w * h * PC), hole = new Uint8Array(w * h), acc = new Float32Array(PC);
   for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
-    let r = 0, g = 0, b = 0, c = 0, any = 0;
+    let c = 0, any = 0;
+    acc.fill(0);
     for (let dy = 0; dy < 2; dy++) for (let dx = 0; dx < 2; dx++) {
       const sx = x * 2 + dx, sy = y * 2 + dy;
       if (sx >= L.w || sy >= L.h) continue;
       const i = sy * L.w + sx;
       if (L.hole[i]) { any = 1; continue; }
-      r += L.px[i * 3]; g += L.px[i * 3 + 1]; b += L.px[i * 3 + 2]; c++;
+      for (let k = 0; k < PC; k++) acc[k] += L.px[i * PC + k];
+      c++;
     }
     const o = y * w + x;
     hole[o] = any;
-    if (c) { px[o * 3] = r / c; px[o * 3 + 1] = g / c; px[o * 3 + 2] = b / c; }
+    if (c) for (let k = 0; k < PC; k++) px[o * PC + k] = acc[k] / c;
   }
   return pmLevel(w, h, px, hole);
 }
-// ระดับหยาบสุด: เติมพื้นที่ว่างแบบเกลี่ยจากขอบไว้เป็นจุดเริ่มต้น
+// สำรอง: เกลี่ยค่าจากขอบเข้าหาตรงกลาง (ใช้เมื่อไม่มีชิ้นส่วนต้นทางให้เลือกเลย)
 function pmDiffuse(L) {
-  const { w, h, px, hole } = L, known = new Uint8Array(w * h);
+  const { w, h, px, hole } = L, known = new Uint8Array(w * h), acc = new Float32Array(PC);
   let todo = [];
   for (let i = 0; i < w * h; i++) { if (hole[i]) todo.push(i); else known[i] = 1; }
   while (todo.length) {
     const fill = [], rest = [];
     for (const i of todo) {
       const x = i % w, y = (i / w) | 0;
-      let r = 0, g = 0, b = 0, c = 0;
+      let c = 0; acc.fill(0);
       for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
         const nx = x + dx, ny = y + dy;
         if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
         const j = ny * w + nx;
-        if (known[j]) { r += px[j * 3]; g += px[j * 3 + 1]; b += px[j * 3 + 2]; c++; }
+        if (known[j]) { for (let k = 0; k < PC; k++) acc[k] += px[j * PC + k]; c++; }
       }
-      if (c) fill.push([i, r / c, g / c, b / c]); else rest.push(i);
+      if (c) fill.push([i, Array.from(acc, v => v / c)]); else rest.push(i);
     }
     if (!fill.length) break;
-    for (const [i, r, g, b] of fill) { px[i * 3] = r; px[i * 3 + 1] = g; px[i * 3 + 2] = b; known[i] = 1; }
+    for (const [i, v] of fill) { for (let k = 0; k < PC; k++) px[i * PC + k] = v[k]; known[i] = 1; }
     todo = rest;
+  }
+}
+// หาชิ้นส่วนเฉพาะในระยะใกล้จุดที่ลบ (L.win) ไม่ไปหยิบบริเวณไกลๆ ที่ไม่เกี่ยวข้อง
+function pmNear(L, p, c) {
+  const w = L.w;
+  return Math.abs((c % w) - (p % w)) <= L.win && Math.abs(((c / w) | 0) - ((p / w) | 0)) <= L.win;
+}
+function pmRandomValid(L, p) {
+  const { w, h, valid, win } = L, x = p % w, y = (p / w) | 0;
+  for (let k = 0; k < 60; k++) {
+    const cx = x + Math.round((Math.random() * 2 - 1) * win), cy = y + Math.round((Math.random() * 2 - 1) * win);
+    if (cx >= 0 && cy >= 0 && cx < w && cy < h && valid[cy * w + cx]) return cy * w + cx;
+  }
+  return L.vlist[(Math.random() * L.vlist.length) | 0];
+}
+// ระดับหยาบสุด: เติมจากขอบเข้าหาตรงกลางทีละชั้น ("ลอกเปลือกหัวหอม") ด้วยชิ้นส่วนจริงที่เข้ากับพิกเซลรอบๆ มากที่สุด
+function pmOnion(L) {
+  const { w, h, px, hole, vlist } = L, n = w * h, filled = new Uint8Array(n);
+  for (let i = 0; i < n; i++) filled[i] = hole[i] ? 0 : 1;
+  let cand = vlist;
+  if (cand.length > 1500) { cand = new Int32Array(1500); for (let k = 0; k < 1500; k++) cand[k] = vlist[(Math.random() * vlist.length) | 0]; }
+  const edge = p => {
+    const x = p % w;
+    return (x > 0 && filled[p - 1]) || (x < w - 1 && filled[p + 1]) || (p >= w && filled[p - w]) || (p < n - w && filled[p + w]);
+  };
+  let front = [];
+  for (let i = 0; i < n; i++) if (!filled[i] && edge(i)) front.push(i);
+  while (front.length) {
+    for (const p of front) {
+      const x = p % w, y = (p / w) | 0;
+      let best = -1, bd = Infinity;
+      // หาในระยะใกล้ก่อน ถ้าไม่มีชิ้นส่วนที่ใช้ได้เลยค่อยหาทั้งบริเวณ
+      for (const near of [true, false]) {
+        for (const q of cand) {
+          if (near && !pmNear(L, p, q)) continue;
+          const qx = q % w, qy = (q / w) | 0;
+          let s = 0, c = 0;
+          for (let dy = -PR; dy <= PR && s < bd; dy++) {
+            const ty = y + dy; if (ty < 0 || ty >= h) continue;
+            for (let dx = -PR; dx <= PR; dx++) {
+              const tx = x + dx; if (tx < 0 || tx >= w) continue;
+              const t = ty * w + tx; if (!filled[t]) continue;
+              const a = t * PC, b = ((qy + dy) * w + qx + dx) * PC;
+              for (let k = 0; k < PC; k++) { const dk = px[a + k] - px[b + k]; s += dk * dk; }
+              c++;
+            }
+          }
+          if (c && s < bd) { bd = s; best = q; }
+        }
+        if (best >= 0) break;
+      }
+      if (best >= 0) for (let k = 0; k < PC; k++) px[p * PC + k] = px[best * PC + k];
+    }
+    for (const p of front) filled[p] = 1;
+    const next = [];
+    for (const p of front) {
+      const x = p % w;
+      for (const j of [x > 0 ? p - 1 : -1, x < w - 1 ? p + 1 : -1, p - w, p + w]) if (j >= 0 && j < n && !filled[j] && edge(j) && next.indexOf(j) < 0) next.push(j);
+    }
+    front = next;
   }
 }
 // ผลต่างของชิ้นส่วนรอบจุด p (ปลายทาง) กับรอบจุด q (ต้นทาง) หยุดคำนวณทันทีเมื่อเกินค่าที่ดีที่สุดแล้ว
 function pmDist(L, p, q, max) {
-  const { w, h, px } = L, x = p % w, y = (p / w) | 0, qx = q % w, qy = (q / w) | 0;
+  const { w, h, px, conf } = L, x = p % w, y = (p / w) | 0, qx = q % w, qy = (q / w) | 0;
   let s = 0;
   for (let dy = -PR; dy <= PR; dy++) {
     const ty = y + dy; if (ty < 0 || ty >= h) continue;
     const ra = ty * w, rb = (qy + dy) * w + qx - x;
     for (let dx = -PR; dx <= PR; dx++) {
       const tx = x + dx; if (tx < 0 || tx >= w) continue;
-      const a = (ra + tx) * 3, b = (rb + tx) * 3;
-      const d0 = px[a] - px[b], d1 = px[a + 1] - px[b + 1], d2 = px[a + 2] - px[b + 2];
-      s += d0 * d0 + d1 * d1 + d2 * d2;
+      const a = (ra + tx) * PC, b = (rb + tx) * PC;
+      const d0 = px[a] - px[b], d1 = px[a + 1] - px[b + 1], d2 = px[a + 2] - px[b + 2], d3 = px[a + 3] - px[b + 3], d4 = px[a + 4] - px[b + 4];
+      s += conf[ra + tx] * (d0 * d0 + d1 * d1 + d2 * d2 + d3 * d3 + d4 * d4);
     }
     if (s >= max) return s;
   }
   return s;
 }
-function pmRandomValid(L) { return L.vlist[(Math.random() * L.vlist.length) | 0]; }
 function pmInitNNF(L, P) {
   const { w, h, nnf, dist, valid } = L;
   for (const p of L.targets) {
@@ -867,10 +969,10 @@ function pmInitNNF(L, P) {
       const x = p % w, y = (p / w) | 0, pc = Math.min(y >> 1, P.h - 1) * P.w + Math.min(x >> 1, P.w - 1), qc = P.nnf[pc];
       if (qc >= 0) {
         const qx = clamp((qc % P.w) * 2 + (x & 1), 0, w - 1), qy = clamp(((qc / P.w) | 0) * 2 + (y & 1), 0, h - 1);
-        if (valid[qy * w + qx]) q = qy * w + qx;
+        if (valid[qy * w + qx] && pmNear(L, p, qy * w + qx)) q = qy * w + qx;
       }
     }
-    nnf[p] = q >= 0 ? q : pmRandomValid(L);
+    nnf[p] = q >= 0 ? q : pmRandomValid(L, p);
     dist[p] = pmDist(L, p, nnf[p], Infinity);
   }
 }
@@ -881,52 +983,74 @@ function pmSearch(L, it) {
     const p = targets[dir > 0 ? k : T - 1 - k], x = p % w, y = (p / w) | 0;
     let best = nnf[p], bd = dist[p];
     // ส่งต่อคำตอบดีๆ จากจุดข้างเคียง (ซ้าย/บน หรือ ขวา/ล่าง สลับกันทุกรอบ)
-    const nxp = x - dir, nyp = y - dir;
-    if (nxp >= 0 && nxp < w) {
+    if (x - dir >= 0 && x - dir < w) {
       const a = nnf[p - dir];
-      if (a >= 0) { const c = a + dir, cx = (a % w) + dir; if (cx >= 0 && cx < w && valid[c] && c !== best) { const d = pmDist(L, p, c, bd); if (d < bd) { bd = d; best = c; } } }
+      if (a >= 0) { const c = a + dir, cx = (a % w) + dir; if (cx >= 0 && cx < w && valid[c] && c !== best && pmNear(L, p, c)) { const d = pmDist(L, p, c, bd); if (d < bd) { bd = d; best = c; } } }
     }
-    if (nyp >= 0 && nyp < h) {
+    if (y - dir >= 0 && y - dir < h) {
       const a = nnf[p - dir * w];
-      if (a >= 0) { const c = a + dir * w; if (c >= 0 && c < w * h && valid[c] && c !== best) { const d = pmDist(L, p, c, bd); if (d < bd) { bd = d; best = c; } } }
+      if (a >= 0) { const c = a + dir * w; if (c >= 0 && c < w * h && valid[c] && c !== best && pmNear(L, p, c)) { const d = pmDist(L, p, c, bd); if (d < bd) { bd = d; best = c; } } }
     }
     // สุ่มหาในรัศมีที่แคบลงเรื่อยๆ รอบคำตอบปัจจุบัน
     const bx = best % w, by = (best / w) | 0;
-    for (let r = Math.max(w, h); r >= 1; r >>= 1) {
+    for (let r = L.win * 2; r >= 1; r >>= 1) {
       const cx = bx + Math.round((Math.random() * 2 - 1) * r), cy = by + Math.round((Math.random() * 2 - 1) * r);
       if (cx < 0 || cy < 0 || cx >= w || cy >= h) continue;
       const c = cy * w + cx;
-      if (!valid[c] || c === best) continue;
+      if (!valid[c] || c === best || !pmNear(L, p, c)) continue;
       const d = pmDist(L, p, c, bd);
       if (d < bd) { bd = d; best = c; }
     }
     nnf[p] = best; dist[p] = bd;
   }
 }
-// สร้างสีของพื้นที่ที่ลบใหม่ จากค่าเฉลี่ยถ่วงน้ำหนักของทุกชิ้นส่วนที่ทับจุดนั้น (ชิ้นที่เหมือนมากได้น้ำหนักมาก)
-function pmVote(L) {
-  const { w, h, px, hole, nnf, dist, targets } = L, acc = new Float32Array(w * h * 3), ws = new Float32Array(w * h);
+// ผลต่างเฉลี่ยต่อพิกเซลของชิ้นส่วน (หารด้วยผลรวมความน่าเชื่อถือ) เทียบกันได้ทั้งชิ้นที่ขอบและที่อยู่กลางพื้นที่ลบ
+function pmNormDist(L, p) {
+  const { w, h, conf } = L, x = p % w, y = (p / w) | 0;
+  let c = 0;
+  for (let dy = -PR; dy <= PR; dy++) {
+    const ty = y + dy; if (ty < 0 || ty >= h) continue;
+    for (let dx = -PR; dx <= PR; dx++) { const tx = x + dx; if (tx >= 0 && tx < w) c += conf[ty * w + tx]; }
+  }
+  return L.dist[p] / (c + 1e-6);
+}
+// สร้างค่าของพื้นที่ที่ลบใหม่จากทุกชิ้นส่วนที่ทับจุดนั้น (ชิ้นที่เหมือนมากได้น้ำหนักมาก)
+// sharp ยิ่งน้อย ยิ่งให้น้ำหนักชิ้นที่เหมือนที่สุด ภาพคมขึ้นและไม่ซีด (รอบสุดท้ายใช้ค่าน้อย แต่ยังผสมกันพอให้รอยต่อนุ่ม)
+function pmVote(L, sharp = .5) {
+  const { w, h, px, hole, nnf, targets } = L, n = w * h, acc = new Float32Array(n * PC), ws = new Float32Array(n);
+  const nd = new Float32Array(targets.length);
   let mean = 0;
-  for (const p of targets) mean += dist[p];
-  mean = mean / Math.max(1, targets.length) + 1e-6;
-  for (const p of targets) {
-    const q = nnf[p], wt = Math.exp(-dist[p] / mean), x = p % w, y = (p / w) | 0, off = q - p;
+  for (let k = 0; k < targets.length; k++) { nd[k] = pmNormDist(L, targets[k]); mean += nd[k]; }
+  mean = mean / Math.max(1, targets.length) * sharp + 1e-6;
+  for (let k = 0; k < targets.length; k++) {
+    const p = targets[k], off = nnf[p] - p, x = p % w, y = (p / w) | 0, wt = Math.exp(-nd[k] / mean);
     for (let dy = -PR; dy <= PR; dy++) {
       const ty = y + dy; if (ty < 0 || ty >= h) continue;
       for (let dx = -PR; dx <= PR; dx++) {
         const tx = x + dx; if (tx < 0 || tx >= w) continue;
         const t = ty * w + tx;
         if (!hole[t]) continue;
-        const s = (t + off) * 3;
-        acc[t * 3] += wt * px[s]; acc[t * 3 + 1] += wt * px[s + 1]; acc[t * 3 + 2] += wt * px[s + 2]; ws[t] += wt;
+        const s = (t + off) * PC, a = t * PC;
+        for (let c = 0; c < PC; c++) acc[a + c] += wt * px[s + c];
+        ws[t] += wt;
       }
     }
   }
-  for (let t = 0; t < w * h; t++) if (hole[t] && ws[t] > 0) { px[t * 3] = acc[t * 3] / ws[t]; px[t * 3 + 1] = acc[t * 3 + 1] / ws[t]; px[t * 3 + 2] = acc[t * 3 + 2] / ws[t]; }
+  for (let t = 0; t < n; t++) if (hole[t] && ws[t] > 0) for (let c = 0; c < PC; c++) px[t * PC + c] = acc[t * PC + c] / ws[t];
 }
 function patchInpaint(img, hole) {
-  const W = img.width, H = img.height, n = W * H, px = new Float32Array(n * 3), d = img.data;
-  for (let i = 0; i < n; i++) { px[i * 3] = d[i * 4]; px[i * 3 + 1] = d[i * 4 + 1]; px[i * 3 + 2] = d[i * 4 + 2]; }
+  const W = img.width, H = img.height, n = W * H, px = new Float32Array(n * PC), d = img.data;
+  for (let i = 0; i < n; i++) { px[i * PC] = d[i * 4]; px[i * PC + 1] = d[i * 4 + 1]; px[i * PC + 2] = d[i * 4 + 2]; }
+  // ความแรงของลวดลาย: ค่าเฉลี่ยของความต่างความสว่างกับจุดข้างเคียง ในแนวนอนและแนวตั้ง
+  const Lm = new Float32Array(n), gx = new Float32Array(n), gy = new Float32Array(n);
+  for (let i = 0; i < n; i++) Lm[i] = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2];
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const i = y * W + x;
+    gx[i] = Math.abs(Lm[y * W + Math.min(x + 1, W - 1)] - Lm[y * W + Math.max(x - 1, 0)]) / 2;
+    gy[i] = Math.abs(Lm[Math.min(y + 1, H - 1) * W + x] - Lm[Math.max(y - 1, 0) * W + x]) / 2;
+  }
+  const bx = boxBlur(gx, W, H, 2), by = boxBlur(gy, W, H, 2);
+  for (let i = 0; i < n; i++) { px[i * PC + 3] = bx[i] * TEX_W; px[i * PC + 4] = by[i] * TEX_W; }
   const extent = L => {
     let x0 = L.w, x1 = -1, y0 = L.h, y1 = -1;
     for (let i = 0; i < L.w * L.h; i++) if (L.hole[i]) { const x = i % L.w, y = (i / L.w) | 0; if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
@@ -934,25 +1058,27 @@ function patchInpaint(img, hole) {
   };
   const pyr = [pmLevel(W, H, px, hole)];
   while (Math.min(pyr[pyr.length - 1].w, pyr[pyr.length - 1].h) > 48 && extent(pyr[pyr.length - 1]) > 16) pyr.push(pmHalve(pyr[pyr.length - 1]));
+  // ระยะค้นหาชิ้นส่วน: ราว 3/4 ของขนาดพื้นที่ที่ลบในแต่ละระดับ
+  for (const L of pyr) L.win = Math.max(10, Math.round(extent(L) * .75));
   let prev = null;
   for (let li = pyr.length - 1; li >= 0; li--) {
     const L = pyr[li];
     if (prev) {
       // ขยายผลจากระดับหยาบมาเป็นค่าเริ่มต้นของระดับนี้
       for (let i = 0; i < L.w * L.h; i++) if (L.hole[i]) {
-        const x = i % L.w, y = (i / L.w) | 0, j = (Math.min(y >> 1, prev.h - 1) * prev.w + Math.min(x >> 1, prev.w - 1)) * 3;
-        L.px[i * 3] = prev.px[j]; L.px[i * 3 + 1] = prev.px[j + 1]; L.px[i * 3 + 2] = prev.px[j + 2];
+        const x = i % L.w, y = (i / L.w) | 0, j = (Math.min(y >> 1, prev.h - 1) * prev.w + Math.min(x >> 1, prev.w - 1)) * PC;
+        for (let k = 0; k < PC; k++) L.px[i * PC + k] = prev.px[j + k];
       }
-    } else pmDiffuse(L);
+    } else if (L.vlist.length) pmOnion(L);
     if (!L.vlist.length) { prev = null; pmDiffuse(L); continue; }
     pmInitNNF(L, prev && prev.vlist.length ? prev : null);
-    const iters = !prev ? 8 : li === 0 ? 3 : 5;
-    for (let it = 0; it < iters; it++) { pmSearch(L, it); pmVote(L); }
+    const iters = !prev ? 8 : li === 0 ? 4 : 5;
+    for (let it = 0; it < iters; it++) { pmSearch(L, it); pmVote(L, li === 0 && it === iters - 1 ? .12 : .5); }
     prev = L;
   }
   const out = new ImageData(W, H), od = out.data, fin = pyr[0].px;
   od.set(d);
-  for (let i = 0; i < n; i++) if (hole[i]) { od[i * 4] = fin[i * 3]; od[i * 4 + 1] = fin[i * 3 + 1]; od[i * 4 + 2] = fin[i * 3 + 2]; }
+  for (let i = 0; i < n; i++) if (hole[i]) { od[i * 4] = fin[i * PC]; od[i * 4 + 1] = fin[i * PC + 1]; od[i * 4 + 2] = fin[i * PC + 2]; }
   return out;
 }
 
@@ -1945,10 +2071,13 @@ MODES.adj = {
   },
 };
 
-/* ----- ฟีเจอร์ที่จะทำในรอบถัดไป ----- */
-/* ----- ตัวช่วย AI (MediaPipe ของ Google ทำงานในเครื่อง โหลดโมเดลครั้งแรกจากอินเทอร์เน็ต) ----- */
-const MP_BASE = 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
-const MP_MODELS = {
+/* ----- ตัวช่วย AI (MediaPipe ของ Google ทำงานในเครื่อง ไฟล์โมเดลเก็บไว้ในเว็บเอง) ----- */
+const MP_BASE = LOCAL ? asset('vendor/mediapipe') : 'https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@0.10.14';
+const MP_MODELS = LOCAL ? {
+  person: asset('vendor/models/selfie_multiclass_256x256.tflite'),
+  object: asset('vendor/models/deeplab_v3.tflite'),
+  face: asset('vendor/models/blaze_face_short_range.tflite'),
+} : {
   person: 'https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite',
   object: 'https://storage.googleapis.com/mediapipe-models/image_segmenter/deeplab_v3/float32/1/deeplab_v3.tflite',
   face: 'https://storage.googleapis.com/mediapipe-models/face_detector/blaze_face_short_range/float16/1/blaze_face_short_range.tflite',
@@ -3528,6 +3657,34 @@ if (IS_TOUCH) {
   $('#drop-title').textContent = 'แตะเพื่อเลือกรูป';
   $('#drop-sub').textContent = 'เลือกจากอัลบั้ม หรือถ่ายรูปใหม่ได้เลย';
 }
+
+/* ---------- ติดตั้งเป็นแอป (PWA) และใช้งานออฟไลน์ ---------- */
+const STANDALONE = window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true;
+if (LOCAL && 'serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').then(reg => {
+    // มีเวอร์ชันใหม่: แจ้งให้เปิดใหม่ (ไม่รีโหลดเองระหว่างที่ผู้ใช้กำลังแต่งรูป)
+    reg.addEventListener('updatefound', () => {
+      const w = reg.installing;
+      if (w) w.addEventListener('statechange', () => {
+        if (w.state === 'installed' && navigator.serviceWorker.controller) toast('มีเวอร์ชันใหม่ ปิดแล้วเปิดแอปใหม่เพื่ออัปเดต');
+      });
+    });
+  }).catch(e => console.warn('ลงทะเบียน service worker ไม่ได้', e));
+}
+let installEvt = null;
+window.addEventListener('beforeinstallprompt', e => { e.preventDefault(); installEvt = e; $('#install').hidden = false; });
+window.addEventListener('appinstalled', () => { $('#install').hidden = true; toast('ติดตั้งแอปแล้ว เปิดได้จากหน้าจอหลักหรือเมนูแอป'); });
+// iPhone/iPad ไม่มีปุ่มติดตั้งให้เรียก จึงแสดงวิธีเพิ่มไปยังหน้าจอโฮมแทน
+if (IS_IOS && !STANDALONE && LOCAL) $('#install').hidden = false;
+$('#install').onclick = async () => {
+  if (installEvt) {
+    installEvt.prompt();
+    const r = await installEvt.userChoice;
+    if (r.outcome === 'accepted') $('#install').hidden = true;
+    installEvt = null;
+  } else $('#ios-help').hidden = false;
+};
+$('#ios-x').onclick = () => { $('#ios-help').hidden = true; };
 
 // สำหรับทดสอบจาก console
 window.app = {
