@@ -1,0 +1,2436 @@
+<!doctype html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="theme-color" content="#0d0e14">
+<title>แต่งรูปง่าย</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500&family=Prompt:wght@500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{
+  --bg:#0d0e14;--bg-2:#11131b;--surface:#161822;--surface-2:#1d202c;--surface-3:#272a39;
+  --text:#ecedf5;--text-2:#a3a6bb;--text-3:#6d7088;
+  --border:rgba(255,255,255,.07);--border-2:rgba(255,255,255,.14);
+  --accent:#7b6cff;--accent-2:#4fb3ff;--accent-hover:#8e81ff;--accent-bg:rgba(123,108,255,.14);--accent-text:#c4bcff;--on-accent:#fff;
+  --grad:linear-gradient(135deg,#7b6cff 0%,#4fb3ff 100%);
+  --ok:#4ade80;--ok-bg:rgba(74,222,128,.14);--warn-bg:rgba(251,191,36,.12);--warn-text:#fcd34d;
+  --stage:#08090d;--stage-dot:rgba(255,255,255,.05);
+  --shadow:0 8px 24px rgba(0,0,0,.35);--shadow-lg:0 24px 60px rgba(0,0,0,.55);
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{font-family:'IBM Plex Sans Thai','Leelawadee UI','Noto Sans Thai',system-ui,sans-serif;font-size:15px;line-height:1.55;color:var(--text);background:var(--bg)}
+[hidden]{display:none!important}
+button,input,select{font:inherit;color:inherit}
+p{margin:0}
+::selection{background:rgba(123,108,255,.4)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-thumb{background:var(--surface-3);border-radius:10px;border:3px solid transparent;background-clip:padding-box}
+.muted{color:var(--text-2)}
+h1,h2,.brand,.title,.ct,.big{font-family:'Prompt','IBM Plex Sans Thai',sans-serif}
+
+/* ปุ่ม */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;height:38px;padding:0 14px;border:1px solid var(--border-2);border-radius:10px;background:var(--surface-2);cursor:pointer;white-space:nowrap;transition:background .15s,border-color .15s,transform .1s}
+.btn:hover{background:var(--surface-3);border-color:rgba(255,255,255,.22)}
+.btn:active{transform:scale(.98)}
+.btn i{font-size:18px}
+.btn.primary{width:100%;height:50px;border:0;border-radius:12px;background:var(--grad);color:var(--on-accent);font-size:16px;font-weight:500;box-shadow:0 8px 24px rgba(123,108,255,.35)}
+.btn.primary:hover{filter:brightness(1.08);background:var(--grad)}
+.btn.ghost{border-color:transparent;background:transparent}
+.btn.ghost:hover{background:var(--surface-2)}
+.btn.sm{height:32px;padding:0 10px;font-size:13px;border-radius:8px}
+.ibtn{width:36px;height:36px;display:inline-flex;align-items:center;justify-content:center;border:0;border-radius:9px;background:transparent;color:var(--text-2);font-size:20px;cursor:pointer;transition:background .15s,color .15s}
+.ibtn:hover{background:var(--surface-3);color:var(--text)}
+.ibtn:disabled{opacity:.3;cursor:default;background:transparent}
+
+/* ---------- หน้าแรก ---------- */
+#home{min-height:100%;background:radial-gradient(900px 500px at 15% -10%,rgba(123,108,255,.18),transparent 60%),radial-gradient(700px 450px at 95% 0%,rgba(79,179,255,.12),transparent 60%),var(--bg)}
+.hd{position:sticky;top:0;z-index:5;display:flex;align-items:center;gap:14px;flex-wrap:wrap;padding:14px 28px;background:rgba(13,14,20,.7);-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);border-bottom:1px solid var(--border)}
+.brand{display:flex;align-items:center;gap:10px;font-size:19px;font-weight:600}
+.logo{width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;background:var(--grad);color:#fff;font-size:20px;box-shadow:0 6px 18px rgba(123,108,255,.4)}
+.pill-safe{display:inline-flex;align-items:center;gap:6px;margin-left:auto;padding:5px 12px;border-radius:999px;border:1px solid var(--border-2);background:var(--surface);font-size:13px;color:var(--text-2)}
+.pill-safe i{color:var(--ok);font-size:16px}
+.home-main{max-width:1080px;margin:0 auto;padding:48px 28px 64px}
+.hero{text-align:center;margin-bottom:32px}
+.hero h1{margin:0 0 10px;font-size:42px;font-weight:600;line-height:1.25;letter-spacing:-.01em}
+.grad-text{background:var(--grad);-webkit-background-clip:text;background-clip:text;color:transparent}
+.lead{max-width:620px;margin:0 auto;font-size:17px;color:var(--text-2)}
+.drop{position:relative;border:1.5px dashed rgba(123,108,255,.45);border-radius:22px;background:linear-gradient(180deg,rgba(123,108,255,.08),rgba(79,179,255,.04)),var(--surface);padding:40px 24px;text-align:center;cursor:pointer;transition:border-color .2s,background .2s,transform .2s;box-shadow:var(--shadow)}
+.drop:hover,body.dragging .drop{border-color:var(--accent);background:linear-gradient(180deg,rgba(123,108,255,.16),rgba(79,179,255,.08)),var(--surface)}
+body.dragging .drop{transform:scale(1.01)}
+.drop .ic-circle{width:76px;height:76px;margin:0 auto 14px;display:flex;align-items:center;justify-content:center;border-radius:50%;background:var(--grad);color:#fff;font-size:36px;box-shadow:0 10px 30px rgba(123,108,255,.45)}
+.drop .big{font-size:22px;font-weight:500;margin:0 0 4px}
+.drop .fake-btn{display:inline-flex;align-items:center;gap:6px;margin-top:16px;height:42px;padding:0 20px;border-radius:12px;background:var(--grad);color:#fff;font-weight:500;box-shadow:0 8px 20px rgba(123,108,255,.35)}
+.drop .tiny{font-size:13px;color:var(--text-3);margin-top:12px}
+.drop-has{display:none;align-items:center;justify-content:center;gap:28px;text-align:left;flex-wrap:wrap}
+.drop.has{padding:24px}
+.drop.has .drop-empty{display:none}
+.drop.has .drop-has{display:flex}
+.drop .ok-tag{display:inline-flex;align-items:center;gap:6px;padding:3px 10px;border-radius:999px;background:var(--ok-bg);color:var(--ok);font-size:13px;margin-bottom:8px}
+#thumb{max-width:280px;max-height:160px;border-radius:12px;box-shadow:var(--shadow)}
+.sec-head{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;margin:44px 0 16px}
+.sec-head h2{margin:0;font-size:22px;font-weight:500}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:14px}
+.card{--mc:#7b6cff;position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:3px;padding:20px;border:1px solid var(--border);border-radius:18px;background:linear-gradient(180deg,rgba(255,255,255,.025),transparent),var(--surface);text-align:left;cursor:pointer;overflow:hidden;transition:transform .18s,border-color .18s,box-shadow .18s}
+.card::before{content:'';position:absolute;inset:0;background:radial-gradient(320px 140px at 0% 0%,color-mix(in srgb,var(--mc) 16%,transparent),transparent 70%);opacity:0;transition:opacity .2s;pointer-events:none}
+.card:hover{transform:translateY(-3px);border-color:color-mix(in srgb,var(--mc) 55%,transparent);box-shadow:0 14px 34px rgba(0,0,0,.4)}
+.card:hover::before{opacity:1}
+.card .ic{width:48px;height:48px;display:flex;align-items:center;justify-content:center;margin-bottom:12px;border-radius:14px;background:color-mix(in srgb,var(--mc) 18%,transparent);color:var(--mc);font-size:26px}
+.card .ct{font-size:17px;font-weight:500}
+.card .cd{font-size:13.5px;color:var(--text-2)}
+.card .go{position:absolute;right:18px;bottom:18px;font-size:20px;color:var(--mc);opacity:0;transform:translateX(-6px);transition:.18s}
+.card:hover .go{opacity:1;transform:none}
+.card.soon{cursor:default;opacity:.55}
+.card.soon:hover{transform:none;border-color:var(--border);box-shadow:none}
+.card.soon:hover::before,.card.soon .go{display:none}
+.card .badge,.card.sug::after{position:absolute;top:16px;right:16px;font-size:11.5px;padding:3px 10px;border-radius:999px;background:var(--surface-3);color:var(--text-2)}
+.card.sug{border-color:var(--mc);box-shadow:0 0 0 1px var(--mc),0 14px 34px rgba(0,0,0,.4)}
+.card.sug::before{opacity:1}
+.card.sug::after{content:'แนะนำ';background:var(--grad);color:#fff}
+.features{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin-top:40px}
+.feat{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1px solid var(--border);border-radius:14px;background:var(--bg-2);font-size:14px;color:var(--text-2)}
+.feat i{font-size:22px;color:var(--accent-text)}
+.feat b{display:block;color:var(--text);font-weight:500}
+
+/* ---------- หน้าแก้ไข ---------- */
+#editor{height:100vh;height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr);background:var(--bg)}
+.top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:8px 12px;background:var(--surface);border-bottom:1px solid var(--border)}
+.title{display:flex;align-items:center;gap:10px;font-size:16px;font-weight:500}
+.title .ic{--mc:#7b6cff;width:34px;height:34px;display:inline-flex;align-items:center;justify-content:center;border-radius:10px;background:color-mix(in srgb,var(--mc) 20%,transparent);color:var(--mc);font-size:20px}
+.steps{display:flex;align-items:center;gap:2px;margin-left:16px;padding:4px;border-radius:999px;background:var(--bg-2);border:1px solid var(--border)}
+.step{display:flex;align-items:center;gap:7px;padding:4px 12px 4px 5px;border-radius:999px;font-size:13px;color:var(--text-3);transition:.2s}
+.step b{width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;border-radius:50%;background:var(--surface-3);font-size:12px;font-weight:500}
+.step.on{background:var(--surface-3);color:var(--text)}
+.step.on b{background:var(--grad);color:#fff}
+.step.ok{color:var(--ok)}
+.step.ok b{background:var(--ok-bg);color:var(--ok);font-size:0}
+.step.ok b::before{content:'\2713';font-size:13px}
+.spacer{flex:1}
+.tb{display:flex;align-items:center;gap:4px}
+.vsep{width:1px;height:22px;background:var(--border-2);margin:0 6px}
+.main{display:grid;grid-template-columns:88px minmax(0,1fr) 320px;min-height:0}
+#tools{display:flex;flex-direction:column;gap:6px;padding:12px 10px;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto}
+.tool{display:flex;flex-direction:column;align-items:center;gap:4px;padding:11px 4px;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--text-2);font-size:12px;cursor:pointer;transition:.15s}
+.tool i{font-size:24px}
+.tool:hover{background:var(--surface-2);color:var(--text)}
+.tool.on{background:var(--accent-bg);border-color:rgba(123,108,255,.5);color:var(--accent-text);box-shadow:inset 0 0 0 1px rgba(123,108,255,.15)}
+#stage{position:relative;overflow:hidden;background-color:var(--stage);background-image:radial-gradient(var(--stage-dot) 1px,transparent 1px);background-size:20px 20px;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-touch-callout:none}
+#world{position:absolute;left:0;top:0;transform-origin:0 0;box-shadow:0 0 0 1px rgba(255,255,255,.08),var(--shadow-lg)}
+#world canvas{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+#world.px canvas{image-rendering:pixelated}
+#mask{opacity:.5}
+.bg-checker{background-color:#f2f2f6;background-image:conic-gradient(#d5d6de 25%,#f2f2f6 0 50%,#d5d6de 0 75%,#f2f2f6 0)}
+.bg-white{background:#fff}
+.bg-black{background:#000}
+.zoombar{position:absolute;left:50%;bottom:18px;z-index:4;transform:translateX(-50%);display:flex;align-items:center;gap:2px;padding:5px;border-radius:999px;background:rgba(22,24,34,.85);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--border-2);box-shadow:var(--shadow)}
+.zoombar .ibtn{width:34px;height:34px;border-radius:999px;font-size:18px}
+.zl{min-width:58px;height:32px;border:0;border-radius:999px;background:transparent;color:var(--text);font-size:13px;cursor:pointer;font-variant-numeric:tabular-nums}
+.zl:hover{background:var(--surface-3)}
+#busy{position:absolute;inset:0;z-index:6;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:16px;padding:20px;background:rgba(8,9,13,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);color:#fff;text-align:center}
+.spin{width:44px;height:44px;border-radius:50%;background:conic-gradient(from 0deg,transparent,#7b6cff,#4fb3ff);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 0);mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 0);animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#panel{display:flex;flex-direction:column;gap:18px;padding:16px;background:var(--surface);border-left:1px solid var(--border);overflow-y:auto}
+.hint{display:flex;gap:10px;padding:12px 14px;border-radius:14px;background:linear-gradient(135deg,rgba(123,108,255,.16),rgba(79,179,255,.08));border:1px solid rgba(123,108,255,.25);color:var(--text);font-size:14px;line-height:1.65}
+.hint>i{flex:none;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:8px;background:var(--grad);color:#fff;font-size:16px}
+.hint b{color:var(--accent-text)}
+#controls{display:flex;flex-direction:column;gap:18px}
+.field{display:flex;flex-direction:column;gap:8px}
+.fl{display:flex;justify-content:space-between;align-items:center;font-size:14px;color:var(--text)}
+.fl b{min-width:38px;padding:1px 8px;border-radius:6px;background:var(--surface-3);font-size:12.5px;font-weight:500;text-align:center;font-variant-numeric:tabular-nums}
+.fl b:empty{display:none}
+.ends{display:flex;justify-content:space-between;margin-top:-4px;font-size:12px;color:var(--text-3)}
+input[type=range]{--p:50%;-webkit-appearance:none;appearance:none;width:100%;height:22px;margin:0;background:transparent;cursor:pointer}
+input[type=range]::-webkit-slider-runnable-track{height:6px;border-radius:6px;background:linear-gradient(90deg,var(--surface-3) var(--a,0%),#7b6cff var(--a,0%),#4fb3ff var(--b,50%),var(--surface-3) var(--b,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;margin-top:-6px;border-radius:50%;background:#fff;border:0;box-shadow:0 0 0 4px rgba(123,108,255,.35),0 2px 6px rgba(0,0,0,.5);transition:box-shadow .15s}
+input[type=range]:hover::-webkit-slider-thumb{box-shadow:0 0 0 6px rgba(123,108,255,.35),0 2px 6px rgba(0,0,0,.5)}
+input[type=range]::-moz-range-track{height:6px;border-radius:6px;background:var(--surface-3)}
+input[type=range]::-moz-range-progress{height:6px;border-radius:6px;background:linear-gradient(90deg,#7b6cff,#4fb3ff)}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border:0;border-radius:50%;background:#fff;box-shadow:0 0 0 4px rgba(123,108,255,.35)}
+input[type=color]{width:100%;height:36px;padding:3px;border:1px solid var(--border-2);border-radius:10px;background:var(--surface-2);cursor:pointer}
+input[type=number],select{width:100%;height:38px;padding:0 10px;border:1px solid var(--border-2);border-radius:10px;background:var(--surface-2);outline:none}
+input[type=number]:focus,select:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,108,255,.25)}
+select option{background:var(--surface-2)}
+.seg{display:flex;gap:3px;padding:3px;border-radius:11px;background:var(--bg-2);border:1px solid var(--border)}
+.seg button{flex:1;height:32px;padding:0 4px;border:0;border-radius:8px;background:transparent;color:var(--text-2);font-size:13px;cursor:pointer;transition:.15s}
+.seg button:hover{color:var(--text)}
+.seg button.on{background:var(--surface-3);color:var(--text);font-weight:500;box-shadow:0 1px 3px rgba(0,0,0,.4),inset 0 0 0 1px rgba(123,108,255,.45)}
+.fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 8px}
+.fitem{display:flex;flex-direction:column;align-items:center;gap:5px;padding:0;border:0;background:transparent;color:var(--text-2);font-size:12px;cursor:pointer}
+.fitem canvas{width:100%;height:auto;aspect-ratio:1;border-radius:12px;border:2px solid transparent;background:var(--surface-2);transition:border-color .15s,transform .15s}
+.fitem:hover canvas{transform:scale(1.03)}
+.fitem.on{color:var(--text);font-weight:500}
+.fitem.on canvas{border-color:var(--accent);box-shadow:0 0 0 3px rgba(123,108,255,.3)}
+@media (max-width:900px){.fgrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chips button{height:32px;padding:0 12px;border:1px solid var(--border-2);border-radius:999px;background:var(--surface-2);color:var(--text-2);font-size:13px;cursor:pointer;transition:.15s}
+.chips button:hover{color:var(--text);background:var(--surface-3)}
+.chips button.on{background:var(--accent-bg);color:var(--accent-text);border-color:rgba(123,108,255,.6)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.grid2 label{display:flex;flex-direction:column;gap:4px;font-size:13px;color:var(--text-2)}
+.sec{display:flex;flex-direction:column;gap:18px}
+details.adv{padding:10px 12px;border:1px solid var(--border);border-radius:12px;background:var(--bg-2)}
+details.adv summary{font-size:14px;color:var(--text-2);cursor:pointer;list-style:none;display:flex;align-items:center;gap:6px}
+details.adv summary::-webkit-details-marker{display:none}
+details.adv summary::before{content:'';width:7px;height:7px;border-right:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg);transition:transform .15s;margin:0 4px 0 2px}
+details.adv[open] summary::before{transform:rotate(45deg)}
+details.adv[open]{display:flex;flex-direction:column;gap:14px}
+.chk{display:flex;align-items:center;gap:10px;font-size:14px;cursor:pointer}
+.chk input{width:18px;height:18px;margin:0;accent-color:var(--accent)}
+.note{display:flex;gap:8px;font-size:13px;color:var(--text-2)}
+.note i{flex:none;font-size:16px;margin-top:2px;color:var(--text-3)}
+.status{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--text-3)}
+.status .ti-circle-check{color:var(--ok)}
+.save{display:flex;flex-direction:column;gap:10px;margin-top:auto;padding:14px;border-radius:14px;background:var(--bg-2);border:1px solid var(--border)}
+.save .row{display:grid;grid-template-columns:1fr 84px;gap:8px}
+.save label{display:flex;flex-direction:column;gap:4px;font-size:12.5px;color:var(--text-3)}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+#toast{position:fixed;left:50%;bottom:28px;z-index:50;max-width:90vw;padding:11px 20px;border-radius:12px;background:rgba(39,42,57,.95);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);border:1px solid var(--border-2);color:#fff;font-size:14px;box-shadow:var(--shadow-lg);opacity:0;pointer-events:none;transform:translate(-50%,16px);transition:opacity .2s,transform .2s}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+#toast.err{background:rgba(127,29,29,.95);border-color:rgba(248,113,113,.4)}
+button,.card,.tool{touch-action:manipulation;-webkit-tap-highlight-color:transparent}
+
+/* หน้าต่างบันทึกรูปบนมือถือ */
+#sheet{position:fixed;inset:0;z-index:40;display:flex;align-items:flex-end;justify-content:center;background:rgba(0,0,0,.6);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.sheet-card{width:100%;max-width:520px;max-height:92vh;max-height:92dvh;overflow:auto;display:flex;flex-direction:column;gap:12px;padding:16px 16px calc(16px + env(safe-area-inset-bottom));border-radius:20px 20px 0 0;background:var(--surface);border:1px solid var(--border-2);box-shadow:var(--shadow-lg)}
+.sheet-head{display:flex;align-items:center;justify-content:space-between;font-family:'Prompt','IBM Plex Sans Thai',sans-serif;font-size:17px;font-weight:500}
+#sheet-img{align-self:center;max-width:100%;max-height:50vh;max-height:50dvh;object-fit:contain;border-radius:12px}
+#sheet-dl{text-decoration:none;color:var(--text)}
+.sheet-pdf{display:flex;align-items:center;gap:12px;padding:16px;border-radius:12px;background:var(--surface-2);font-size:15px;word-break:break-all}
+.sheet-pdf i{font-size:40px;color:#ff6b6b}
+
+/* รายการหน้าที่สแกนแล้ว */
+.pages{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.pg{position:relative;overflow:hidden;border:1px solid var(--border-2);border-radius:10px;background:#fff}
+.pg canvas{display:block;width:100%;height:auto;aspect-ratio:3/4;object-fit:contain}
+.pg.cur{border-color:var(--accent);box-shadow:0 0 0 2px rgba(123,108,255,.45)}
+.pg .no{position:absolute;top:4px;left:4px;min-width:20px;height:20px;padding:0 6px;display:flex;align-items:center;justify-content:center;border-radius:10px;background:rgba(0,0,0,.7);color:#fff;font-size:11px}
+.pg-act{position:absolute;left:0;right:0;bottom:0;display:flex;justify-content:space-between;padding:3px;background:linear-gradient(transparent,rgba(0,0,0,.55))}
+.pg-act button{width:26px;height:26px;display:flex;align-items:center;justify-content:center;border:0;border-radius:6px;background:rgba(0,0,0,.5);color:#fff;font-size:14px;cursor:pointer}
+@media (max-width:900px){.pages{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media (min-width:701px){#sheet{align-items:center}.sheet-card{border-radius:20px}}
+
+/* แท็บเล็ตและมือถือ */
+@media (max-width:900px){
+  #editor{height:auto;min-height:100vh;min-height:100dvh;grid-template-rows:auto auto}
+  .top{position:sticky;top:0;z-index:8;flex-wrap:nowrap;gap:4px;padding:6px 8px}
+  .top .vsep{display:none}
+  .top .btn.ghost{padding:0 8px}
+  .title{min-width:0;font-size:15px}
+  .title .ic{display:none}
+  #title{overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+  .tb{flex:none;gap:0}
+  #cmp{width:38px;padding:0}
+  .main{grid-template-columns:minmax(0,1fr);grid-template-rows:auto 60vh auto;grid-template-rows:auto min(62dvh,560px) auto}
+  #tools{flex-direction:row;gap:6px;padding:8px;overflow-x:auto;border-right:0;border-bottom:1px solid var(--border)}
+  .tool{flex:none;min-width:66px;padding:8px 4px}
+  #panel{overflow:visible;border-left:0;padding:14px 14px calc(18px + env(safe-area-inset-bottom))}
+  #act{position:-webkit-sticky;position:sticky;bottom:calc(10px + env(safe-area-inset-bottom));z-index:3}
+  .zoombar{bottom:10px}
+  .steps,#cmp span,#home-btn span{display:none}
+}
+@media (max-width:700px){
+  .hd{padding:10px 16px}
+  .brand{font-size:17px}
+  .pill-safe{padding:4px 10px;font-size:12px}
+  .home-main{padding:24px 16px calc(40px + env(safe-area-inset-bottom))}
+  .hero{margin-bottom:20px}
+  .hero h1{font-size:28px}
+  .lead{font-size:15px}
+  .drop{padding:26px 16px;border-radius:18px}
+  .drop .ic-circle{width:60px;height:60px;font-size:28px}
+  .drop .big{font-size:19px}
+  #thumb{max-width:100%}
+  .sec-head{margin:32px 0 12px}
+  .cards{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+  .card{padding:14px;border-radius:16px}
+  .card .ic{width:40px;height:40px;margin-bottom:10px;border-radius:12px;font-size:22px}
+  .card .ct{font-size:15px}
+  .card .cd{font-size:12.5px}
+  .card .go{display:none}
+  .card .badge,.card.sug::after{top:10px;right:10px;padding:2px 8px;font-size:10.5px}
+  .features{grid-template-columns:1fr;margin-top:28px}
+  input[type=number],select{font-size:16px}
+}
+</style>
+</head>
+<body>
+
+<div id="home">
+  <header class="hd">
+    <div class="brand"><span class="logo"><i class="ti ti-photo-edit"></i></span>แต่งรูปง่าย</div>
+    <span class="pill-safe"><i class="ti ti-shield-lock"></i>รูปอยู่ในเครื่องคุณ ไม่ถูกอัปโหลด</span>
+  </header>
+  <main class="home-main">
+    <section class="hero">
+      <h1>แต่งรูปง่ายๆ <span class="grad-text">ใครก็ทำได้</span></h1>
+      <p class="lead">ตัดลายเซ็น ลบคนหรือลายน้ำ ปิดหน้าเพื่อ PDPA ใส่ฟิลเตอร์ แต่งสีให้สดใส เสร็จในไม่กี่คลิก</p>
+    </section>
+    <div id="drop" class="drop">
+      <div class="drop-empty">
+        <div class="ic-circle"><i class="ti ti-photo-up"></i></div>
+        <p class="big" id="drop-title">ลากรูปมาวางตรงนี้</p>
+        <p class="muted" id="drop-sub">หรือวางจากคลิปบอร์ดด้วย Ctrl+V</p>
+        <span class="fake-btn"><i class="ti ti-folder-open"></i>เลือกรูปจากเครื่อง</span>
+        <p class="tiny">รองรับ JPG, PNG, WEBP</p>
+      </div>
+      <div class="drop-has">
+        <canvas id="thumb" class="bg-checker"></canvas>
+        <div>
+          <span class="ok-tag"><i class="ti ti-circle-check"></i>รูปพร้อมแล้ว</span>
+          <p id="fname" class="big" style="font-size:17px"></p>
+          <p class="muted" style="margin-top:6px">เลือกงานด้านล่างได้เลย หรือคลิกตรงนี้เพื่อเปลี่ยนรูป</p>
+        </div>
+      </div>
+    </div>
+    <div class="sec-head">
+      <h2>อยากทำอะไรกับรูป</h2>
+      <span class="muted">เลือกงาน แล้วทำตาม 3 ขั้นตอน</span>
+    </div>
+    <div id="cards" class="cards"></div>
+    <div class="features">
+      <div class="feat"><i class="ti ti-download-off"></i><div><b>ไม่ต้องติดตั้ง</b>เปิดไฟล์นี้ในเบราว์เซอร์ได้เลย</div></div>
+      <div class="feat"><i class="ti ti-lock"></i><div><b>ปลอดภัย</b>รูปไม่ถูกส่งออกจากเครื่อง</div></div>
+      <div class="feat"><i class="ti ti-arrow-back-up"></i><div><b>ย้อนกลับได้</b>กด Ctrl+Z ได้ทุกขั้นตอน</div></div>
+    </div>
+  </main>
+</div>
+
+<div id="editor" hidden>
+  <div class="top">
+    <button class="btn ghost" id="home-btn"><i class="ti ti-arrow-left"></i><span>หน้าแรก</span></button>
+    <span class="vsep"></span>
+    <div class="title"><span class="ic" id="title-tile"><i id="title-ic" class="ti"></i></span><span id="title"></span></div>
+    <div class="steps">
+      <span class="step" id="s1"><b>1</b>เลือกรูป</span>
+      <span class="step" id="s2"><b>2</b>แก้ไข</span>
+      <span class="step" id="s3"><b>3</b>บันทึก</span>
+    </div>
+    <div class="spacer"></div>
+    <div class="tb">
+      <button class="ibtn" id="open2" title="เปิดรูปอื่น"><i class="ti ti-photo-up"></i></button>
+      <span class="vsep"></span>
+      <button class="ibtn" id="undo" title="ย้อนกลับ (Ctrl+Z)"><i class="ti ti-arrow-back-up"></i></button>
+      <button class="ibtn" id="redo" title="ทำซ้ำ (Ctrl+Y)"><i class="ti ti-arrow-forward-up"></i></button>
+      <span class="vsep"></span>
+      <button class="btn" id="cmp" title="กดค้างไว้เพื่อดูรูปก่อนแก้"><i class="ti ti-eye"></i><span>กดค้างดูก่อนแก้</span></button>
+    </div>
+  </div>
+  <div class="main">
+    <div id="tools"></div>
+    <div id="stage">
+      <div id="world" class="bg-checker">
+        <canvas id="view"></canvas>
+        <canvas id="orig" hidden></canvas>
+        <canvas id="mask"></canvas>
+        <canvas id="guide"></canvas>
+      </div>
+      <div class="zoombar">
+        <button class="ibtn" id="zout" title="ซูมออก"><i class="ti ti-minus"></i></button>
+        <button class="zl" id="zlabel" title="พอดีหน้าจอ (กด 0)">100%</button>
+        <button class="ibtn" id="zin" title="ซูมเข้า"><i class="ti ti-plus"></i></button>
+        <span class="vsep"></span>
+        <button class="ibtn" id="zfit" title="พอดีหน้าจอ (กด 0)"><i class="ti ti-arrows-maximize"></i></button>
+      </div>
+      <div id="busy" hidden><div class="spin"></div><span id="busy-msg"></span></div>
+    </div>
+    <aside id="panel">
+      <div class="hint"><i class="ti ti-sparkles"></i><span id="hint"></span></div>
+      <div id="controls"></div>
+      <button class="btn primary" id="act"></button>
+      <div class="save">
+        <div class="row">
+          <label>บันทึกเป็น
+            <select id="fmt"><option value="png">PNG (พื้นโปร่งใสได้)</option><option value="jpg">JPG (ไฟล์เล็ก)</option></select>
+          </label>
+          <label>ขนาด
+            <select id="scale"><option value="1">1x</option><option value="2">2x</option><option value="3">3x</option></select>
+          </label>
+        </div>
+        <div id="qrow" class="field" hidden>
+          <div class="fl"><span>คุณภาพ JPG</span><b id="q-v">90</b></div>
+          <input type="range" id="q" min="40" max="100" step="1" value="90">
+        </div>
+        <div class="row2">
+          <button class="btn" id="save"><i class="ti ti-download"></i>บันทึกรูป</button>
+          <button class="btn" id="copy"><i class="ti ti-copy"></i>คัดลอก</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+</div>
+
+<div id="sheet" hidden>
+  <div class="sheet-card">
+    <div class="sheet-head"><span id="sheet-title">รูปพร้อมบันทึกแล้ว</span><button class="ibtn" id="sheet-x" aria-label="ปิด"><i class="ti ti-x"></i></button></div>
+    <img id="sheet-img" class="bg-checker" alt="รูปที่แก้ไขแล้ว">
+    <div id="sheet-pdf" class="sheet-pdf" hidden><i class="ti ti-file-type-pdf"></i><span id="sheet-pdf-name"></span></div>
+    <p class="note" id="sheet-tip"><i class="ti ti-hand-finger"></i>กดค้างที่รูปแล้วเลือก "บันทึกรูปภาพ" หรือใช้ปุ่มด้านล่าง</p>
+    <button class="btn primary" id="sheet-share"><i class="ti ti-share"></i>บันทึกลงรูปภาพ / แชร์</button>
+    <a class="btn" id="sheet-dl"><i class="ti ti-download"></i>ดาวน์โหลดเป็นไฟล์</a>
+  </div>
+</div>
+
+<div id="toast"></div>
+<input type="file" id="file" accept="image/*" hidden>
+
+<script>
+'use strict';
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const IS_TOUCH = window.matchMedia('(pointer: coarse)').matches;
+// iPhone/iPad และมือถือจำกัดหน่วยความจำของ canvas จึงใช้รูปขนาดเล็กลง
+const MAX_SIDE = IS_IOS || IS_TOUCH ? 2560 : 4000;
+const MAX_PIXELS = IS_IOS ? 16e6 : 64e6;
+const HIST_BUDGET = IS_IOS || IS_TOUCH ? 40e6 : 150e6;
+const CV_URL = 'https://cdn.jsdelivr.net/npm/@techstark/opencv-js@4.10.0-release.1/dist/opencv.js';
+
+const $ = s => document.querySelector(s);
+const $$ = s => [...document.querySelectorAll(s)];
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+// ใช้ setTimeout แทน requestAnimationFrame เพราะ rAF จะหยุดเมื่อผู้ใช้สลับไปแท็บอื่นระหว่างประมวลผล
+const nextFrame = () => new Promise(r => setTimeout(r, 30));
+
+function newCanvas(w, h) { const c = document.createElement('canvas'); c.width = w; c.height = h; return c; }
+function ctxOf(c) { return c.getContext('2d', { willReadFrequently: true }); }
+function cloneCanvas(src) { const c = newCanvas(src.width, src.height); ctxOf(c).drawImage(src, 0, 0); return c; }
+function hex2rgb(h) { const n = parseInt(h.slice(1), 16); return [n >> 16 & 255, n >> 8 & 255, n & 255]; }
+
+/* ---------- สถานะหลัก ---------- */
+const S = {
+  img: null, orig: null, name: '', ver: 0, hist: [], fut: [],
+  mode: null, tool: null, done: false, pendingMode: null,
+  z: 1, tx: 0, ty: 0, space: false, cursor: null, busy: false,
+};
+const stage = $('#stage'), world = $('#world');
+const view = $('#view'), vctx = view.getContext('2d');
+const maskC = $('#mask'), mctx = ctxOf(maskC);
+const guide = $('#guide'), gctx = guide.getContext('2d');
+const origC = $('#orig');
+const Brush = { size: 30 };
+const imgW = () => S.img.width, imgH = () => S.img.height;
+const curTool = () => S.mode && S.mode.tools.find(t => t.id === S.tool);
+
+let toastT;
+function toast(msg, type) {
+  const t = $('#toast');
+  t.textContent = msg; t.className = 'show' + (type ? ' ' + type : '');
+  clearTimeout(toastT); toastT = setTimeout(() => t.className = '', 3600);
+}
+function setBusyMsg(m) { $('#busy-msg').textContent = m; }
+async function busy(msg, fn) {
+  setBusyMsg(msg); $('#busy').hidden = false; S.busy = true;
+  await nextFrame();
+  try { return await fn(); } finally { $('#busy').hidden = true; S.busy = false; }
+}
+
+/* ---------- เปิดรูป ---------- */
+function loadImg(src) {
+  return new Promise((res, rej) => {
+    const i = new Image();
+    i.onload = () => res(i);
+    i.onerror = () => rej(new Error('เปิดรูปนี้ไม่ได้ ลองใช้ไฟล์ JPG หรือ PNG'));
+    i.src = src;
+  });
+}
+async function openFile(file) {
+  if (!file) return;
+  if (!/^image\//.test(file.type)) return toast('ไฟล์นี้ไม่ใช่รูปภาพ ลองใช้ JPG, PNG หรือ WEBP', 'err');
+  const url = URL.createObjectURL(file);
+  try { setImage(await loadImg(url), file.name || 'image.png'); }
+  catch (e) { toast(e.message, 'err'); }
+  finally { URL.revokeObjectURL(url); }
+}
+function setImage(src, name) {
+  const w0 = src.naturalWidth || src.width, h0 = src.naturalHeight || src.height;
+  const s = Math.min(1, MAX_SIDE / Math.max(w0, h0));
+  const w = Math.round(w0 * s), h = Math.round(h0 * s);
+  const c = newCanvas(w, h), x = ctxOf(c);
+  x.imageSmoothingQuality = 'high';
+  x.drawImage(src, 0, 0, w, h);
+  S.img = c; S.orig = cloneCanvas(c); S.name = name; S.hist = []; S.fut = []; S.ver++; S.done = false;
+  Brush.size = clamp(Math.round(Math.max(w, h) / 30), 6, 300);
+  if (s < 1) toast(`รูปใหญ่มาก ระบบย่อเหลือ ${w}×${h} px เพื่อให้ทำงานเร็วขึ้น`);
+  showHomeImage();
+  if (S.pendingMode) { const k = S.pendingMode; S.pendingMode = null; openMode(k); }
+  else if (S.mode) openMode(S.mode.id);
+}
+function showHomeImage() {
+  $('#drop').classList.add('has');
+  const t = $('#thumb'), s = Math.min(1, 300 / Math.max(imgW(), imgH()));
+  t.width = Math.max(1, Math.round(imgW() * s)); t.height = Math.max(1, Math.round(imgH() * s));
+  t.getContext('2d').drawImage(S.img, 0, 0, t.width, t.height);
+  $('#fname').textContent = `${S.name} · ${imgW()}×${imgH()} px`;
+  const sug = guessMode();
+  $$('.card').forEach(c => c.classList.toggle('sug', c.dataset.k === sug));
+}
+// เดาว่ารูปน่าจะเป็นลายเซ็นบนกระดาษหรือไม่ (พื้นสว่างเกือบทั้งรูป มีเส้นเข้มเล็กน้อย)
+function guessMode() {
+  const c = newCanvas(64, 64), x = ctxOf(c);
+  x.fillStyle = '#fff'; x.fillRect(0, 0, 64, 64);
+  x.drawImage(S.img, 0, 0, 64, 64);
+  const d = x.getImageData(0, 0, 64, 64).data;
+  let bright = 0, dark = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    const L = .299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2];
+    if (L > 190) bright++; else if (L < 120) dark++;
+  }
+  const n = 64 * 64;
+  return bright / n > .7 && dark / n > .004 && dark / n < .2 ? 'sig' : null;
+}
+
+/* ---------- ประวัติการแก้ไข (Undo/Redo) ---------- */
+function histLimit() { return clamp(Math.floor(HIST_BUDGET / (imgW() * imgH())), 4, 30); }
+function trimHist() { while (S.hist.length > histLimit()) S.hist.shift(); }
+// ใช้เมื่อแก้รูปเดิมโดยตรง (เช่น โคลน) ต้องเก็บสำเนาไว้ก่อน
+function pushHist() { S.hist.push(cloneCanvas(S.img)); trimHist(); S.fut = []; }
+// ใช้เมื่อได้รูปผลลัพธ์ใหม่ทั้งรูป
+function commit(c) { S.hist.push(S.img); trimHist(); S.fut = []; S.img = c; afterChange(); }
+function undo() {
+  if (!S.hist.length || S.busy) return;
+  S.fut.push(S.img); S.img = S.hist.pop(); S.done = false; afterChange();
+}
+function redo() {
+  if (!S.fut.length || S.busy) return;
+  S.hist.push(S.img); S.img = S.fut.pop(); afterChange();
+}
+function afterChange() {
+  S.ver++;
+  const dims = view.width !== imgW() || view.height !== imgH();
+  if (dims) { sizeLayers(); fit(); }
+  if (S.mode && S.mode.changed) S.mode.changed(dims);
+  render(); updateUI();
+}
+
+/* ---------- เลเยอร์แสดงผลและการซูม ---------- */
+function sizeLayers() {
+  for (const c of [view, maskC, guide]) { c.width = imgW(); c.height = imgH(); }
+  world.style.width = imgW() + 'px'; world.style.height = imgH() + 'px';
+}
+function clearMask() { mctx.clearRect(0, 0, maskC.width, maskC.height); }
+function maskData() {
+  const d = mctx.getImageData(0, 0, maskC.width, maskC.height).data, n = d.length / 4;
+  const m = new Uint8Array(n); let any = false;
+  for (let i = 0; i < n; i++) if (d[i * 4 + 3] > 20) { m[i] = 255; any = true; }
+  return any ? m : null;
+}
+function setStageBg(v) {
+  world.classList.remove('bg-checker', 'bg-white', 'bg-black');
+  world.classList.add('bg-' + v);
+}
+function applyView() {
+  world.style.transform = `translate(${S.tx}px,${S.ty}px) scale(${S.z})`;
+  world.style.backgroundSize = `${24 / S.z}px ${24 / S.z}px`;
+  world.classList.toggle('px', S.z > 2);
+  $('#zlabel').textContent = Math.round(S.z * 100) + '%';
+  drawGuide();
+}
+function fit() {
+  if (!S.img) return;
+  const r = stage.getBoundingClientRect(), pad = 28;
+  S.z = Math.min((r.width - pad * 2) / imgW(), (r.height - pad * 2) / imgH(), 4);
+  if (!(S.z > 0)) S.z = 1;
+  S.tx = (r.width - imgW() * S.z) / 2; S.ty = (r.height - imgH() * S.z) / 2;
+  applyView();
+}
+function zoomAt(f, mx, my) {
+  const nz = clamp(S.z * f, .05, 16);
+  S.tx = mx - (mx - S.tx) * nz / S.z; S.ty = my - (my - S.ty) * nz / S.z; S.z = nz;
+  applyView();
+}
+function zoomCenter(f) { const r = stage.getBoundingClientRect(); zoomAt(f, r.width / 2, r.height / 2); }
+function pt(e) {
+  const r = stage.getBoundingClientRect();
+  return { x: (e.clientX - r.left - S.tx) / S.z, y: (e.clientY - r.top - S.ty) / S.z };
+}
+
+let rq = 0;
+function render() { if (!rq) rq = requestAnimationFrame(() => { rq = 0; renderNow(); }); }
+function renderNow() {
+  if (!S.img || !S.mode) return;
+  vctx.clearRect(0, 0, view.width, view.height);
+  if (S.mode.render) S.mode.render(vctx); else vctx.drawImage(S.img, 0, 0);
+  drawGuide();
+}
+function drawGuide() {
+  gctx.clearRect(0, 0, guide.width, guide.height);
+  if (!S.mode || !S.img) return;
+  if (S.mode.guide) S.mode.guide(gctx);
+  const t = curTool();
+  if (t && t.brush && S.cursor) {
+    const px = 1 / S.z, r = Brush.size / 2;
+    gctx.save();
+    gctx.lineWidth = 3 * px; gctx.strokeStyle = 'rgba(0,0,0,.55)';
+    gctx.beginPath(); gctx.arc(S.cursor.x, S.cursor.y, r, 0, Math.PI * 2); gctx.stroke();
+    gctx.lineWidth = 1.5 * px; gctx.strokeStyle = '#fff';
+    gctx.beginPath(); gctx.arc(S.cursor.x, S.cursor.y, r, 0, Math.PI * 2); gctx.stroke();
+    gctx.restore();
+  }
+}
+function dashRect(g, r, color) {
+  const px = 1 / S.z;
+  g.save();
+  g.lineWidth = 4 * px; g.strokeStyle = 'rgba(255,255,255,.9)'; g.strokeRect(r.x, r.y, r.w, r.h);
+  g.lineWidth = 2 * px; g.setLineDash([8 * px, 5 * px]); g.strokeStyle = color; g.strokeRect(r.x, r.y, r.w, r.h);
+  g.restore();
+}
+function normRect(a, b) {
+  const x0 = clamp(Math.min(a.x, b.x), 0, imgW()), x1 = clamp(Math.max(a.x, b.x), 0, imgW());
+  const y0 = clamp(Math.min(a.y, b.y), 0, imgH()), y1 = clamp(Math.max(a.y, b.y), 0, imgH());
+  return { x: Math.round(x0), y: Math.round(y0), w: Math.round(x1 - x0), h: Math.round(y1 - y0) };
+}
+function stroke(ctx, a, b, color, erase) {
+  ctx.save();
+  ctx.globalCompositeOperation = erase ? 'destination-out' : 'source-over';
+  ctx.strokeStyle = color; ctx.lineWidth = Brush.size; ctx.lineCap = 'round'; ctx.lineJoin = 'round';
+  ctx.beginPath(); ctx.moveTo(a.x, a.y); ctx.lineTo(b.x + .01, b.y); ctx.stroke();
+  ctx.restore();
+}
+function maskStroke(a, b) { stroke(mctx, a, b, '#ff2020', S.tool === 'erase'); }
+
+/* ---------- ชิ้นส่วนแผงตั้งค่า ---------- */
+function slider(id, label, min, max, val, ends, step = 1) {
+  return `<div class="field"><div class="fl"><span>${label}</span><b id="${id}-v"></b></div>
+    <input type="range" id="${id}" min="${min}" max="${max}" step="${step}" value="${val}">
+    ${ends ? `<div class="ends"><span>${ends[0]}</span><span>${ends[1]}</span></div>` : ''}</div>`;
+}
+// ระบายสีแถบเลื่อน: แถบแบบ -/+ ระบายจากตรงกลาง แถบปกติระบายจากซ้าย
+function fillRange(el) {
+  const p = (el.value - el.min) / (el.max - el.min) * 100, z = +el.min < 0 ? -el.min / (el.max - el.min) * 100 : 0;
+  el.style.setProperty('--a', Math.min(p, z) + '%'); el.style.setProperty('--b', Math.max(p, z) + '%');
+}
+function onSlider(id, fn, fmt = v => v) {
+  const el = $('#' + id), out = $('#' + id + '-v');
+  out.textContent = fmt(+el.value); fillRange(el);
+  el.oninput = () => { out.textContent = fmt(+el.value); fillRange(el); fn(+el.value); };
+}
+function setSlider(id, v) { const el = $('#' + id); if (el) { el.value = v; el.oninput(); } }
+function seg(name, opts, val) {
+  return `<div class="seg" data-seg="${name}">${opts.map(([v, l]) =>
+    `<button type="button" data-v="${v}" class="${v === val ? 'on' : ''}">${l}</button>`).join('')}</div>`;
+}
+function onSeg(name, fn) {
+  const el = $(`[data-seg="${name}"]`);
+  el.onclick = e => {
+    const b = e.target.closest('button'); if (!b) return;
+    el.querySelectorAll('button').forEach(x => x.classList.toggle('on', x === b));
+    fn(b.dataset.v);
+  };
+}
+function field(label, inner) { return `<div class="field"><div class="fl"><span>${label}</span></div>${inner}</div>`; }
+function brushField() {
+  const mx = Math.max(60, Math.round(Math.max(imgW(), imgH()) / 4));
+  Brush.size = Math.min(Brush.size, mx);
+  return slider('bsize', 'ขนาดแปรง', 2, mx, Brush.size, ['เล็ก', 'ใหญ่']);
+}
+function bindBrush() { if ($('#bsize')) onSlider('bsize', v => { Brush.size = v; drawGuide(); }); }
+const clearBtn = `<button class="btn sm" id="clr"><i class="ti ti-trash"></i>ล้างที่ระบายทั้งหมด</button>`;
+function bindClear(after) { $('#clr').onclick = () => { clearMask(); if (after) after(); render(); }; }
+
+/* ---------- OpenCV (โหลดเมื่อใช้ครั้งแรก) ---------- */
+let cvP = null, cvState = 'idle';
+function loadCV() {
+  if (cvP) return cvP;
+  cvState = 'loading'; updateCvStatus();
+  cvP = new Promise((res, rej) => {
+    const t = setTimeout(() => rej(new Error('timeout')), 90000);
+    const s = document.createElement('script');
+    s.src = CV_URL; s.async = true;
+    s.onerror = () => { clearTimeout(t); rej(new Error('network')); };
+    s.onload = async () => {
+      try {
+        let cv = window.cv;
+        if (cv instanceof Promise) cv = await cv;
+        else if (!cv.Mat) await new Promise(r => { cv.onRuntimeInitialized = r; });
+        // ตัว Module ของ OpenCV มี .then อยู่ ถ้าส่งเข้า resolve ตรงๆ จะวนไม่จบ จึงห่อไว้ก่อน
+        window.cv = cv; clearTimeout(t); res({ cv });
+      } catch (e) { clearTimeout(t); rej(e); }
+    };
+    document.head.appendChild(s);
+  });
+  cvP.then(() => { cvState = 'ready'; updateCvStatus(); },
+           () => { cvState = 'failed'; cvP = null; updateCvStatus(); });
+  return cvP;
+}
+const cvStatusHTML = () => `<p class="status" id="cvst"></p>`;
+function updateCvStatus() {
+  const el = $('#cvst'); if (!el) return;
+  el.innerHTML = {
+    idle: '',
+    loading: '<i class="ti ti-loader-2"></i>กำลังเตรียมเครื่องมือลบ (ครั้งแรกประมาณ 10 MB)',
+    ready: '<i class="ti ti-circle-check"></i>เครื่องมือลบพร้อมใช้งาน',
+    failed: '<i class="ti ti-wifi-off"></i>ออฟไลน์อยู่ จะใช้วิธีลบแบบพื้นฐานแทน',
+  }[cvState];
+}
+
+// ขยายพื้นที่ mask ออกรอบด้าน r พิกเซล
+function dilate(m, w, h, r) {
+  if (r <= 0) return m;
+  const t = new Uint8Array(w * h), o = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) {
+    let last = -1e9;
+    for (let x = 0; x < w; x++) { if (m[y * w + x]) last = x; if (x - last <= r) t[y * w + x] = 255; }
+    last = 1e9;
+    for (let x = w - 1; x >= 0; x--) { if (m[y * w + x]) last = x; if (last - x <= r) t[y * w + x] = 255; }
+  }
+  for (let x = 0; x < w; x++) {
+    let last = -1e9;
+    for (let y = 0; y < h; y++) { if (t[y * w + x]) last = y; if (y - last <= r) o[y * w + x] = 255; }
+    last = 1e9;
+    for (let y = h - 1; y >= 0; y--) { if (t[y * w + x]) last = y; if (last - y <= r) o[y * w + x] = 255; }
+  }
+  return o;
+}
+// วิธีลบสำรองเมื่อโหลด OpenCV ไม่ได้: เติมสีจากขอบเข้าหาตรงกลางทีละชั้น
+function jsInpaint(img, m, w, h) {
+  const d = img.data, known = new Uint8Array(w * h);
+  let todo = [];
+  for (let i = 0; i < w * h; i++) { if (m[i]) todo.push(i); else known[i] = 1; }
+  const filled = todo.slice();
+  const N = [[-1, 0, 1], [1, 0, 1], [0, -1, 1], [0, 1, 1], [-1, -1, .7], [1, -1, .7], [-1, 1, .7], [1, 1, .7]];
+  while (todo.length) {
+    const layer = [], rest = [];
+    for (const i of todo) {
+      const x = i % w, y = (i / w) | 0;
+      let r = 0, g = 0, b = 0, s = 0;
+      for (const [dx, dy, wt] of N) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const j = ny * w + nx;
+        if (known[j]) { r += d[j * 4] * wt; g += d[j * 4 + 1] * wt; b += d[j * 4 + 2] * wt; s += wt; }
+      }
+      if (s) layer.push([i, r / s, g / s, b / s]); else rest.push(i);
+    }
+    if (!layer.length) break;
+    for (const [i, r, g, b] of layer) { d[i * 4] = r; d[i * 4 + 1] = g; d[i * 4 + 2] = b; known[i] = 1; }
+    todo = rest;
+  }
+  for (let pass = 0; pass < 6; pass++) {
+    for (const i of filled) {
+      const x = i % w, y = (i / w) | 0;
+      let r = 0, g = 0, b = 0, s = 0;
+      for (const [dx, dy] of N) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const j = (ny * w + nx) * 4; r += d[j]; g += d[j + 1]; b += d[j + 2]; s++;
+      }
+      d[i * 4] = r / s; d[i * 4 + 1] = g / s; d[i * 4 + 2] = b / s;
+    }
+  }
+  return img;
+}
+function cvInpaint(cv, img, m, grow, method) {
+  const src = cv.matFromImageData(img), rgb = new cv.Mat(), dst = new cv.Mat();
+  const mk = new cv.Mat(img.height, img.width, cv.CV_8UC1);
+  let k = null;
+  try {
+    mk.data.set(m);
+    cv.cvtColor(src, rgb, cv.COLOR_RGBA2RGB);
+    if (grow > 0) {
+      k = cv.getStructuringElement(cv.MORPH_ELLIPSE, new cv.Size(grow * 2 + 1, grow * 2 + 1));
+      cv.dilate(mk, mk, k, new cv.Point(-1, -1), 1, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    }
+    cv.inpaint(rgb, mk, dst, clamp(grow + 3, 3, 12), method === 'ns' ? cv.INPAINT_NS : cv.INPAINT_TELEA);
+    const out = new ImageData(img.width, img.height), o = out.data, dd = dst.data, sd = img.data;
+    for (let i = 0, n = img.width * img.height; i < n; i++) {
+      o[i * 4] = dd[i * 3]; o[i * 4 + 1] = dd[i * 3 + 1]; o[i * 4 + 2] = dd[i * 3 + 2]; o[i * 4 + 3] = sd[i * 4 + 3];
+    }
+    return out;
+  } finally { src.delete(); rgb.delete(); dst.delete(); mk.delete(); if (k) k.delete(); }
+}
+// ลบพื้นที่ใน mask แล้วเติมให้กลืนกับรอบข้าง ประมวลผลเฉพาะกรอบรอบ mask เพื่อความเร็ว
+async function inpaintImage(mask, grow, method) {
+  const W = imgW(), H = imgH();
+  let x0 = W, y0 = H, x1 = -1, y1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (mask[y * W + x]) {
+    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+  }
+  if (x1 < 0) return null;
+  const pad = grow + 24;
+  x0 = Math.max(0, x0 - pad); y0 = Math.max(0, y0 - pad);
+  x1 = Math.min(W - 1, x1 + pad); y1 = Math.min(H - 1, y1 + pad);
+  const w = x1 - x0 + 1, h = y1 - y0 + 1;
+  const img = ctxOf(S.img).getImageData(x0, y0, w, h);
+  const m = new Uint8Array(w * h);
+  for (let y = 0; y < h; y++) m.set(mask.subarray((y + y0) * W + x0, (y + y0) * W + x0 + w), y * w);
+  let res;
+  try {
+    if (cvState !== 'ready') setBusyMsg('กำลังเตรียมเครื่องมือลบ (ครั้งแรกประมาณ 10 MB)...');
+    const { cv } = await loadCV();
+    setBusyMsg('กำลังลบ...'); await nextFrame();
+    res = cvInpaint(cv, img, m, grow, method);
+  } catch (err) {
+    console.warn('OpenCV ใช้ไม่ได้ เปลี่ยนไปใช้วิธีพื้นฐาน', err);
+    setBusyMsg('กำลังลบ (วิธีพื้นฐาน)...'); await nextFrame();
+    res = jsInpaint(img, dilate(m, w, h, grow), w, h);
+  }
+  const out = cloneCanvas(S.img);
+  ctxOf(out).putImageData(res, x0, y0);
+  return out;
+}
+
+/* ---------- ตัวช่วยประมวลผลภาพ ---------- */
+// ค่าเฉลี่ยในหน้าต่าง (2r+1)² ด้วย integral image
+function boxBlur(L, w, h, r) {
+  const W1 = w + 1, I = new Float64Array(W1 * (h + 1));
+  for (let y = 0; y < h; y++) {
+    let row = 0;
+    for (let x = 0; x < w; x++) { row += L[y * w + x]; I[(y + 1) * W1 + x + 1] = I[y * W1 + x + 1] + row; }
+  }
+  const o = new Float32Array(w * h);
+  for (let y = 0; y < h; y++) {
+    const ya = Math.max(0, y - r), yb = Math.min(h - 1, y + r);
+    for (let x = 0; x < w; x++) {
+      const xa = Math.max(0, x - r), xb = Math.min(w - 1, x + r);
+      const s = I[(yb + 1) * W1 + xb + 1] - I[ya * W1 + xb + 1] - I[(yb + 1) * W1 + xa] + I[ya * W1 + xa];
+      o[y * w + x] = s / ((xb - xa + 1) * (yb - ya + 1));
+    }
+  }
+  return o;
+}
+function gridFilter(g, w, h, mode) {
+  const o = new Float32Array(g.length);
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    let s = 0, c = 0, m = 0;
+    for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+      const nx = x + dx, ny = y + dy;
+      if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+      const v = g[ny * w + nx]; s += v; c++; if (v > m) m = v;
+    }
+    o[y * w + x] = mode === 'max' ? m : s / c;
+  }
+  return o;
+}
+// ประมาณความสว่างของกระดาษแต่ละจุด ใช้แก้เงาและแสงไม่สม่ำเสมอ
+function bgEstimate(L, W, H) {
+  const B = Math.max(8, Math.round(Math.min(W, H) / 20)), gw = Math.ceil(W / B), gh = Math.ceil(H / B);
+  let g = new Float32Array(gw * gh);
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) {
+    const k = ((y / B) | 0) * gw + ((x / B) | 0), v = L[y * W + x];
+    if (v > g[k]) g[k] = v;
+  }
+  g = gridFilter(g, gw, gh, 'max'); g = gridFilter(g, gw, gh, 'mean'); g = gridFilter(g, gw, gh, 'mean');
+  const out = new Float32Array(W * H);
+  for (let y = 0; y < H; y++) {
+    const gy = (y + .5) / B - .5, ya = clamp(Math.floor(gy), 0, gh - 1), yb = Math.min(ya + 1, gh - 1), fy = clamp(gy - ya, 0, 1);
+    for (let x = 0; x < W; x++) {
+      const gx = (x + .5) / B - .5, xa = clamp(Math.floor(gx), 0, gw - 1), xb = Math.min(xa + 1, gw - 1), fx = clamp(gx - xa, 0, 1);
+      const top = g[ya * gw + xa] * (1 - fx) + g[ya * gw + xb] * fx;
+      const bot = g[yb * gw + xa] * (1 - fx) + g[yb * gw + xb] * fx;
+      out[y * W + x] = top * (1 - fy) + bot * fy;
+    }
+  }
+  return out;
+}
+function paperLevel(L) {
+  const hist = new Uint32Array(256);
+  for (let i = 0; i < L.length; i++) hist[L[i] | 0]++;
+  let acc = 0;
+  for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= L.length * .9) return Math.max(v, 60); }
+  return 255;
+}
+// ลบกลุ่มพิกเซลเล็กๆ ที่อยู่โดดเดี่ยว (ฝุ่น จุดหมึก)
+function despeckle(a, W, H, minA) {
+  const seen = new Uint8Array(W * H), q = new Int32Array(W * H);
+  for (let s = 0; s < W * H; s++) {
+    if (seen[s] || a[s] <= 0) continue;
+    let qh = 0, qt = 0; q[qt++] = s; seen[s] = 1;
+    while (qh < qt) {
+      const p = q[qh++], x = p % W, y = (p / W) | 0;
+      for (let dy = -1; dy <= 1; dy++) for (let dx = -1; dx <= 1; dx++) {
+        const nx = x + dx, ny = y + dy;
+        if (nx < 0 || ny < 0 || nx >= W || ny >= H) continue;
+        const j = ny * W + nx;
+        if (!seen[j] && a[j] > 0) { seen[j] = 1; q[qt++] = j; }
+      }
+    }
+    if (qt < minA) for (let k = 0; k < qt; k++) a[q[k]] = 0;
+  }
+}
+function trimAlpha(c, pad) {
+  const W = c.width, H = c.height, d = ctxOf(c).getImageData(0, 0, W, H).data;
+  let x0 = W, y0 = H, x1 = -1, y1 = -1;
+  for (let y = 0; y < H; y++) for (let x = 0; x < W; x++) if (d[(y * W + x) * 4 + 3] > 40) {
+    if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+  }
+  if (x1 < 0) return null;
+  const w = x1 - x0 + 1, h = y1 - y0 + 1, o = newCanvas(w + pad * 2, h + pad * 2);
+  ctxOf(o).drawImage(c, x0, y0, w, h, pad, pad, w, h);
+  return o;
+}
+function resizeCanvas(src, w, h) {
+  let c = src;
+  while (c.width / 2 >= w && c.height / 2 >= h) {
+    const half = newCanvas(Math.round(c.width / 2), Math.round(c.height / 2)), x = ctxOf(half);
+    x.imageSmoothingQuality = 'high'; x.drawImage(c, 0, 0, half.width, half.height); c = half;
+  }
+  const o = newCanvas(w, h), x = ctxOf(o);
+  x.imageSmoothingQuality = 'high'; x.drawImage(c, 0, 0, w, h);
+  return o;
+}
+/* ---------- ฟิลเตอร์สำรองสำหรับเบราว์เซอร์ที่ไม่มี ctx.filter (Safari) ---------- */
+let CANVAS_FILTER = (() => {
+  try {
+    const x = newCanvas(1, 1).getContext('2d');
+    if (typeof x.filter !== 'string') return false;
+    x.filter = 'grayscale(1)'; x.fillStyle = '#f00'; x.fillRect(0, 0, 1, 1);
+    return x.getImageData(0, 0, 1, 1).data[1] > 20;
+  } catch (e) { return false; }
+})();
+/* ---------- เครื่องมือแต่งสี (คำนวณเองทุกพิกเซล ผลจึงเหมือนกันทุกเบราว์เซอร์) ---------- */
+function smoothstep(a, b, x) { const t = clamp((x - a) / (b - a), 0, 1); return t * t * (3 - 2 * t); }
+// ค่าสุ่มที่คงที่ตามตำแหน่ง เกรนจึงไม่กระพริบเวลาเลื่อนแถบ
+function noise(x, y) {
+  let h = (Math.imul(x, 374761393) + Math.imul(y, 668265263)) | 0;
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+}
+// ปรับแสง สี และเอฟเฟกต์ตามค่า q (ส่วนใหญ่อยู่ในช่วง -1..1) แก้ข้อมูลใน d โดยตรง
+// gcell = ขนาดเม็ดเกรนเป็นพิกเซลของรูปนี้ ให้พรีวิวกับไฟล์จริงดูเหมือนกัน
+function develop(d, w, h, q, gcell) {
+  const ex = Math.pow(2, (q.exposure || 0) * 1.2), temp = q.temp || 0, tint = q.tint || 0;
+  const mr = ex * (1 + temp * .18) * (1 + tint * .06), mg = ex * (1 - tint * .12), mb = ex * (1 - temp * .18) * (1 + tint * .06);
+  const ct = Math.max(.1, 1 + (q.contrast || 0) * .8);
+  const sh = q.shadows || 0, hi = q.highlights || 0, sat = q.sat || 0, vib = q.vib || 0;
+  const fade = (q.fade || 0) * .22, vig = q.vignette || 0, grain = (q.grain || 0) * .16, bw = !!q.bw;
+  const sp = q.split;
+  const s0 = sp ? sp[0].map(v => (v - .5) * sp[2]) : null, s1 = sp ? sp[1].map(v => (v - .5) * sp[2]) : null;
+  for (let y = 0, i = 0; y < h; y++) {
+    const dy = (y / h - .5) * 2;
+    for (let x = 0; x < w; x++, i += 4) {
+      let r = d[i] / 255 * mr, g = d[i + 1] / 255 * mg, b = d[i + 2] / 255 * mb;
+      r = (r - .5) * ct + .5; g = (g - .5) * ct + .5; b = (b - .5) * ct + .5;
+      let L = .2126 * r + .7152 * g + .0722 * b;
+      // ส่วนมืด/ส่วนสว่าง: ยกหรือกดเฉพาะช่วงความสว่างนั้น
+      if (sh || hi) {
+        const l = clamp(L, 0, 1), L2 = L + sh * 2.4 * l * (1 - l) * (1 - l) + hi * 2.4 * l * l * (1 - l);
+        if (L > .004) { const k = clamp(L2 / L, 0, 3); r *= k; g *= k; b *= k; }
+        else { r += L2 - L; g += L2 - L; b += L2 - L; }
+        L = L2;
+      }
+      // ความสด (vibrance) เพิ่มสีให้ส่วนที่สีจืดมากกว่าส่วนที่สีจัดอยู่แล้ว
+      if (sat || vib) {
+        const mx = Math.max(r, g, b), mn = Math.min(r, g, b);
+        const f = 1 + sat + vib * (1 - Math.min(1, (mx - mn) * 1.5));
+        r = L + (r - L) * f; g = L + (g - L) * f; b = L + (b - L) * f;
+      }
+      if (bw) { r = g = b = L; }
+      // ใส่โทนสีแยกส่วนมืด/ส่วนสว่าง (split toning) แบบฟิล์มและภาพยนตร์
+      if (sp) {
+        const l = clamp(L, 0, 1), ws = (1 - l) * (1 - l), wh = l * l;
+        r += s0[0] * ws + s1[0] * wh; g += s0[1] * ws + s1[1] * wh; b += s0[2] * ws + s1[2] * wh;
+      }
+      if (fade) { r = fade + r * (1 - fade); g = fade + g * (1 - fade); b = fade + b * (1 - fade); }
+      if (vig) {
+        const dx = (x / w - .5) * 2, v = smoothstep(.45, 1.45, Math.sqrt(dx * dx + dy * dy)) * vig * .8;
+        if (v > 0) { r *= 1 - v; g *= 1 - v; b *= 1 - v; }
+        else { r -= (1 - r) * v; g -= (1 - g) * v; b -= (1 - b) * v; }
+      }
+      if (grain) {
+        const n = (noise((x / gcell) | 0, (y / gcell) | 0) - .5) * grain;
+        r += n; g += n; b += n;
+      }
+      d[i] = r * 255; d[i + 1] = g * 255; d[i + 2] = b * 255;
+    }
+  }
+}
+// เพิ่มความคมด้วย unsharp mask บนค่าความสว่าง (ไม่เกิดขอบสีเพี้ยน)
+function sharpen(d, w, h, amt, r) {
+  const n = w * h, L = new Float32Array(n);
+  for (let i = 0; i < n; i++) L[i] = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2];
+  const B = boxBlur(L, w, h, r);
+  for (let i = 0; i < n; i++) {
+    const k = (L[i] - B[i]) * amt * 1.5;
+    d[i * 4] += k; d[i * 4 + 1] += k; d[i * 4 + 2] += k;
+  }
+}
+function boxBlurRGBA(d, w, h, r) {
+  const t = new Float32Array(d.length), n = 2 * r + 1;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) for (let ch = 0; ch < 4; ch++) {
+    let s = 0;
+    for (let k = -r; k <= r; k++) s += d[(y * w + clamp(x + k, 0, w - 1)) * 4 + ch];
+    t[(y * w + x) * 4 + ch] = s / n;
+  }
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) for (let ch = 0; ch < 4; ch++) {
+    let s = 0;
+    for (let k = -r; k <= r; k++) s += t[(clamp(y + k, 0, h - 1) * w + x) * 4 + ch];
+    d[(y * w + x) * 4 + ch] = s / n;
+  }
+}
+// เบลอโดยย่อรูปลง เบลอเล็กน้อย แล้วขยายกลับ ได้ผลใกล้เคียง blur ของ CSS และเร็วพอบนมือถือ
+function softBlur(ctx, src, r) {
+  const f = Math.max(1, r / 3), w = Math.max(1, Math.round(src.width / f)), h = Math.max(1, Math.round(src.height / f));
+  const t = newCanvas(w, h), x = ctxOf(t);
+  x.imageSmoothingQuality = 'high'; x.drawImage(src, 0, 0, w, h);
+  const im = x.getImageData(0, 0, w, h);
+  boxBlurRGBA(im.data, w, h, 2); boxBlurRGBA(im.data, w, h, 2);
+  x.putImageData(im, 0, 0);
+  ctx.save(); ctx.imageSmoothingQuality = 'high'; ctx.drawImage(t, 0, 0, src.width, src.height); ctx.restore();
+}
+
+function hasAlpha(c) {
+  const d = ctxOf(c).getImageData(0, 0, c.width, c.height).data;
+  for (let i = 3; i < d.length; i += 16) if (d[i] < 250) return true;
+  return false;
+}
+
+/* ================= โหมดต่างๆ ================= */
+const PAN = {
+  id: 'pan', icon: 'ti-hand-move', label: 'เลื่อน', cursor: 'grab',
+  hint: IS_TOUCH ? 'ลากเพื่อเลื่อนดูรูป ถ่างสองนิ้วเพื่อซูม (ใช้สองนิ้วได้กับทุกเครื่องมือ)'
+                 : 'ลากเพื่อเลื่อนดูรูป หมุนล้อเมาส์เพื่อซูม (หรือกด Space ค้างแล้วลากจากเครื่องมือไหนก็ได้)',
+};
+const MODES = {};
+
+/* ----- 1) ตัดลายเซ็น ----- */
+MODES.sig = {
+  id: 'sig', file: 'signature', title: 'ตัดลายเซ็น', icon: 'ti-signature', color: '#5b8cff', desc: 'เอาเฉพาะลายเซ็น พื้นหลังโปร่งใส',
+  tools: [
+    { id: 'box', icon: 'ti-crop', label: 'ครอบ', hint: '<b>1.</b> ลากกรอบครอบลายเซ็น (ข้ามได้ถ้ารูปมีแค่ลายเซ็น)<br><b>2.</b> เลื่อน "ลบพื้นกระดาษ" จนพื้นหายหมด<br><b>3.</b> กด "ตัดลายเซ็นเลย"' },
+    { id: 'erase', icon: 'ti-eraser', label: 'ลบจุด', brush: true, hint: 'ระบายทับจุดสกปรก เส้นบรรทัด หรือตัวหนังสือที่ไม่ต้องการ' },
+    PAN],
+  o: { cut: 40, soft: 40, shadow: true, speck: true, ink: 'orig', color: '#0b2a8a', bg: 'checker' },
+  actLabel: 'ตัดลายเซ็นเลย',
+  enter() { this.box = null; this.cache = null; setStageBg(this.o.bg); },
+  leave() { setStageBg('checker'); },
+  changed() { this.box = null; this.cache = null; },
+  escape() { this.box = null; this.dirty(); },
+  pending() { return !S.done; },
+  panel() {
+    const o = this.o;
+    return slider('cut', 'ลบพื้นกระดาษ', 0, 100, o.cut, ['น้อย', 'มาก'])
+      + slider('soft', 'ความนุ่มของขอบ', 0, 100, o.soft, ['คม', 'นุ่ม'])
+      + field('สีหมึก', seg('ink', [['orig', 'สีเดิม'], ['blue', 'น้ำเงิน'], ['black', 'ดำ'], ['custom', 'เลือกเอง']], o.ink)
+        + `<input type="color" id="inkc" value="${o.color}" ${o.ink === 'custom' ? '' : 'hidden'}>`)
+      + field('พื้นหลังตัวอย่าง', seg('pbg', [['checker', 'ตาราง'], ['white', 'ขาว'], ['black', 'ดำ']], o.bg))
+      + `<details class="adv"><summary>ตั้งค่าเพิ่มเติม</summary>
+          <label class="chk"><input type="checkbox" id="shadow" ${o.shadow ? 'checked' : ''}>แก้เงาและแสงไม่สม่ำเสมอ (รูปถ่ายจากมือถือ)</label>
+          <label class="chk"><input type="checkbox" id="speck" ${o.speck ? 'checked' : ''}>ลบจุดรบกวนเล็กๆ</label>
+          ${brushField()}
+          <p class="note"><i class="ti ti-info-circle"></i>ต้องการไฟล์ความละเอียดสูง เลือกขนาด 2x หรือ 3x ตอนบันทึก</p>
+        </details>`;
+  },
+  bind() {
+    const o = this.o;
+    onSlider('cut', v => { o.cut = v; this.dirty(); });
+    onSlider('soft', v => { o.soft = v; this.dirty(); });
+    onSeg('ink', v => { o.ink = v; $('#inkc').hidden = v !== 'custom'; this.dirty(); });
+    $('#inkc').oninput = e => { o.color = e.target.value; this.dirty(); };
+    onSeg('pbg', v => { o.bg = v; setStageBg(v); });
+    $('#shadow').onchange = e => { o.shadow = e.target.checked; this.cache = null; this.dirty(); };
+    $('#speck').onchange = e => { o.speck = e.target.checked; this.dirty(); };
+    bindBrush();
+  },
+  dirty() { if (S.done) { S.done = false; updateUI(); } render(); },
+  region() {
+    const b = this.box;
+    return b && b.w > 5 && b.h > 5 ? b : { x: 0, y: 0, w: imgW(), h: imgH() };
+  },
+  down(p) {
+    if (S.tool === 'box') { this.anchor = p; this.box = null; }
+    else { maskStroke(p, p); this.dirty(); }
+  },
+  move(p, l) {
+    if (S.tool === 'box') { if (this.anchor) { this.box = normRect(this.anchor, p); drawGuide(); } }
+    else { maskStroke(l, p); render(); }
+  },
+  up() {
+    if (S.tool !== 'box' || !this.anchor) return;
+    this.anchor = null;
+    if (this.box && (this.box.w < 6 || this.box.h < 6)) this.box = null;
+    this.dirty();
+  },
+  guide(g) { if (!S.done && this.box) dashRect(g, this.box, '#1a66c9'); },
+  render(c) {
+    if (S.done) { c.drawImage(S.img, 0, 0); return; }
+    const r = this.region();
+    c.save(); c.globalAlpha = .25; c.drawImage(S.img, 0, 0); c.restore();
+    c.clearRect(r.x, r.y, r.w, r.h);
+    c.drawImage(this.process(), r.x, r.y);
+  },
+  // แปลงความเข้มของหมึกเป็นความทึบ (alpha) พื้นกระดาษจึงโปร่งใส
+  process() {
+    const r = this.region(), o = this.o, W = r.w, H = r.h, n = W * H;
+    const key = [r.x, r.y, W, H, o.shadow, S.ver].join();
+    let C = this.cache;
+    if (!C || C.key !== key) {
+      const d = ctxOf(S.img).getImageData(r.x, r.y, W, H).data;
+      const L = new Float32Array(n), cp = new Uint8ClampedArray(n * 3);
+      for (let i = 0, j = 0; i < n; i++, j += 4) {
+        const a = d[j + 3] / 255, ia = 255 * (1 - a);
+        const R = d[j] * a + ia, G = d[j + 1] * a + ia, B = d[j + 2] * a + ia;
+        cp[i * 3] = R; cp[i * 3 + 1] = G; cp[i * 3 + 2] = B;
+        L[i] = .299 * R + .587 * G + .114 * B;
+      }
+      C = this.cache = { key, L, cp, bg: o.shadow ? bgEstimate(L, W, H) : paperLevel(L) };
+    }
+    const lo = 8 + o.cut * 1.4, hi = lo + 4 + o.soft * 1.2;
+    const bgA = typeof C.bg === 'number' ? null : C.bg;
+    const alpha = new Float32Array(n);
+    for (let i = 0; i < n; i++) {
+      const f = 255 / Math.max(bgA ? bgA[i] : C.bg, 40);
+      const D = 255 - Math.min(255, C.L[i] * f);
+      const a = (D - lo) / (hi - lo);
+      alpha[i] = a <= 0 ? 0 : a >= 1 ? 1 : a;
+    }
+    if (o.speck) despeckle(alpha, W, H, Math.max(6, Math.round(n / 30000)));
+    const md = mctx.getImageData(r.x, r.y, W, H).data;
+    const ink = o.ink === 'orig' ? null : hex2rgb(o.ink === 'blue' ? '#0b2a8a' : o.ink === 'black' ? '#111111' : o.color);
+    const out = new ImageData(W, H), od = out.data;
+    for (let i = 0; i < n; i++) {
+      if (!alpha[i] || md[i * 4 + 3] > 20) continue;
+      const j = i * 4;
+      if (ink) { od[j] = ink[0]; od[j + 1] = ink[1]; od[j + 2] = ink[2]; }
+      else {
+        const f = 255 / Math.max(bgA ? bgA[i] : C.bg, 40);
+        od[j] = C.cp[i * 3] * f; od[j + 1] = C.cp[i * 3 + 1] * f; od[j + 2] = C.cp[i * 3 + 2] * f;
+      }
+      od[j + 3] = alpha[i] * 255;
+    }
+    if (!this.outC || this.outC.width !== W || this.outC.height !== H) this.outC = newCanvas(W, H);
+    ctxOf(this.outC).putImageData(out, 0, 0);
+    return this.outC;
+  },
+  async apply() {
+    const res = this.process();
+    const t = trimAlpha(res, Math.round(Math.max(res.width, res.height) * .03) + 4);
+    if (!t) return toast('ไม่พบลายเซ็น ลองเลื่อน "ลบพื้นกระดาษ" ไปทาง "น้อย"', 'err');
+    clearMask(); this.box = null;
+    commit(t); S.done = true; updateUI();
+    $('#fmt').value = 'png'; $('#qrow').hidden = true;
+    toast('ตัดลายเซ็นแล้ว กด "บันทึกรูป" เพื่อเก็บเป็น PNG พื้นโปร่งใส');
+  },
+};
+
+/* ----- 2) ลบสิ่งที่ไม่ต้องการ ----- */
+MODES.rem = {
+  id: 'rem', file: 'removed', title: 'ลบสิ่งที่ไม่ต้องการ', icon: 'ti-eraser', color: '#ff6b8b', desc: 'ลบคนหรือสิ่งของออกจากรูป',
+  tools: [
+    { id: 'brush', icon: 'ti-brush', label: 'ระบาย', brush: true, hint: 'ระบายสีแดงทับคนหรือสิ่งของที่อยากลบ ให้เลยขอบออกมานิดหน่อย แล้วกด "ลบเลย"' },
+    { id: 'erase', icon: 'ti-eraser', label: 'ยางลบ', brush: true, hint: 'ลบสีแดงตรงที่ระบายเกิน' },
+    { id: 'clone', icon: 'ti-rubber-stamp', label: 'โคลน', brush: true, hint: 'ซ่อมจุดที่ยังไม่เนียน: กด "เลือกจุดต้นแบบ" แล้วแตะจุดที่สวย (หรือกด <b>Alt</b> ค้างแล้วคลิก) จากนั้นระบายทับจุดที่ต้องการซ่อม' },
+    PAN],
+  o: { grow: 6, method: 'telea' },
+  actLabel: 'ลบเลย',
+  enter() { this.src = null; loadCV().catch(() => {}); },
+  changed() { this.src = null; },
+  panel() {
+    return brushField()
+      + slider('grow', 'ขยายขอบที่ลบ', 0, 30, this.o.grow, ['พอดี', 'กว้าง'])
+      + clearBtn
+      + `<button class="btn sm" id="setsrc"><i class="ti ti-target"></i>เลือกจุดต้นแบบ (สำหรับโคลน)</button>`
+      + `<details class="adv"><summary>ตั้งค่าเพิ่มเติม</summary>
+          ${field('วิธีลบ', seg('meth', [['telea', 'แบบเร็ว'], ['ns', 'แบบเรียบ']], this.o.method))}
+          <p class="note"><i class="ti ti-info-circle"></i>ลบได้เนียนที่สุดเมื่อพื้นหลังเรียบ เช่น ท้องฟ้า ผนัง พื้นถนน ถ้าพื้นหลังซับซ้อนให้ใช้ "โคลน" ซ่อมต่อ</p>
+        </details>`
+      + cvStatusHTML();
+  },
+  bind() {
+    bindBrush(); bindClear();
+    $('#setsrc').onclick = () => { setTool('clone'); this.picking = true; toast('แตะหรือคลิกจุดที่สวยเพื่อใช้เป็นต้นแบบ'); };
+    onSlider('grow', v => this.o.grow = v);
+    onSeg('meth', v => this.o.method = v);
+    updateCvStatus();
+  },
+  down(p, e) {
+    if (S.tool === 'clone') {
+      if (e.altKey || this.picking) {
+        this.src = p; this.picking = false; drawGuide();
+        return toast('ตั้งจุดต้นแบบแล้ว ระบายทับจุดที่ต้องการซ่อมได้เลย');
+      }
+      if (!this.src) { this.picking = true; return toast('แตะหรือคลิกจุดที่สวยเพื่อใช้เป็นต้นแบบก่อน'); }
+      pushHist();
+      this.snap = cloneCanvas(S.img);
+      this.off = { x: this.src.x - p.x, y: this.src.y - p.y };
+      this.cloning = true; S.done = false; updateUI();
+      this.stamp(p, p);
+      return;
+    }
+    maskStroke(p, p); S.done = false; updateUI();
+  },
+  move(p, l) {
+    if (S.tool === 'clone') { if (this.cloning) this.stamp(l, p); return; }
+    maskStroke(l, p);
+  },
+  up() {
+    if (!this.cloning) return;
+    this.cloning = false; this.snap = null; S.ver++;
+    this.src = { x: this.src.x + 0, y: this.src.y + 0 };
+  },
+  stamp(a, b) {
+    const c = ctxOf(S.img), r = Brush.size / 2;
+    const steps = Math.max(1, Math.ceil(Math.hypot(b.x - a.x, b.y - a.y) / Math.max(1, r / 3)));
+    for (let i = 0; i <= steps; i++) {
+      const x = a.x + (b.x - a.x) * i / steps, y = a.y + (b.y - a.y) * i / steps;
+      c.save(); c.beginPath(); c.arc(x, y, r, 0, Math.PI * 2); c.clip();
+      c.drawImage(this.snap, x + this.off.x - r, y + this.off.y - r, r * 2, r * 2, x - r, y - r, r * 2, r * 2);
+      c.restore();
+    }
+    render();
+  },
+  guide(g) {
+    if (S.tool !== 'clone' || !this.src) return;
+    const p = this.cloning && S.cursor ? { x: S.cursor.x + this.off.x, y: S.cursor.y + this.off.y } : this.src;
+    const px = 1 / S.z, s = 10 * px;
+    g.save(); g.lineWidth = 2 * px; g.strokeStyle = '#ffd400';
+    g.beginPath(); g.moveTo(p.x - s, p.y); g.lineTo(p.x + s, p.y); g.moveTo(p.x, p.y - s); g.lineTo(p.x, p.y + s); g.stroke();
+    g.beginPath(); g.arc(p.x, p.y, Brush.size / 2, 0, Math.PI * 2); g.stroke();
+    g.restore();
+  },
+  async apply() {
+    const m = maskData();
+    if (!m) return toast('ระบายสีแดงทับสิ่งที่อยากลบก่อน', 'err');
+    const out = await busy('กำลังลบ...', () => inpaintImage(m, this.o.grow, this.o.method));
+    if (!out) return;
+    clearMask(); commit(out); S.done = true; updateUI();
+  },
+};
+
+/* ----- 3) ลบลายน้ำ ----- */
+MODES.wm = {
+  id: 'wm', file: 'no-watermark', title: 'ลบลายน้ำ', icon: 'ti-droplet-off', color: '#2dd4bf', desc: 'ลบตัวหนังสือ โลโก้ หรือวันที่ที่ทับรูป',
+  tools: [
+    { id: 'box', icon: 'ti-scan', label: 'หาในกรอบ', hint: 'ลากกรอบครอบลายน้ำ ระบบจะหาตัวลายน้ำให้เป็นสีแดง ถ้าได้ไม่ครบ ปรับ "ความไว" หรือใช้แปรงเติม แล้วกด "ลบลายน้ำ"' },
+    { id: 'pick', icon: 'ti-color-picker', label: 'เลือกสี', hint: 'คลิกที่ตัวลายน้ำ ระบบจะเลือกทุกจุดที่สีเหมือนกัน (ถ้ามีกรอบอยู่ จะเลือกเฉพาะในกรอบ) เหมาะกับโลโก้หรือวันที่สีชัดๆ' },
+    { id: 'brush', icon: 'ti-brush', label: 'ระบาย', brush: true, hint: 'ระบายเพิ่มตรงที่ระบบหาไม่เจอ' },
+    { id: 'erase', icon: 'ti-eraser', label: 'ยางลบ', brush: true, hint: 'ลบสีแดงตรงที่ไม่ใช่ลายน้ำ' },
+    PAN],
+  o: { sens: 50, type: 'light', tol: 30, grow: 3, method: 'telea' },
+  actLabel: 'ลบลายน้ำ',
+  enter() { this.box = null; this.pick = null; loadCV().catch(() => {}); },
+  changed() { this.box = null; this.pick = null; },
+  escape() { this.box = null; drawGuide(); },
+  panel() {
+    const o = this.o;
+    return field('ลายน้ำเป็นแบบไหน', seg('wtype', [['light', 'สีอ่อน/ขาว'], ['dark', 'สีเข้ม'], ['both', 'ทั้งสองแบบ']], o.type))
+      + slider('sens', 'ความไวในการหา', 0, 100, o.sens, ['หาน้อย', 'หามาก'])
+      + slider('tol', 'ช่วงสีที่เลือก (เครื่องมือเลือกสี)', 0, 100, o.tol, ['แคบ', 'กว้าง'])
+      + brushField()
+      + clearBtn
+      + `<details class="adv"><summary>ตั้งค่าเพิ่มเติม</summary>
+          ${slider('wgrow', 'ขยายขอบที่ลบ', 0, 20, o.grow, ['พอดี', 'กว้าง'])}
+          ${field('วิธีลบ', seg('wmeth', [['telea', 'แบบเร็ว'], ['ns', 'แบบเรียบ']], o.method))}
+          <p class="note"><i class="ti ti-info-circle"></i>ลายน้ำขนาดเล็ก เช่น วันที่ ชื่อ โลโก้มุมรูป จะลบได้เนียน ลายน้ำที่ทับเต็มรูปจะทำให้รูปเบลอ</p>
+        </details>`
+      + `<p class="note"><i class="ti ti-shield-check"></i>ใช้กับรูปที่คุณมีสิทธิ์ใช้งาน เช่น รูปของบริษัทหรือรูปของคุณเอง</p>`
+      + cvStatusHTML();
+  },
+  bind() {
+    const o = this.o;
+    onSeg('wtype', v => { o.type = v; this.redetect(); });
+    onSlider('sens', v => { o.sens = v; this.redetect(); });
+    onSlider('tol', v => { o.tol = v; if (this.pick) this.applyPick(); });
+    onSlider('wgrow', v => o.grow = v);
+    onSeg('wmeth', v => o.method = v);
+    bindBrush(); bindClear(() => { this.pick = null; });
+    updateCvStatus();
+  },
+  redetect() { if (this.box && this.last === 'detect') { cancelAnimationFrame(this.rd); this.rd = requestAnimationFrame(() => this.detect()); } },
+  down(p) {
+    S.done = false; updateUI();
+    if (S.tool === 'box') { this.anchor = p; this.box = null; return; }
+    if (S.tool === 'pick') { this.pickAt(p); return; }
+    this.pick = null; maskStroke(p, p);
+  },
+  move(p, l) {
+    if (S.tool === 'box') { if (this.anchor) { this.box = normRect(this.anchor, p); drawGuide(); } return; }
+    if (S.tool === 'brush' || S.tool === 'erase') maskStroke(l, p);
+  },
+  up() {
+    if (S.tool !== 'box' || !this.anchor) return;
+    this.anchor = null;
+    if (!this.box || this.box.w < 6 || this.box.h < 6) { this.box = null; drawGuide(); return; }
+    this.detect();
+  },
+  guide(g) { if (this.box) dashRect(g, this.box, '#e08a00'); },
+  // หาลายน้ำในกรอบ: จุดที่สว่าง/มืดกว่าบริเวณรอบๆ อย่างชัดเจน
+  detect() {
+    const b = this.box; if (!b) return;
+    this.last = 'detect'; this.pick = null;
+    const { x, y, w, h } = b, n = w * h, o = this.o;
+    const d = ctxOf(S.img).getImageData(x, y, w, h).data;
+    const L = new Float32Array(n);
+    for (let i = 0; i < n; i++) L[i] = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2];
+    const mean = boxBlur(L, w, h, clamp(Math.round(Math.min(w, h) / 8), 3, 40));
+    const t = 3 + (100 - o.sens) * .37;
+    const md = new ImageData(w, h), m = md.data;
+    let cnt = 0;
+    for (let i = 0; i < n; i++) {
+      const df = L[i] - mean[i];
+      const hit = o.type === 'light' ? df > t : o.type === 'dark' ? -df > t : Math.abs(df) > t;
+      if (hit) { m[i * 4] = 255; m[i * 4 + 1] = 32; m[i * 4 + 2] = 32; m[i * 4 + 3] = 255; cnt++; }
+    }
+    mctx.putImageData(md, x, y);
+    if (!cnt) toast('ยังไม่พบลายน้ำในกรอบ ลองเพิ่มความไว หรือเปลี่ยนแบบของลายน้ำ');
+  },
+  pickAt(p) {
+    const x = clamp(Math.round(p.x), 1, imgW() - 2), y = clamp(Math.round(p.y), 1, imgH() - 2);
+    const d = ctxOf(S.img).getImageData(x - 1, y - 1, 3, 3).data;
+    let r = 0, g = 0, bl = 0;
+    for (let i = 0; i < 36; i += 4) { r += d[i]; g += d[i + 1]; bl += d[i + 2]; }
+    const R = this.box || { x: 0, y: 0, w: imgW(), h: imgH() };
+    this.pick = { c: [r / 9, g / 9, bl / 9], R, base: mctx.getImageData(R.x, R.y, R.w, R.h) };
+    this.last = 'pick';
+    this.applyPick();
+  },
+  applyPick() {
+    const { c: [pr, pg, pb], R, base } = this.pick;
+    const md = new ImageData(new Uint8ClampedArray(base.data), R.w, R.h), m = md.data;
+    const d = ctxOf(S.img).getImageData(R.x, R.y, R.w, R.h).data;
+    const th = (6 + this.o.tol * 1.3) ** 2;
+    for (let i = 0; i < d.length; i += 4) {
+      const dr = d[i] - pr, dg = d[i + 1] - pg, db = d[i + 2] - pb;
+      if (dr * dr + dg * dg + db * db < th) { m[i] = 255; m[i + 1] = 32; m[i + 2] = 32; m[i + 3] = 255; }
+    }
+    mctx.putImageData(md, R.x, R.y);
+  },
+  async apply() {
+    const m = maskData();
+    if (!m) return toast('ลากกรอบครอบลายน้ำ หรือระบายทับลายน้ำก่อน', 'err');
+    const out = await busy('กำลังลบลายน้ำ...', () => inpaintImage(m, this.o.grow, this.o.method));
+    if (!out) return;
+    clearMask(); this.box = null; this.pick = null;
+    commit(out); S.done = true; updateUI();
+  },
+};
+
+/* ----- 4) ปิดหน้าและข้อมูลส่วนตัว (PDPA) ----- */
+MODES.blur = {
+  id: 'blur', file: 'privacy', title: 'ปิดหน้าและข้อมูลส่วนตัว', icon: 'ti-eye-off', color: '#b47cff', desc: 'เบลอหน้า ทะเบียนรถ เลขบัตร',
+  tools: [
+    { id: 'box', icon: 'ti-square', label: 'ลากกรอบ', hint: 'ลากกรอบทับใบหน้า ทะเบียนรถ หรือเลขบัตร ทำได้หลายจุด เสร็จแล้วกด "ปิดบริเวณที่เลือก"' },
+    { id: 'brush', icon: 'ti-brush', label: 'ระบาย', brush: true, hint: 'ระบายทับบริเวณที่ต้องการปิด เหมาะกับรูปทรงไม่เป็นสี่เหลี่ยม' },
+    { id: 'erase', icon: 'ti-eraser', label: 'ยางลบ', brush: true, hint: 'ระบายเพื่อเอาส่วนที่ปิดเกินออก' },
+    PAN],
+  o: { type: 'mosaic', str: 50 },
+  actLabel: 'ปิดบริเวณที่เลือก',
+  enter() { maskC.style.opacity = '0'; this.fx = null; this.has = false; },
+  leave() { maskC.style.opacity = ''; },
+  changed() { this.fx = null; },
+  pending() { return this.has; },
+  panel() {
+    return field('แบบการปิด', seg('btype', [['mosaic', 'โมเสก'], ['blur', 'เบลอ'], ['bar', 'แถบดำ']], this.o.type))
+      + slider('bstr', 'ความแรง', 0, 100, this.o.str, ['น้อย', 'มาก'])
+      + brushField() + clearBtn
+      + `<p class="note"><i class="ti ti-shield-lock"></i>เลขบัตรประชาชนหรือเลขบัญชี แนะนำ "แถบดำ" เพราะปลอดภัยที่สุด</p>`;
+  },
+  bind() {
+    onSeg('btype', v => { this.o.type = v; render(); });
+    onSlider('bstr', v => { this.o.str = v; render(); });
+    bindBrush(); bindClear(() => { this.has = false; });
+  },
+  effect() {
+    const key = [this.o.type, this.o.str, S.ver].join();
+    if (this.fx && this.fxKey === key) return this.fx;
+    const W = imgW(), H = imgH(), k = Math.max(W, H) / 1000;
+    const fx = this.fx && this.fx.width === W && this.fx.height === H ? this.fx : newCanvas(W, H);
+    const x = fx.getContext('2d');
+    x.clearRect(0, 0, W, H);
+    if (this.o.type === 'bar') { x.fillStyle = '#000'; x.fillRect(0, 0, W, H); }
+    else if (this.o.type === 'blur') {
+      const r = (2 + this.o.str * .4) * k;
+      if (CANVAS_FILTER) { x.drawImage(S.img, 0, 0); x.filter = `blur(${r}px)`; x.drawImage(S.img, 0, 0); x.filter = 'none'; }
+      else softBlur(x, S.img, r);
+    } else {
+      const bs = Math.max(2, Math.round((4 + this.o.str * .5) * k));
+      const sm = newCanvas(Math.ceil(W / bs), Math.ceil(H / bs)), sx = sm.getContext('2d');
+      sx.imageSmoothingQuality = 'high'; sx.drawImage(S.img, 0, 0, sm.width, sm.height);
+      x.imageSmoothingEnabled = false; x.drawImage(sm, 0, 0, sm.width * bs, sm.height * bs);
+    }
+    this.fx = fx; this.fxKey = key;
+    return fx;
+  },
+  render(c) {
+    c.drawImage(S.img, 0, 0);
+    if (!this.has) return;
+    const W = imgW(), H = imgH();
+    const t = this.tmp && this.tmp.width === W && this.tmp.height === H ? this.tmp : (this.tmp = newCanvas(W, H));
+    const x = t.getContext('2d');
+    x.globalCompositeOperation = 'copy'; x.drawImage(this.effect(), 0, 0);
+    x.globalCompositeOperation = 'destination-in'; x.drawImage(maskC, 0, 0);
+    x.globalCompositeOperation = 'source-over';
+    c.drawImage(t, 0, 0);
+  },
+  down(p) {
+    S.done = false; updateUI();
+    if (S.tool === 'box') { this.anchor = p; this.tmpR = null; return; }
+    maskStroke(p, p); this.has = true; render();
+  },
+  move(p, l) {
+    if (S.tool === 'box') { if (this.anchor) { this.tmpR = normRect(this.anchor, p); drawGuide(); } return; }
+    maskStroke(l, p); render();
+  },
+  up() {
+    if (S.tool !== 'box' || !this.anchor) return;
+    this.anchor = null;
+    const r = this.tmpR; this.tmpR = null;
+    if (r && r.w > 3 && r.h > 3) { mctx.fillStyle = '#ff2020'; mctx.fillRect(r.x, r.y, r.w, r.h); this.has = true; }
+    render();
+  },
+  guide(g) { if (this.tmpR) dashRect(g, this.tmpR, '#e08a00'); },
+  async apply() {
+    if (!this.has) return toast('ลากกรอบหรือระบายทับส่วนที่ต้องการปิดก่อน', 'err');
+    const out = newCanvas(imgW(), imgH());
+    this.render(ctxOf(out));
+    clearMask(); this.has = false;
+    commit(out); S.done = true; updateUI();
+  },
+};
+
+/* ----- 5) ครอป หมุน ปรับขนาด ----- */
+const RATIOS = [['0', 'อิสระ'], ['1', '1:1'], ['1.3333', '4:3'], ['0.75', '3:4'], ['1.7778', '16:9'], ['0.5625', '9:16'], ['0.8333', 'ติดบัตร 1 นิ้ว'], ['0.8444', 'ติดบัตร 2 นิ้ว']];
+function inscribe(W, H, t) {
+  const a = Math.abs(t), c = Math.cos(a), s = Math.sin(a);
+  return Math.min(W / (W * c + H * s), H / (W * s + H * c));
+}
+MODES.crop = {
+  id: 'crop', file: 'cropped', title: 'ครอปและปรับขนาด', icon: 'ti-crop', color: '#ffb547', desc: 'ตัดขอบ หมุน ย่อไฟล์',
+  tools: [
+    { id: 'crop', icon: 'ti-crop', label: 'ครอป', hint: 'ลากมุมหรือขอบกรอบเพื่อเลือกส่วนที่ต้องการ ลากตรงกลางเพื่อย้าย หรือเลือกสัดส่วนสำเร็จรูป แล้วกด "ครอปรูป"' },
+    { id: 'rotate', icon: 'ti-rotate-clockwise', label: 'หมุน', cursor: 'default', hint: 'หมุนหรือพลิกรูปได้ทันที ถ้ารูปเอียงเล็กน้อย ใช้ "หมุนละเอียด" ให้เส้นตารางตรงกับแนวในรูป' },
+    { id: 'size', icon: 'ti-dimensions', label: 'ขนาด', cursor: 'default', hint: 'กำหนดขนาดใหม่ หรือเลือกขนาดสำเร็จรูป แล้วกด "ปรับขนาด"' },
+    PAN],
+  actLabel() { return { crop: 'ครอปรูป', rotate: this.angle ? 'หมุนรูป' : null, size: 'ปรับขนาด' }[this.sec || 'crop']; },
+  enter() { this.ratio = 0; this.angle = 0; this.sec = 'crop'; this.full(); },
+  changed() { this.angle = 0; this.full(); this.syncSize(); if ($('#ang')) setSlider('ang', 0); },
+  full() { this.rect = { x: 0, y: 0, w: imgW(), h: imgH() }; if (this.ratio) this.setRatio(this.ratio); },
+  panel() {
+    return `<div class="sec" data-sec="crop">
+        ${field('สัดส่วน', `<div class="chips" id="ratios">${RATIOS.map(([v, l]) => `<button data-r="${v}" class="${+v === this.ratio ? 'on' : ''}">${l}</button>`).join('')}</div>`)}
+        <p class="note"><i class="ti ti-ruler-2"></i><span id="csize"></span></p>
+      </div>
+      <div class="sec" data-sec="rotate">
+        <div class="grid2">
+          <button class="btn" id="rl"><i class="ti ti-rotate-2"></i>หมุนซ้าย</button>
+          <button class="btn" id="rr"><i class="ti ti-rotate-clockwise-2"></i>หมุนขวา</button>
+          <button class="btn" id="fh"><i class="ti ti-flip-vertical"></i>พลิกซ้าย-ขวา</button>
+          <button class="btn" id="fv"><i class="ti ti-flip-horizontal"></i>พลิกบน-ล่าง</button>
+        </div>
+        ${slider('ang', 'หมุนละเอียด', -45, 45, 0, ['-45°', '45°'], .5)}
+      </div>
+      <div class="sec" data-sec="size">
+        <div class="grid2">
+          <label>กว้าง (px)<input type="number" id="rw" min="1" max="12000"></label>
+          <label>สูง (px)<input type="number" id="rh" min="1" max="12000"></label>
+        </div>
+        <label class="chk"><input type="checkbox" id="rlock" checked>ล็อกสัดส่วน</label>
+        ${field('ขนาดสำเร็จรูป', `<div class="chips" id="rpre">
+          <button data-p="0.5">ครึ่งหนึ่ง</button><button data-p="1200">อีเมล 1200px</button>
+          <button data-p="2048">Facebook 2048px</button><button data-p="1040">LINE 1040px</button></div>`)}
+      </div>`;
+  },
+  bind() {
+    $('#ratios').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      $$('#ratios button').forEach(x => x.classList.toggle('on', x === b));
+      this.ratio = +b.dataset.r;
+      if (this.ratio) this.setRatio(this.ratio); else this.rect = { x: 0, y: 0, w: imgW(), h: imgH() };
+      this.syncCrop(); drawGuide();
+    };
+    $('#rl').onclick = () => this.rot90(-1);
+    $('#rr').onclick = () => this.rot90(1);
+    $('#fh').onclick = () => this.flip(true);
+    $('#fv').onclick = () => this.flip(false);
+    onSlider('ang', v => { this.angle = v; setAct(); render(); }, v => v + '°');
+    const rw = $('#rw'), rh = $('#rh');
+    rw.oninput = () => { if ($('#rlock').checked) rh.value = Math.max(1, Math.round(rw.value * imgH() / imgW())); };
+    rh.oninput = () => { if ($('#rlock').checked) rw.value = Math.max(1, Math.round(rh.value * imgW() / imgH())); };
+    $('#rpre').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const p = +b.dataset.p, s = p < 10 ? p : p / Math.max(imgW(), imgH());
+      rw.value = Math.max(1, Math.round(imgW() * s)); rh.value = Math.max(1, Math.round(imgH() * s));
+    };
+    this.syncSize(); this.syncCrop();
+  },
+  onTool(id) { this.sec = id; render(); },
+  syncSize() { if ($('#rw')) { $('#rw').value = imgW(); $('#rh').value = imgH(); } },
+  syncCrop() { if ($('#csize')) $('#csize').textContent = `ขนาดหลังครอป ${Math.round(this.rect.w)} × ${Math.round(this.rect.h)} px`; },
+  setRatio(R) {
+    let w = imgW(), h = w / R;
+    if (h > imgH()) { h = imgH(); w = h * R; }
+    this.rect = { x: (imgW() - w) / 2, y: (imgH() - h) / 2, w, h };
+  },
+  hit(p) {
+    const r = this.rect, hs = (S.ptype === 'touch' ? 30 : 16) / S.z;
+    const cs = { nw: [r.x, r.y], ne: [r.x + r.w, r.y], sw: [r.x, r.y + r.h], se: [r.x + r.w, r.y + r.h] };
+    for (const k in cs) if (Math.abs(p.x - cs[k][0]) < hs && Math.abs(p.y - cs[k][1]) < hs) return k;
+    if (p.x > r.x && p.x < r.x + r.w && p.y > r.y && p.y < r.y + r.h) return 'move';
+    return 'new';
+  },
+  // สร้างกรอบจากจุดยึด A ไปยังจุด P โดยรักษาสัดส่วนและไม่ให้ล้นรูป
+  fromAnchor(A, P) {
+    const R = this.ratio, sx = P.x >= A.x ? 1 : -1, sy = P.y >= A.y ? 1 : -1;
+    let w = Math.min(Math.abs(P.x - A.x), sx > 0 ? imgW() - A.x : A.x);
+    let h = Math.min(Math.abs(P.y - A.y), sy > 0 ? imgH() - A.y : A.y);
+    if (R) { if (w / Math.max(h, 1e-6) > R) w = h * R; else h = w / R; }
+    return { x: sx > 0 ? A.x : A.x - w, y: sy > 0 ? A.y : A.y - h, w, h };
+  },
+  down(p) {
+    if (this.sec !== 'crop') return;
+    this.op = this.hit(p); this.p0 = p; this.r0 = { ...this.rect };
+  },
+  move(p) {
+    if (!this.op) return;
+    const r0 = this.r0;
+    if (this.op === 'move') {
+      this.rect = { ...r0, x: clamp(r0.x + p.x - this.p0.x, 0, imgW() - r0.w), y: clamp(r0.y + p.y - this.p0.y, 0, imgH() - r0.h) };
+    } else if (this.op === 'new') {
+      this.rect = this.fromAnchor({ x: clamp(this.p0.x, 0, imgW()), y: clamp(this.p0.y, 0, imgH()) }, p);
+    } else {
+      const A = { x: this.op[1] === 'w' ? r0.x + r0.w : r0.x, y: this.op[0] === 'n' ? r0.y + r0.h : r0.y };
+      this.rect = this.fromAnchor(A, p);
+    }
+    this.syncCrop(); drawGuide();
+  },
+  up() {
+    if (!this.op) return;
+    this.op = null;
+    if (this.rect.w < 4 || this.rect.h < 4) { this.full(); this.syncCrop(); drawGuide(); }
+    S.done = false; updateUI();
+  },
+  hover(p) {
+    if (this.sec !== 'crop' || S.tool === 'pan' || S.space) return;
+    const h = this.hit(p);
+    stage.style.cursor = h === 'move' ? 'move' : h === 'new' ? 'crosshair' : (h === 'nw' || h === 'se' ? 'nwse-resize' : 'nesw-resize');
+  },
+  render(c) {
+    if (this.sec === 'rotate' && this.angle) {
+      const W = imgW(), H = imgH(), t = this.angle * Math.PI / 180, s = inscribe(W, H, t);
+      c.save(); c.translate(W / 2, H / 2); c.rotate(t); c.scale(1 / s, 1 / s); c.drawImage(S.img, -W / 2, -H / 2); c.restore();
+    } else c.drawImage(S.img, 0, 0);
+  },
+  guide(g) {
+    const px = 1 / S.z, W = imgW(), H = imgH();
+    if (this.sec === 'rotate') {
+      g.save(); g.lineWidth = px; g.strokeStyle = 'rgba(255,255,255,.7)';
+      for (let i = 1; i < 8; i++) {
+        g.beginPath(); g.moveTo(W * i / 8, 0); g.lineTo(W * i / 8, H); g.moveTo(0, H * i / 8); g.lineTo(W, H * i / 8); g.stroke();
+      }
+      g.restore(); return;
+    }
+    if (this.sec !== 'crop') return;
+    const r = this.rect;
+    g.save();
+    g.fillStyle = 'rgba(0,0,0,.5)';
+    g.beginPath(); g.rect(0, 0, W, H); g.rect(r.x, r.y, r.w, r.h); g.fill('evenodd');
+    g.strokeStyle = 'rgba(255,255,255,.6)'; g.lineWidth = px;
+    g.beginPath();
+    for (let i = 1; i < 3; i++) {
+      g.moveTo(r.x + r.w * i / 3, r.y); g.lineTo(r.x + r.w * i / 3, r.y + r.h);
+      g.moveTo(r.x, r.y + r.h * i / 3); g.lineTo(r.x + r.w, r.y + r.h * i / 3);
+    }
+    g.stroke();
+    g.strokeStyle = '#fff'; g.lineWidth = 2 * px; g.strokeRect(r.x, r.y, r.w, r.h);
+    const hs = 12 * px; g.fillStyle = '#fff';
+    for (const [x, y] of [[r.x, r.y], [r.x + r.w, r.y], [r.x, r.y + r.h], [r.x + r.w, r.y + r.h]]) g.fillRect(x - hs / 2, y - hs / 2, hs, hs);
+    g.restore();
+  },
+  rot90(dir) {
+    const W = imgW(), H = imgH(), o = newCanvas(H, W), x = ctxOf(o);
+    x.translate(H / 2, W / 2); x.rotate(dir * Math.PI / 2); x.drawImage(S.img, -W / 2, -H / 2);
+    commit(o);
+  },
+  flip(h) {
+    const W = imgW(), H = imgH(), o = newCanvas(W, H), x = ctxOf(o);
+    if (h) { x.translate(W, 0); x.scale(-1, 1); } else { x.translate(0, H); x.scale(1, -1); }
+    x.drawImage(S.img, 0, 0); commit(o);
+  },
+  async apply() {
+    if (this.sec === 'size') {
+      const w = Math.round(+$('#rw').value), h = Math.round(+$('#rh').value);
+      if (!(w > 0 && h > 0) || w > 12000 || h > 12000) return toast('ใส่ขนาดระหว่าง 1 ถึง 12000 px', 'err');
+      if (w === imgW() && h === imgH()) return toast('ขนาดเท่าเดิม ลองเปลี่ยนตัวเลขก่อน');
+      commit(resizeCanvas(S.img, w, h)); S.done = true; updateUI();
+      return toast(`ปรับขนาดเป็น ${w}×${h} px แล้ว`);
+    }
+    if (this.sec === 'rotate') {
+      if (!this.angle) return;
+      const W = imgW(), H = imgH(), t = this.angle * Math.PI / 180, s = inscribe(W, H, t);
+      const o = newCanvas(Math.round(W * s), Math.round(H * s)), x = ctxOf(o);
+      x.imageSmoothingQuality = 'high';
+      x.translate(o.width / 2, o.height / 2); x.rotate(t); x.drawImage(S.img, -W / 2, -H / 2);
+      commit(o); S.done = true; updateUI(); return;
+    }
+    const r = { x: Math.round(this.rect.x), y: Math.round(this.rect.y), w: Math.round(this.rect.w), h: Math.round(this.rect.h) };
+    if (r.w >= imgW() && r.h >= imgH()) return toast('ลากกรอบเพื่อเลือกส่วนที่ต้องการก่อน', 'err');
+    const o = newCanvas(r.w, r.h);
+    ctxOf(o).drawImage(S.img, r.x, r.y, r.w, r.h, 0, 0, r.w, r.h);
+    commit(o); S.done = true; updateUI();
+  },
+};
+
+/* ----- 6) แต่งสีและฟิลเตอร์ ----- */
+// [รหัส, ชื่อ, ค่าปรับ] ค่าอยู่ในช่วง -1..1, split = [สีส่วนมืด, สีส่วนสว่าง, ความแรง]
+const FILTERS = [
+  ['none', 'ต้นฉบับ', {}],
+  ['vivid', 'สดใส', { sat: .25, vib: .3, contrast: .12 }],
+  ['pop', 'สีจัด', { sat: .4, vib: .3, contrast: .2 }],
+  ['warm', 'อบอุ่น', { temp: .35, sat: .05, fade: .05 }],
+  ['cool', 'เย็นสบาย', { temp: -.35, tint: -.05, sat: -.05 }],
+  ['golden', 'แดดเย็น', { temp: .5, tint: .1, sat: .15, exposure: .05, highlights: -.15 }],
+  ['airy', 'ละมุน', { exposure: .2, contrast: -.2, sat: -.15, temp: -.1, fade: .2, shadows: .3 }],
+  ['japan', 'ญี่ปุ่น', { exposure: .25, contrast: -.15, sat: -.25, temp: -.15, tint: -.1, fade: .15, shadows: .35 }],
+  ['film', 'ฟิล์ม', { contrast: -.1, fade: .35, sat: -.15, split: [[.38, .55, .6], [.65, .55, .42], .5], grain: .35 }],
+  ['vintage', 'วินเทจ', { temp: .3, sat: -.35, fade: .4, contrast: -.1, vignette: .35, split: [[.5, .5, .5], [.68, .56, .4], .6], grain: .25 }],
+  ['cine', 'หนัง', { contrast: .15, sat: .05, split: [[.36, .54, .62], [.66, .55, .4], .6], vignette: .25 }],
+  ['cafe', 'คาเฟ่', { exposure: -.05, contrast: .1, sat: -.2, temp: .2, fade: .15, vignette: .25, highlights: -.2 }],
+  ['food', 'อาหาร', { sat: .2, vib: .25, temp: .15, contrast: .1, exposure: .05 }],
+  ['drama', 'ดราม่า', { contrast: .35, highlights: -.3, shadows: .2, sat: -.1, vignette: .35 }],
+  ['mono', 'ขาวดำ', { bw: 1, contrast: .15 }],
+  ['noir', 'ขาวดำเข้ม', { bw: 1, contrast: .45, exposure: -.1, vignette: .4, grain: .2 }],
+  ['sepia', 'ซีเปีย', { bw: 1, split: [[.7, .56, .38], [.7, .56, .38], .55], contrast: -.05, fade: .1 }],
+];
+const ADJ_ZERO = { exposure: 0, contrast: 0, highlights: 0, shadows: 0, fade: 0, temp: 0, tint: 0, vib: 0, sat: 0, sharp: 0, vignette: 0, grain: 0 };
+MODES.adj = {
+  id: 'adj', file: 'edited', title: 'แต่งสีและฟิลเตอร์', icon: 'ti-adjustments', color: '#ff7ad9', desc: 'ฟิลเตอร์ โทนสี ความสดใส',
+  tools: [
+    { id: 'filter', icon: 'ti-wand', label: 'ฟิลเตอร์', cursor: 'default', hint: 'แตะฟิลเตอร์ที่ชอบ แล้วปรับ "ความเข้ม" ได้ กดค้างปุ่มรูปตาด้านบนเพื่อเทียบกับรูปเดิม' },
+    { id: 'light', icon: 'ti-sun', label: 'แสง', cursor: 'default', hint: 'ปรับความสว่าง ดึงรายละเอียดในส่วนมืดหรือส่วนสว่างที่จ้าเกินไป' },
+    { id: 'color', icon: 'ti-palette', label: 'สี', cursor: 'default', hint: '"ความสด" เพิ่มสีให้ส่วนที่จืดโดยไม่ทำให้สีผิวจัดเกินไป เหมาะกับรูปคน' },
+    { id: 'effect', icon: 'ti-sparkles', label: 'เอฟเฟกต์', cursor: 'default', hint: 'เพิ่มความคมชัด ขอบภาพมืดแบบเลนส์กล้อง หรือเกรนแบบฟิล์ม' },
+    PAN],
+  actLabel: 'ใช้การแต่งนี้',
+  enter() { this.p = { ...ADJ_ZERO }; this.f = 'none'; this.fi = 100; this.smallKey = null; },
+  changed() { this.smallKey = null; if ($('#fgrid')) this.thumbs(); },
+  pending() { return this.f !== 'none' || Object.keys(this.p).some(k => this.p[k]); },
+  panel() {
+    const sl = (k, label, ends, min = -100) => slider('a_' + k, label, min, 100, this.p[k], ends);
+    return `<div class="row2">
+        <button class="btn" id="auto"><i class="ti ti-sparkles"></i>ปรับอัตโนมัติ</button>
+        <button class="btn" id="areset"><i class="ti ti-restore"></i>ค่าเริ่มต้น</button>
+      </div>
+      <div class="sec" data-sec="filter">
+        <div class="fgrid" id="fgrid">${FILTERS.map(([k, l]) =>
+          `<button class="fitem${k === this.f ? ' on' : ''}" data-f="${k}"><canvas width="84" height="84" data-f="${k}"></canvas><span>${l}</span></button>`).join('')}</div>
+        <div id="fi-wrap" ${this.f === 'none' ? 'hidden' : ''}>${slider('fi', 'ความเข้มของฟิลเตอร์', 0, 100, this.fi, ['อ่อน', 'เข้ม'])}</div>
+      </div>
+      <div class="sec" data-sec="light">
+        ${sl('exposure', 'ความสว่าง', ['มืด', 'สว่าง'])}${sl('contrast', 'คอนทราสต์', ['นุ่ม', 'จัด'])}
+        ${sl('highlights', 'ส่วนสว่าง', ['ลดลง', 'เพิ่มขึ้น'])}${sl('shadows', 'ส่วนมืด', ['มืดลง', 'สว่างขึ้น'])}
+        ${sl('fade', 'ซีดจาง', ['ไม่มี', 'มาก'], 0)}
+      </div>
+      <div class="sec" data-sec="color">
+        ${sl('temp', 'อุณหภูมิสี', ['เย็น', 'อุ่น'])}${sl('tint', 'โทนสี', ['เขียว', 'ชมพู'])}
+        ${sl('vib', 'ความสด', ['จืด', 'สด'])}${sl('sat', 'ความอิ่มสี', ['ขาวดำ', 'จัด'])}
+      </div>
+      <div class="sec" data-sec="effect">
+        ${sl('sharp', 'ความคมชัด', ['ปกติ', 'คมมาก'], 0)}${sl('vignette', 'ขอบภาพ', ['สว่าง', 'มืด'])}
+        ${sl('grain', 'เกรนฟิล์ม', ['ไม่มี', 'มาก'], 0)}
+      </div>
+      <p class="note"><i class="ti ti-info-circle"></i>ดับเบิลคลิกที่แถบเลื่อนเพื่อกลับเป็น 0</p>`;
+  },
+  bind() {
+    const ch = () => {
+      if (S.done) { S.done = false; updateUI(); }
+      this.fast = true; clearTimeout(this.ft);
+      this.ft = setTimeout(() => { this.fast = false; render(); }, 220);
+      render();
+    };
+    const sg = v => (v > 0 ? '+' : '') + v;
+    for (const k of Object.keys(ADJ_ZERO)) {
+      onSlider('a_' + k, v => { this.p[k] = v; ch(); }, sg);
+      $('#a_' + k).ondblclick = () => setSlider('a_' + k, 0);
+    }
+    onSlider('fi', v => { this.fi = v; ch(); }, v => v + '%');
+    $('#fgrid').onclick = e => {
+      const b = e.target.closest('.fitem'); if (!b) return;
+      $$('#fgrid .fitem').forEach(x => x.classList.toggle('on', x === b));
+      this.f = b.dataset.f; $('#fi-wrap').hidden = this.f === 'none';
+      ch();
+    };
+    $('#auto').onclick = () => this.auto();
+    $('#areset').onclick = () => this.reset();
+    this.thumbs();
+  },
+  // รูปตัวอย่างของแต่ละฟิลเตอร์ สร้างจากรูปของผู้ใช้เอง
+  thumbs() {
+    const T = 84, t = newCanvas(T, T), x = ctxOf(t), s = Math.max(T / imgW(), T / imgH());
+    x.drawImage(S.img, (T - imgW() * s) / 2, (T - imgH() * s) / 2, imgW() * s, imgH() * s);
+    const src = x.getImageData(0, 0, T, T);
+    $$('#fgrid canvas').forEach(cv => {
+      const im = new ImageData(new Uint8ClampedArray(src.data), T, T);
+      develop(im.data, T, T, FILTERS.find(f => f[0] === cv.dataset.f)[2], 1);
+      cv.getContext('2d').putImageData(im, 0, 0);
+    });
+  },
+  reset() {
+    Object.keys(ADJ_ZERO).forEach(k => setSlider('a_' + k, 0));
+    this.f = 'none'; $('#fi-wrap').hidden = true;
+    $$('#fgrid .fitem').forEach(x => x.classList.toggle('on', x.dataset.f === 'none'));
+    render();
+  },
+  // ปรับอัตโนมัติจาก histogram: ยืดช่วงแสง 1%–99% ดึงค่ากลางให้อยู่ตรงกลาง และเพิ่มความสดเล็กน้อย
+  auto() {
+    const s = Math.min(1, 300 / Math.max(imgW(), imgH()));
+    const c = newCanvas(Math.max(1, Math.round(imgW() * s)), Math.max(1, Math.round(imgH() * s))), x = ctxOf(c);
+    x.drawImage(S.img, 0, 0, c.width, c.height);
+    const d = x.getImageData(0, 0, c.width, c.height).data, hist = new Uint32Array(256);
+    let n = 0;
+    for (let i = 0; i < d.length; i += 4) if (d[i + 3] > 128) { hist[(.299 * d[i] + .587 * d[i + 1] + .114 * d[i + 2]) | 0]++; n++; }
+    if (!n) return;
+    let acc = 0, lo = 0, hi = 255;
+    for (let v = 0; v < 256; v++) { acc += hist[v]; if (acc >= n * .01) { lo = v; break; } }
+    acc = 0;
+    for (let v = 255; v >= 0; v--) { acc += hist[v]; if (acc >= n * .01) { hi = v; break; } }
+    const cf = clamp(220 / Math.max(hi - lo, 1), .8, 1.6);
+    const mid = ((lo + hi) / 2 - 128) * cf + 128;
+    setSlider('a_exposure', Math.round(clamp(Math.log2(128 / Math.max(mid, 1)) / 1.2 * 100, -60, 60)));
+    setSlider('a_contrast', Math.round(clamp((cf - 1) / .8 * 100, -30, 60)));
+    setSlider('a_vib', 20);
+    toast('ปรับอัตโนมัติแล้ว เลื่อนแถบหรือเลือกฟิลเตอร์เพิ่มได้');
+  },
+  user() {
+    const q = {};
+    for (const k of Object.keys(ADJ_ZERO)) q[k] = this.p[k] / 100;
+    return q;
+  },
+  // แต่งรูป src ที่ความละเอียดของ src เอง แล้วเขียนผลลง out
+  compute(src, out) {
+    const w = src.width, h = src.height, s = w / imgW(), big = Math.max(imgW(), imgH()) / 1200;
+    const im = ctxOf(src).getImageData(0, 0, w, h), d = im.data, gcell = Math.max(1, big * s);
+    develop(d, w, h, this.user(), gcell);
+    if (this.f !== 'none' && this.fi > 0) {
+      const fd = new Uint8ClampedArray(d), k = this.fi / 100;
+      develop(fd, w, h, FILTERS.find(f => f[0] === this.f)[2], gcell);
+      for (let i = 0; i < d.length; i++) if ((i & 3) !== 3) d[i] += (fd[i] - d[i]) * k;
+    }
+    if (this.p.sharp) sharpen(d, w, h, this.p.sharp / 100, Math.max(1, Math.round(big * s)));
+    if (out.width !== w || out.height !== h) { out.width = w; out.height = h; }
+    ctxOf(out).putImageData(im, 0, 0);
+    return out;
+  },
+  // พรีวิวคำนวณบนรูปย่อ: ระหว่างลากแถบใช้รูปเล็กให้ลื่น ปล่อยมือแล้วค่อยคำนวณละเอียดขึ้น
+  preview(max) {
+    const s = Math.min(1, max / Math.max(imgW(), imgH()));
+    if (s >= 1) return S.img;
+    if (this.smallKey !== S.ver) { this.smalls = {}; this.smallKey = S.ver; }
+    if (!this.smalls[max]) this.smalls[max] = resizeCanvas(S.img, Math.max(1, Math.round(imgW() * s)), Math.max(1, Math.round(imgH() * s)));
+    return this.smalls[max];
+  },
+  render(c) {
+    if (!this.pending()) { c.drawImage(S.img, 0, 0); return; }
+    const o = this.compute(this.preview(this.fast ? 720 : IS_TOUCH ? 1000 : 1400), this.pv || (this.pv = newCanvas(1, 1)));
+    c.save(); c.imageSmoothingQuality = 'high'; c.drawImage(o, 0, 0, imgW(), imgH()); c.restore();
+  },
+  async apply() {
+    if (!this.pending()) return toast('ยังไม่ได้แต่งอะไร ลองเลือกฟิลเตอร์ หรือกด "ปรับอัตโนมัติ"');
+    const out = await busy('กำลังแต่งรูป...', () => this.compute(S.img, newCanvas(1, 1)));
+    this.enter();
+    commit(out); buildPanel(); setTool(S.tool); S.done = true; updateUI();
+  },
+};
+
+/* ----- ฟีเจอร์ที่จะทำในรอบถัดไป ----- */
+MODES.add = { id: 'add', title: 'เพิ่มคนหรือสิ่งของ', icon: 'ti-photo-plus', color: '#7b6cff', desc: 'วางรูปอื่นเพิ่มลงไปในรูป', soon: true };
+/* ----- 7) สแกนเอกสาร ----- */
+// เรียงจุดเป็น บนซ้าย บนขวา ล่างขวา ล่างซ้าย
+function orderQuad(pts) {
+  const by = f => pts.reduce((a, b) => (f(b) > f(a) ? b : a));
+  return [by(p => -p.x - p.y), by(p => p.x - p.y), by(p => p.x + p.y), by(p => p.y - p.x)].map(p => ({ x: p.x, y: p.y }));
+}
+function defaultQuad(W, H) {
+  const m = Math.min(W, H) * .05;
+  return [{ x: m, y: m }, { x: W - m, y: m }, { x: W - m, y: H - m }, { x: m, y: H - m }];
+}
+// หามุมกระดาษด้วย OpenCV: หาเส้นขอบ แล้วเลือกรูปสี่เหลี่ยมนูนที่ใหญ่ที่สุด
+function cvQuad(cv, img) {
+  const s = Math.min(1, 800 / Math.max(img.width, img.height));
+  const w = Math.max(1, Math.round(img.width * s)), h = Math.max(1, Math.round(img.height * s));
+  const c = newCanvas(w, h), x = ctxOf(c);
+  x.drawImage(img, 0, 0, w, h);
+  const src = cv.matFromImageData(x.getImageData(0, 0, w, h));
+  const gray = new cv.Mat(), edges = new cv.Mat(), hier = new cv.Mat(), contours = new cv.MatVector();
+  const k = cv.getStructuringElement(cv.MORPH_RECT, new cv.Size(3, 3));
+  let best = null, bestA = 0;
+  try {
+    cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
+    cv.GaussianBlur(gray, gray, new cv.Size(5, 5), 0);
+    cv.Canny(gray, edges, 40, 120);
+    cv.dilate(edges, edges, k, new cv.Point(-1, -1), 2, cv.BORDER_CONSTANT, cv.morphologyDefaultBorderValue());
+    cv.findContours(edges, contours, hier, cv.RETR_LIST, cv.CHAIN_APPROX_SIMPLE);
+    for (let i = 0; i < contours.size(); i++) {
+      const cnt = contours.get(i), area = cv.contourArea(cnt);
+      if (area > w * h * .15 && area > bestA) {
+        const ap = new cv.Mat();
+        cv.approxPolyDP(cnt, ap, .02 * cv.arcLength(cnt, true), true);
+        if (ap.rows === 4 && cv.isContourConvex(ap)) {
+          bestA = area;
+          best = [0, 1, 2, 3].map(j => ({ x: ap.data32S[j * 2] / s, y: ap.data32S[j * 2 + 1] / s }));
+        }
+        ap.delete();
+      }
+      cnt.delete();
+    }
+  } finally { src.delete(); gray.delete(); edges.delete(); hier.delete(); contours.delete(); k.delete(); }
+  return best && orderQuad(best);
+}
+// วิธีสำรองเมื่อไม่มี OpenCV: กระดาษมักสว่างกว่าพื้นโต๊ะ หาบริเวณสว่างที่ใหญ่ที่สุดแล้วใช้จุดปลายสุดเป็นมุม
+function jsQuad(img) {
+  const s = Math.min(1, 320 / Math.max(img.width, img.height));
+  const w = Math.max(1, Math.round(img.width * s)), h = Math.max(1, Math.round(img.height * s)), n = w * h;
+  const c = newCanvas(w, h), x = ctxOf(c);
+  x.drawImage(img, 0, 0, w, h);
+  const d = x.getImageData(0, 0, w, h).data, L = new Uint8Array(n), hist = new Float64Array(256);
+  for (let i = 0; i < n; i++) { L[i] = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2]; hist[L[i]]++; }
+  // Otsu threshold
+  let sum = 0; for (let v = 0; v < 256; v++) sum += v * hist[v];
+  let wB = 0, sB = 0, best = 0, t = 128;
+  for (let v = 0; v < 256; v++) {
+    wB += hist[v]; if (!wB) continue;
+    const wF = n - wB; if (!wF) break;
+    sB += v * hist[v];
+    const between = wB * wF * (sB / wB - (sum - sB) / wF) ** 2;
+    if (between > best) { best = between; t = v; }
+  }
+  const seen = new Uint8Array(n), q = new Int32Array(n);
+  let top = null, topN = 0;
+  for (let st = 0; st < n; st++) {
+    if (seen[st] || L[st] <= t) continue;
+    let qh = 0, qt = 0; q[qt++] = st; seen[st] = 1;
+    while (qh < qt) {
+      const p = q[qh++], px = p % w, py = (p / w) | 0;
+      for (const [dx, dy] of [[1, 0], [-1, 0], [0, 1], [0, -1]]) {
+        const nx = px + dx, ny = py + dy;
+        if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+        const j = ny * w + nx;
+        if (!seen[j] && L[j] > t) { seen[j] = 1; q[qt++] = j; }
+      }
+    }
+    if (qt > topN) { topN = qt; top = q.slice(0, qt); }
+  }
+  if (!top || topN < n * .15 || topN > n * .97) return null;
+  const pts = [];
+  for (const p of top) pts.push({ x: (p % w + .5) / s, y: (((p / w) | 0) + .5) / s });
+  return orderQuad(pts);
+}
+// หา H ที่แปลงจุดบนกระดาษเรียบ (dst) ไปยังจุดในรูปถ่าย (src)
+function homography(src, dst) {
+  const A = [];
+  for (let i = 0; i < 4; i++) {
+    const X = dst[i].x, Y = dst[i].y, x = src[i].x, y = src[i].y;
+    A.push([X, Y, 1, 0, 0, 0, -x * X, -x * Y, x]);
+    A.push([0, 0, 0, X, Y, 1, -y * X, -y * Y, y]);
+  }
+  for (let c = 0; c < 8; c++) {
+    let p = c;
+    for (let r = c + 1; r < 8; r++) if (Math.abs(A[r][c]) > Math.abs(A[p][c])) p = r;
+    [A[c], A[p]] = [A[p], A[c]];
+    for (let r = 0; r < 8; r++) {
+      if (r === c) continue;
+      const f = A[r][c] / A[c][c];
+      for (let k = c; k < 9; k++) A[r][k] -= f * A[c][k];
+    }
+  }
+  return A.map((row, i) => row[8] / row[i]);
+}
+// ประมาณสัดส่วนจริงของกระดาษ (กว้าง/สูง) จากมุมมองกล้อง ตามวิธีของ Zhang & He (whiteboard scanning)
+// สมมติว่าจุดกึ่งกลางภาพคือจุดศูนย์กลางเลนส์ ถ้าคำนวณไม่ได้ (ถ่ายตรงๆ) จะคืนค่า null
+function trueAspect(q, W, H) {
+  const P = q.map(p => [p.x - W / 2, p.y - H / 2, 1]);
+  const [m1, m2, m4, m3] = P;   // บนซ้าย บนขวา ล่างขวา ล่างซ้าย
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const dot = (a, b) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const c14 = cross(m1, m4);
+  const k2 = dot(c14, m3) / dot(cross(m2, m4), m3), k3 = dot(c14, m2) / dot(cross(m3, m4), m2);
+  const n2 = m2.map((v, i) => k2 * v - m1[i]), n3 = m3.map((v, i) => k3 * v - m1[i]);
+  let f2 = Math.abs(n2[2] * n3[2]) < 1e-9 ? NaN : -(n2[0] * n3[0] + n2[1] * n3[1]) / (n2[2] * n3[2]);
+  // ถ่ายเอียงแค่แนวเดียว (เช่น ก้มกล้องลง) คำนวณความยาวโฟกัสไม่ได้ ใช้ค่าทั่วไปของกล้องมือถือแทน
+  if (!(f2 > 0)) f2 = (.75 * Math.max(W, H)) ** 2;
+  const r = Math.sqrt((n2[0] ** 2 + n2[1] ** 2) / f2 + n2[2] ** 2) / Math.sqrt((n3[0] ** 2 + n3[1] ** 2) / f2 + n3[2] ** 2);
+  return isFinite(r) && r > .2 && r < 5 ? r : null;
+}
+// ดัดรูปให้ตรง (perspective warp) ด้วยการสุ่มจุดแบบ bilinear
+function warpQuad(img, quad, W, H) {
+  const h = homography(quad, [{ x: 0, y: 0 }, { x: W, y: 0 }, { x: W, y: H }, { x: 0, y: H }]);
+  const iw = img.width, ih = img.height, sd = ctxOf(img).getImageData(0, 0, iw, ih).data;
+  const out = new ImageData(W, H), od = out.data;
+  for (let y = 0, o = 0; y < H; y++) {
+    const Y = y + .5;
+    for (let x = 0; x < W; x++, o += 4) {
+      const X = x + .5, z = h[6] * X + h[7] * Y + 1;
+      const sx = clamp((h[0] * X + h[1] * Y + h[2]) / z - .5, 0, iw - 1), sy = clamp((h[3] * X + h[4] * Y + h[5]) / z - .5, 0, ih - 1);
+      const x0 = sx | 0, y0 = sy | 0, x1 = Math.min(x0 + 1, iw - 1), y1 = Math.min(y0 + 1, ih - 1), fx = sx - x0, fy = sy - y0;
+      const a = (y0 * iw + x0) * 4, b = (y0 * iw + x1) * 4, c = (y1 * iw + x0) * 4, e = (y1 * iw + x1) * 4;
+      for (let ch = 0; ch < 4; ch++) {
+        od[o + ch] = (sd[a + ch] * (1 - fx) + sd[b + ch] * fx) * (1 - fy) + (sd[c + ch] * (1 - fx) + sd[e + ch] * fx) * fy;
+      }
+    }
+  }
+  const c = newCanvas(W, H);
+  ctxOf(c).putImageData(out, 0, 0);
+  return c;
+}
+// ทำให้กระดาษขาวและตัวหนังสือคม: หารด้วยความสว่างของพื้นกระดาษแต่ละจุด เงาจึงหายไป
+function enhanceDoc(src, style, str) {
+  const W = src.width, H = src.height, n = W * H, c = newCanvas(W, H), x = ctxOf(c);
+  x.fillStyle = '#fff'; x.fillRect(0, 0, W, H); x.drawImage(src, 0, 0);
+  if (style === 'color') return c;
+  const im = x.getImageData(0, 0, W, H), d = im.data, L = new Float32Array(n);
+  for (let i = 0; i < n; i++) L[i] = .299 * d[i * 4] + .587 * d[i * 4 + 1] + .114 * d[i * 4 + 2];
+  const bg = bgEstimate(L, W, H);
+  if (style === 'bw') {
+    const t = 120 + str;
+    for (let i = 0; i < n; i++) {
+      const v = clamp((L[i] * 255 / Math.max(bg[i], 40) - (t - 14)) / 28, 0, 1) * 255;
+      d[i * 4] = d[i * 4 + 1] = d[i * 4 + 2] = v;
+    }
+  } else {
+    const lo = str * .7, hi = 250 - str * .25;
+    for (let i = 0; i < n; i++) {
+      const f = 255 / Math.max(bg[i], 40);
+      for (let ch = 0; ch < 3; ch++) d[i * 4 + ch] = (d[i * 4 + ch] * f - lo) / (hi - lo) * 255;
+    }
+  }
+  x.putImageData(im, 0, 0);
+  return c;
+}
+function canvasThumb(src, max) {
+  const s = max / Math.max(src.width, src.height), t = newCanvas(Math.max(1, Math.round(src.width * s)), Math.max(1, Math.round(src.height * s)));
+  const x = t.getContext('2d'); x.imageSmoothingQuality = 'high'; x.drawImage(src, 0, 0, t.width, t.height);
+  return t;
+}
+async function jpegBlob(c) {
+  const j = newCanvas(c.width, c.height), x = j.getContext('2d');
+  x.fillStyle = '#fff'; x.fillRect(0, 0, j.width, j.height); x.drawImage(c, 0, 0);
+  return new Promise(r => j.toBlob(r, 'image/jpeg', .88));
+}
+// สร้างไฟล์ PDF เอง (รูป JPEG หน้าละรูป) ไม่ต้องพึ่งไลบรารีภายนอก ใช้งานออฟไลน์ได้
+async function makePdf(pages, size) {
+  const enc = new TextEncoder(), parts = [], offs = [];
+  let len = 0;
+  const push = v => { const b = typeof v === 'string' ? enc.encode(v) : v; parts.push(b); len += b.length; };
+  const obj = (id, ...body) => { offs[id] = len; push(`${id} 0 obj\n`); body.forEach(push); push('\nendobj\n'); };
+  const n = pages.length, f = v => v.toFixed(2);
+  push('%PDF-1.4\n%âãÏÓ\n');
+  obj(1, '<< /Type /Catalog /Pages 2 0 R >>');
+  obj(2, `<< /Type /Pages /Kids [${pages.map((_, i) => `${3 + i * 3} 0 R`).join(' ')}] /Count ${n} >>`);
+  for (let i = 0; i < n; i++) {
+    const p = pages[i], jpg = new Uint8Array(await (p.blob || await jpegBlob(p.canvas)).arrayBuffer());
+    const land = p.w > p.h;
+    let pw, ph;
+    if (size === 'a4') [pw, ph] = land ? [841.89, 595.28] : [595.28, 841.89];
+    else if (size === 'letter') [pw, ph] = land ? [792, 612] : [612, 792];
+    else { const s = 841.89 / Math.max(p.w, p.h); pw = p.w * s; ph = p.h * s; }
+    const s = Math.min(pw / p.w, ph / p.h), w = p.w * s, h = p.h * s, x = (pw - w) / 2, y = (ph - h) / 2;
+    const id = 3 + i * 3, draw = `q ${f(w)} 0 0 ${f(h)} ${f(x)} ${f(y)} cm /Im${i} Do Q`;
+    obj(id, `<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${f(pw)} ${f(ph)}] /Resources << /XObject << /Im${i} ${id + 2} 0 R >> >> /Contents ${id + 1} 0 R >>`);
+    obj(id + 1, `<< /Length ${draw.length} >>\nstream\n${draw}\nendstream`);
+    obj(id + 2, `<< /Type /XObject /Subtype /Image /Width ${p.w} /Height ${p.h} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpg.length} >>\nstream\n`, jpg, '\nendstream');
+  }
+  const xref = len, count = 3 + n * 3;
+  push(`xref\n0 ${count}\n0000000000 65535 f \n`);
+  for (let id = 1; id < count; id++) push(String(offs[id]).padStart(10, '0') + ' 00000 n \n');
+  push(`trailer\n<< /Size ${count} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF\n`);
+  return new Blob(parts, { type: 'application/pdf' });
+}
+
+// หน้าที่สแกนแล้วเก็บไว้นอกตัวโหมด เพื่อให้อยู่ต่อเมื่อเปิดรูปหน้าถัดไป
+const SCAN = { pages: [] };
+const PAGE_MAX = IS_IOS || IS_TOUCH ? 1800 : 2400;
+MODES.scan = {
+  id: 'scan', file: 'scan', title: 'สแกนเอกสาร', icon: 'ti-scan', color: '#4fb3ff', desc: 'ดัดให้ตรง พื้นขาว รวมเป็น PDF',
+  keepAct: true,
+  tools: [
+    { id: 'corners', icon: 'ti-crop', label: 'มุมกระดาษ', cursor: 'default', hint: '' },
+    PAN],
+  o: { size: 'auto', style: 'doc', str: 50 },
+  actLabel() { return this.isResult() ? `บันทึกเป็น PDF (${SCAN.pages.length} หน้า)` : 'สแกนหน้านี้'; },
+  enter() { this.quad = null; this.dragI = -1; this.initQuad(); },
+  isResult() { return SCAN.pages.some(p => p.canvas === S.img); },
+  current() { return SCAN.pages.find(p => p.canvas === S.img); },
+  initQuad() {
+    const img = S.img;
+    this.userMoved = false;
+    this.quad = jsQuad(img) || defaultQuad(imgW(), imgH());
+    // ลองหามุมให้แม่นขึ้นด้วย OpenCV เมื่อโหลดเสร็จ (ถ้าผู้ใช้ยังไม่ได้ขยับมุมเอง)
+    loadCV().then(({ cv }) => {
+      if (S.img !== img || this.userMoved || S.mode !== this || this.isResult()) return;
+      try { const q = cvQuad(cv, img); if (q) { this.quad = q; drawGuide(); } } catch (e) { console.warn(e); }
+    }).catch(() => {});
+  },
+  changed() {
+    if (!this.isResult()) {
+      if (S.img === this.photo && this.photoQuad) this.quad = this.photoQuad.map(p => ({ ...p }));
+      else this.initQuad();
+    }
+    this.syncStage();
+  },
+  onTool() { this.syncStage(); },
+  syncStage() {
+    const r = this.isResult();
+    $$('#controls [data-scan]').forEach(el => el.hidden = el.dataset.scan !== (r ? 'result' : 'corners'));
+    $('#hint').innerHTML = r
+      ? 'นี่คือหน้าที่สแกนแล้ว เปลี่ยน "แบบสแกน" ได้ทันที กด "เพิ่มหน้าถัดไป" เพื่อสแกนหน้าต่อ หรือกดบันทึกเป็น PDF'
+      : S.tool === 'pan' ? PAN.hint
+      : 'ลากจุด<b>สีฟ้าทั้ง 4 มุม</b>ให้ตรงกับมุมกระดาษ แล้วกด "สแกนหน้านี้" ระบบจะดัดเอกสารให้ตรงและทำพื้นให้ขาว';
+    this.buildPages(); setAct(); drawGuide();
+  },
+  panel() {
+    const o = this.o;
+    return `<div class="sec" data-scan="corners">
+        ${field('ขนาดหน้า', seg('psize', [['auto', 'ตามจริง'], ['a4', 'A4'], ['letter', 'Letter']], o.size))}
+        <div class="row2">
+          <button class="btn sm" id="redetect"><i class="ti ti-scan"></i>หามุมใหม่</button>
+          <button class="btn sm" id="fullq"><i class="ti ti-arrows-maximize"></i>ใช้ทั้งรูป</button>
+        </div>
+      </div>
+      <div class="sec" data-scan="result">
+        <button class="btn sm" id="recorner"><i class="ti ti-arrow-back-up"></i>กลับไปแก้มุมหน้านี้</button>
+      </div>
+      ${field('แบบสแกน', seg('pstyle', [['doc', 'เอกสาร'], ['bw', 'ขาวดำ'], ['color', 'สีเดิม']], o.style))}
+      <div id="pstr-wrap" ${o.style === 'color' ? 'hidden' : ''}>${slider('pstr', 'ความเข้มตัวหนังสือ', 0, 100, o.str, ['อ่อน', 'เข้ม'])}</div>
+      <div class="field" id="pages-wrap" hidden>
+        <div class="fl"><span>หน้าที่สแกนแล้ว</span><b id="pcount"></b></div>
+        <div class="pages" id="pages"></div>
+        <div class="row2">
+          <button class="btn sm" id="addpage"><i class="ti ti-plus"></i>เพิ่มหน้าถัดไป</button>
+          <button class="btn sm" id="clearpages"><i class="ti ti-trash"></i>เริ่มใหม่</button>
+        </div>
+      </div>
+      <p class="note"><i class="ti ti-info-circle"></i>วางเอกสารบนพื้นสีเข้มแล้วถ่ายให้เห็นครบทั้ง 4 มุม ระบบจะหามุมได้แม่นขึ้น เอกสารที่มีรูปสีให้เลือก "สีเดิม"</p>`;
+  },
+  bind() {
+    const o = this.o;
+    onSeg('psize', v => o.size = v);
+    onSeg('pstyle', v => { o.style = v; $('#pstr-wrap').hidden = v === 'color'; this.restyle(); });
+    onSlider('pstr', v => { o.str = v; clearTimeout(this.rs); this.rs = setTimeout(() => this.restyle(), 150); });
+    $('#redetect').onclick = () => { this.initQuad(); drawGuide(); toast('หามุมใหม่แล้ว ลากจุดปรับได้ถ้ายังไม่ตรง'); };
+    $('#fullq').onclick = () => { this.quad = [{ x: 0, y: 0 }, { x: imgW(), y: 0 }, { x: imgW(), y: imgH() }, { x: 0, y: imgH() }]; this.userMoved = true; drawGuide(); };
+    $('#recorner').onclick = () => {
+      const p = this.current(); if (!p) return;
+      SCAN.pages.splice(SCAN.pages.indexOf(p), 1);
+      undo();
+    };
+    $('#addpage').onclick = () => $('#file').click();
+    $('#clearpages').onclick = () => {
+      if (!confirm(`ลบหน้าที่สแกนแล้วทั้ง ${SCAN.pages.length} หน้า?`)) return;
+      SCAN.pages = []; this.syncStage();
+    };
+    $('#pages').onclick = e => {
+      const b = e.target.closest('button'); if (!b) return;
+      const i = +b.dataset.i, a = b.dataset.a, P = SCAN.pages;
+      if (a === 'del') P.splice(i, 1);
+      else { const j = a === 'left' ? i - 1 : i + 1; if (j < 0 || j >= P.length) return; [P[i], P[j]] = [P[j], P[i]]; }
+      this.syncStage();
+    };
+    this.syncStage();
+  },
+  buildPages() {
+    const wrap = $('#pages-wrap'); if (!wrap) return;
+    const P = SCAN.pages;
+    wrap.hidden = !P.length;
+    $('#pcount').textContent = P.length + ' หน้า';
+    $('#pages').innerHTML = P.map((p, i) => `<div class="pg${p.canvas === S.img ? ' cur' : ''}">
+        <canvas width="${p.thumb.width}" height="${p.thumb.height}"></canvas><span class="no">${i + 1}</span>
+        <div class="pg-act">
+          <button data-a="left" data-i="${i}" aria-label="เลื่อนไปก่อนหน้า"><i class="ti ti-chevron-left"></i></button>
+          <button data-a="del" data-i="${i}" aria-label="ลบหน้านี้"><i class="ti ti-x"></i></button>
+          <button data-a="right" data-i="${i}" aria-label="เลื่อนไปถัดไป"><i class="ti ti-chevron-right"></i></button>
+        </div></div>`).join('');
+    $$('#pages canvas').forEach((c, i) => c.getContext('2d').drawImage(P[i].thumb, 0, 0));
+  },
+  // เปลี่ยนแบบสแกนของหน้าปัจจุบันโดยไม่ต้องดัดรูปใหม่
+  restyle() {
+    const p = this.current(); if (!p || !p.warp) return;
+    p.canvas = enhanceDoc(p.warp, this.o.style, this.o.str); p.blob = null;
+    p.thumb = canvasThumb(p.canvas, 160);
+    S.img = p.canvas; S.ver++;
+    render(); this.buildPages();
+  },
+  outSize(q) {
+    const d = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+    let w = Math.max(d(q[0], q[1]), d(q[3], q[2])), h = Math.max(d(q[0], q[3]), d(q[1], q[2]));
+    const R = { a4: 1.4142, letter: 1.2941 }[this.o.size];
+    if (R) { if (h >= w) w = h / R; else h = w / R; }
+    else {
+      // ตามจริง: แก้สัดส่วนที่เพี้ยนเพราะถ่ายเฉียง (ขอบที่ไกลกล้องดูสั้นกว่าจริง)
+      const a = trueAspect(q, imgW(), imgH());
+      if (a) { if (h >= w) w = h * a; else h = w / a; }
+    }
+    const s = Math.min(1, PAGE_MAX / Math.max(w, h));
+    return { W: Math.max(1, Math.round(w * s)), H: Math.max(1, Math.round(h * s)) };
+  },
+  hitCorner(p) {
+    const r = (S.ptype === 'touch' ? 34 : 20) / S.z;
+    let best = -1, bd = r;
+    this.quad.forEach((c, i) => { const dd = Math.hypot(c.x - p.x, c.y - p.y); if (dd < bd) { bd = dd; best = i; } });
+    return best;
+  },
+  down(p) {
+    if (this.isResult()) return;
+    this.dragI = this.hitCorner(p);
+    if (this.dragI >= 0) this.off = { x: this.quad[this.dragI].x - p.x, y: this.quad[this.dragI].y - p.y };
+  },
+  move(p) {
+    if (this.dragI < 0) return;
+    this.quad[this.dragI] = { x: clamp(p.x + this.off.x, 0, imgW()), y: clamp(p.y + this.off.y, 0, imgH()) };
+    this.userMoved = true;
+  },
+  up() { this.dragI = -1; },
+  hover(p) {
+    if (this.isResult() || S.tool === 'pan' || S.space) return;
+    stage.style.cursor = this.hitCorner(p) >= 0 ? 'move' : 'default';
+  },
+  guide(g) {
+    if (this.isResult() || !this.quad) return;
+    const q = this.quad, px = 1 / S.z, W = imgW(), H = imgH();
+    g.save();
+    g.fillStyle = 'rgba(0,0,0,.45)';
+    g.beginPath(); g.rect(0, 0, W, H);
+    g.moveTo(q[0].x, q[0].y); q.slice(1).forEach(c => g.lineTo(c.x, c.y)); g.closePath();
+    g.fill('evenodd');
+    g.lineWidth = 3 * px; g.strokeStyle = '#4fb3ff';
+    g.beginPath(); g.moveTo(q[0].x, q[0].y); q.slice(1).forEach(c => g.lineTo(c.x, c.y)); g.closePath(); g.stroke();
+    const r = (S.ptype === 'touch' ? 14 : 10) * px;
+    q.forEach((c, i) => {
+      g.beginPath(); g.arc(c.x, c.y, r, 0, Math.PI * 2);
+      g.fillStyle = i === this.dragI ? '#fff' : 'rgba(79,179,255,.35)'; g.fill();
+      g.lineWidth = 3 * px; g.strokeStyle = '#4fb3ff'; g.stroke();
+    });
+    if (this.dragI >= 0) this.loupe(g, q[this.dragI], px);
+    g.restore();
+  },
+  // แว่นขยายรอบมุมที่กำลังลาก ช่วยวางมุมได้แม่นแม้นิ้วบังจุด
+  loupe(g, c, px) {
+    const R = 70 * px, Z = 3, half = R / Z, W = imgW(), H = imgH();
+    let cx = c.x, cy = c.y - R * 1.7;
+    if (cy - R < 0) cy = c.y + R * 1.7;
+    cx = clamp(cx, R, W - R);
+    const sx0 = Math.max(0, c.x - half), sy0 = Math.max(0, c.y - half), sx1 = Math.min(W, c.x + half), sy1 = Math.min(H, c.y + half);
+    g.save();
+    g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.clip();
+    g.fillStyle = '#000'; g.fillRect(cx - R, cy - R, R * 2, R * 2);
+    if (sx1 > sx0 && sy1 > sy0) g.drawImage(S.img, sx0, sy0, sx1 - sx0, sy1 - sy0, cx + (sx0 - c.x) * Z, cy + (sy0 - c.y) * Z, (sx1 - sx0) * Z, (sy1 - sy0) * Z);
+    g.strokeStyle = '#4fb3ff'; g.lineWidth = 2 * px;
+    g.beginPath(); g.moveTo(cx - R, cy); g.lineTo(cx + R, cy); g.moveTo(cx, cy - R); g.lineTo(cx, cy + R); g.stroke();
+    g.restore();
+    g.beginPath(); g.arc(cx, cy, R, 0, Math.PI * 2); g.lineWidth = 3 * px; g.strokeStyle = '#fff'; g.stroke();
+  },
+  async apply() {
+    if (this.isResult()) return this.savePdf();
+    const q = this.quad.map(p => ({ ...p })), { W, H } = this.outSize(q), o = this.o;
+    const res = await busy('กำลังดัดเอกสารให้ตรง...', () => {
+      const warp = warpQuad(S.img, q, W, H);
+      return { warp, canvas: enhanceDoc(warp, o.style, o.str) };
+    });
+    // หน้าก่อนๆ แปลงเป็น JPEG เก็บไว้ เพื่อไม่ให้กินหน่วยความจำ (สำคัญบน iPhone)
+    for (const p of SCAN.pages) if (p.canvas) { p.blob = p.blob || await jpegBlob(p.canvas); p.canvas = null; p.warp = null; }
+    SCAN.pages.push({ warp: res.warp, canvas: res.canvas, w: W, h: H, thumb: canvasThumb(res.canvas, 160) });
+    this.photo = S.img; this.photoQuad = q;
+    commit(res.canvas);
+    toast(`สแกนหน้า ${SCAN.pages.length} แล้ว กด "เพิ่มหน้าถัดไป" หรือบันทึกเป็น PDF`);
+  },
+  async savePdf() {
+    if (!SCAN.pages.length) return toast('ยังไม่มีหน้าที่สแกน', 'err');
+    const blob = await busy('กำลังสร้างไฟล์ PDF...', () => makePdf(SCAN.pages, this.o.size));
+    S.done = true; updateUI();
+    deliver(blob, `scan_${ymd()}.pdf`);
+  },
+};
+MODES.batch = { id: 'batch', title: 'แก้หลายรูปพร้อมกัน', icon: 'ti-stack-2', color: '#a3e635', desc: 'ย่อ ใส่ลายน้ำ ทีเดียว', soon: true };
+const ORDER = ['sig', 'adj', 'scan', 'rem', 'wm', 'blur', 'crop', 'add', 'batch'];
+
+/* ================= การทำงานของหน้าจอ ================= */
+function openMode(k) {
+  const m = MODES[k];
+  if (m.soon) return toast(`"${m.title}" จะมาในเวอร์ชันถัดไป`);
+  if (!S.img) { S.pendingMode = k; $('#file').click(); return; }
+  if (S.mode && S.mode.leave) S.mode.leave();
+  S.mode = m; S.done = false;
+  $('#home').hidden = true; $('#editor').hidden = false;
+  $('#title').textContent = m.title;
+  $('#title-ic').className = 'ti ' + m.icon;
+  $('#title-tile').style.setProperty('--mc', m.color);
+  sizeLayers(); clearMask();
+  if (m.enter) m.enter();
+  buildPanel();
+  $('#tools').innerHTML = m.tools.map(t =>
+    `<button class="tool" data-t="${t.id}" title="${t.label}"><i class="ti ${t.icon}"></i><span>${t.label}</span></button>`).join('');
+  setTool(m.tools[0].id);
+  requestAnimationFrame(() => { fit(); render(); });
+  updateUI();
+}
+function buildPanel() { $('#controls').innerHTML = S.mode.panel(); S.mode.bind(); }
+function setTool(id) {
+  S.tool = id;
+  const t = curTool();
+  $$('.tool').forEach(b => b.classList.toggle('on', b.dataset.t === id));
+  $('#hint').innerHTML = t.hint;
+  if (id !== 'pan') {
+    $$('#controls [data-sec]').forEach(el => el.hidden = el.dataset.sec !== id);
+    if (S.mode.onTool) S.mode.onTool(id);
+  }
+  stage.style.cursor = t.cursor || 'crosshair';
+  setAct(); drawGuide();
+}
+function goHome() {
+  if (S.mode && S.mode.leave) S.mode.leave();
+  S.mode = null;
+  $('#editor').hidden = true; $('#home').hidden = false;
+  if (S.img) showHomeImage();
+}
+function setAct() {
+  const b = $('#act'), m = S.mode;
+  if (S.done && !m.keepAct) { b.hidden = false; b.innerHTML = '<i class="ti ti-download"></i>บันทึกรูป'; return; }
+  const l = typeof m.actLabel === 'function' ? m.actLabel() : m.actLabel;
+  b.hidden = !l; if (l) b.textContent = l;
+}
+function updateUI() {
+  if (!S.mode) return;
+  $('#s1').className = 'step ok';
+  $('#s2').className = 'step ' + (S.done ? 'ok' : 'on');
+  $('#s3').className = 'step' + (S.done ? ' on' : '');
+  $('#undo').disabled = !S.hist.length;
+  $('#redo').disabled = !S.fut.length;
+  setAct();
+}
+
+/* ---------- บันทึกและคัดลอก ---------- */
+function ymd() { const d = new Date(); return d.getFullYear() + String(d.getMonth() + 1).padStart(2, '0') + String(d.getDate()).padStart(2, '0'); }
+async function finalCanvas() {
+  if (S.mode && S.mode.pending && S.mode.pending()) await S.mode.apply();
+  const want = +$('#scale').value;
+  // iPhone สร้าง canvas ใหญ่เกิน 16 ล้านพิกเซลไม่ได้ จึงลดขนาดตอนบันทึกลงอัตโนมัติ
+  let sc = want;
+  while (sc > 1 && imgW() * imgH() * sc * sc > MAX_PIXELS) sc--;
+  if (sc < want) toast(`รูปใหญ่เกินไปสำหรับอุปกรณ์นี้ จึงบันทึกที่ขนาด ${sc}x`);
+  return sc > 1 ? resizeCanvas(S.img, imgW() * sc, imgH() * sc) : S.img;
+}
+async function save() {
+  if (S.busy || !S.img) return;
+  let c = await finalCanvas();
+  const jpg = $('#fmt').value === 'jpg';
+  if (jpg) {
+    if (hasAlpha(c)) toast('JPG ไม่รองรับพื้นโปร่งใส พื้นหลังจะเป็นสีขาว ถ้าต้องการพื้นใสให้เลือก PNG');
+    const j = newCanvas(c.width, c.height), x = j.getContext('2d');
+    x.fillStyle = '#fff'; x.fillRect(0, 0, j.width, j.height); x.drawImage(c, 0, 0); c = j;
+  }
+  const blob = await new Promise(r => c.toBlob(r, jpg ? 'image/jpeg' : 'image/png', +$('#q').value / 100));
+  if (!blob) return toast('บันทึกไม่สำเร็จ ลองเลือกขนาด 1x', 'err');
+  const name = `${S.mode ? S.mode.file : 'image'}_${ymd()}.${jpg ? 'jpg' : 'png'}`;
+  S.done = true; updateUI();
+  deliver(blob, name);
+}
+// คอมพิวเตอร์: ดาวน์โหลดทันที / มือถือ: เปิดหน้าต่างบันทึก
+function deliver(blob, name) {
+  if (IS_IOS || IS_TOUCH) return showSheet(blob, name);
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob); a.download = name;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(a.href), 4000);
+}
+// มือถือ: แสดงรูปให้กดค้างบันทึก หรือส่งเข้าแอปรูปภาพ/ไฟล์ผ่านปุ่มแชร์ของระบบ
+function showSheet(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const file = new File([blob], name, { type: blob.type });
+  const canShare = !!(navigator.canShare && navigator.canShare({ files: [file] }));
+  const isImg = blob.type.startsWith('image/');
+  $('#sheet-img').hidden = !isImg;
+  if (isImg) $('#sheet-img').src = url;
+  $('#sheet-pdf').hidden = isImg;
+  $('#sheet-pdf-name').textContent = name;
+  $('#sheet-title').textContent = isImg ? 'รูปพร้อมบันทึกแล้ว' : 'ไฟล์พร้อมบันทึกแล้ว';
+  $('#sheet-tip').hidden = !isImg;
+  $('#sheet-share').innerHTML = isImg ? '<i class="ti ti-share"></i>บันทึกลงรูปภาพ / แชร์' : '<i class="ti ti-share"></i>บันทึกลงไฟล์ / แชร์';
+  $('#sheet-dl').href = url; $('#sheet-dl').download = name;
+  $('#sheet-share').hidden = !canShare;
+  $('#sheet-share').onclick = async () => {
+    try { await navigator.share({ files: [file] }); }
+    catch (e) { if (e.name !== 'AbortError') toast('แชร์ไม่ได้ ลองกดค้างที่รูปแล้วเลือก "บันทึกรูปภาพ"', 'err'); }
+  };
+  $('#sheet-x').onclick = () => { $('#sheet').hidden = true; $('#sheet-img').removeAttribute('src'); URL.revokeObjectURL(url); };
+  $('#sheet').hidden = false;
+}
+async function copyImg() {
+  if (S.busy || !S.img) return;
+  try {
+    const blob = finalCanvas().then(c => new Promise(r => c.toBlob(r, 'image/png')));
+    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+    toast('คัดลอกแล้ว วางใน Word, Excel หรือ LINE ได้เลย');
+  } catch (e) {
+    console.warn(e);
+    toast('เบราว์เซอร์นี้คัดลอกรูปไม่ได้ ใช้ปุ่ม "บันทึกรูป" แทน', 'err');
+  }
+}
+
+/* ---------- เทียบก่อน/หลัง ---------- */
+function showCompare(on) {
+  if (!S.img) return;
+  if (on) {
+    const ref = [S.orig, ...S.hist].find(c => c.width === imgW() && c.height === imgH());
+    if (!ref) return toast('รูปถูกครอปหรือปรับขนาดแล้ว จึงเทียบกับรูปเดิมไม่ได้');
+    origC.width = ref.width; origC.height = ref.height;
+    origC.getContext('2d').drawImage(ref, 0, 0);
+    origC.hidden = false; view.style.visibility = maskC.style.visibility = guide.style.visibility = 'hidden';
+  } else {
+    origC.hidden = true; view.style.visibility = maskC.style.visibility = guide.style.visibility = '';
+  }
+}
+
+/* ---------- เมาส์ คีย์บอร์ด ลากวางไฟล์ ---------- */
+let drag = null, pinch = null;
+const touches = new Map();
+function stagePos(e) { const r = stage.getBoundingClientRect(); return { x: e.clientX - r.left, y: e.clientY - r.top }; }
+function pinchInfo() {
+  const [a, b] = [...touches.values()];
+  return { d: Math.hypot(a.x - b.x, a.y - b.y) || 1, m: { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 } };
+}
+stage.addEventListener('pointerdown', e => {
+  if (!S.img || !S.mode || S.busy || e.target.closest('.zoombar')) return;
+  try { stage.setPointerCapture(e.pointerId); } catch (err) { /* บางเบราว์เซอร์ไม่ยอมจับ pointer นี้ ใช้งานต่อได้ */ }
+  S.ptype = e.pointerType;
+  touches.set(e.pointerId, stagePos(e));
+  if (touches.size === 2) {
+    // นิ้วที่สองแตะลง: จบการระบายที่ค้างอยู่ แล้วเปลี่ยนเป็นถ่างนิ้วซูม/เลื่อน
+    if (drag && !drag.pan && S.mode.up) S.mode.up(drag.last, e);
+    drag = null;
+    const p = pinchInfo();
+    pinch = { d0: p.d, m0: p.m, z0: S.z, tx0: S.tx, ty0: S.ty };
+    return;
+  }
+  if (pinch || touches.size > 2) return;
+  if (S.space || e.button === 1 || S.tool === 'pan') {
+    drag = { pan: true, x: e.clientX, y: e.clientY, tx: S.tx, ty: S.ty };
+    stage.style.cursor = 'grabbing'; return;
+  }
+  if (e.button !== 0) return;
+  const p = pt(e);
+  drag = { pan: false, last: p };
+  if (S.mode.down) S.mode.down(p, e);
+  drawGuide();
+});
+stage.addEventListener('pointermove', e => {
+  if (!S.img || !S.mode) return;
+  if (touches.has(e.pointerId)) touches.set(e.pointerId, stagePos(e));
+  if (pinch) {
+    if (touches.size >= 2) {
+      const p = pinchInfo(), nz = clamp(pinch.z0 * p.d / pinch.d0, .05, 16);
+      const ix = (pinch.m0.x - pinch.tx0) / pinch.z0, iy = (pinch.m0.y - pinch.ty0) / pinch.z0;
+      S.z = nz; S.tx = p.m.x - ix * nz; S.ty = p.m.y - iy * nz;
+      applyView();
+    }
+    return;
+  }
+  const p = pt(e);
+  S.cursor = p;
+  if (drag && drag.pan) { S.tx = drag.tx + e.clientX - drag.x; S.ty = drag.ty + e.clientY - drag.y; applyView(); return; }
+  if (drag) { if (S.mode.move) S.mode.move(p, drag.last, e); drag.last = p; }
+  else if (S.mode.hover) S.mode.hover(p, e);
+  drawGuide();
+});
+function endDrag(e) {
+  touches.delete(e.pointerId);
+  if (e.pointerType === 'touch') S.cursor = null;
+  if (pinch) { if (touches.size < 2) pinch = null; drag = null; drawGuide(); return; }
+  if (!drag) return;
+  const d = drag; drag = null;
+  if (d.pan) { stage.style.cursor = S.space ? 'grab' : (curTool().cursor || 'crosshair'); return; }
+  if (S.mode.up) S.mode.up(pt(e), e);
+  drawGuide();
+}
+stage.addEventListener('pointerup', endDrag);
+stage.addEventListener('pointercancel', endDrag);
+stage.addEventListener('pointerleave', () => { if (!drag) { S.cursor = null; drawGuide(); } });
+stage.addEventListener('wheel', e => {
+  if (!S.img) return;
+  e.preventDefault();
+  const r = stage.getBoundingClientRect();
+  zoomAt(Math.exp(-e.deltaY * .0015), e.clientX - r.left, e.clientY - r.top);
+}, { passive: false });
+// Safari บน Mac: ถ่างนิ้วบนแทร็กแพดส่งเป็น gesture event แทน wheel
+if (!IS_TOUCH) {
+  let gz = 1;
+  stage.addEventListener('gesturestart', e => { e.preventDefault(); gz = S.z; });
+  stage.addEventListener('gesturechange', e => {
+    e.preventDefault();
+    if (!S.img) return;
+    const r = stage.getBoundingClientRect();
+    zoomAt(gz * e.scale / S.z, e.clientX - r.left, e.clientY - r.top);
+  });
+  stage.addEventListener('gestureend', e => e.preventDefault());
+}
+
+document.addEventListener('keydown', e => {
+  const tag = e.target.tagName, inField = (tag === 'INPUT' && e.target.type !== 'range' && e.target.type !== 'checkbox') || tag === 'SELECT' || tag === 'TEXTAREA';
+  if (e.ctrlKey || e.metaKey) {
+    if (inField || !S.mode) return;
+    const k = e.key.toLowerCase();
+    if (k === 'z' && !e.shiftKey) { e.preventDefault(); undo(); }
+    else if (k === 'y' || (k === 'z' && e.shiftKey)) { e.preventDefault(); redo(); }
+    else if (k === 's') { e.preventDefault(); save(); }
+    return;
+  }
+  if (inField || !S.mode) return;
+  if (e.code === 'Space') { e.preventDefault(); if (!S.space) { S.space = true; if (!drag) stage.style.cursor = 'grab'; } }
+  else if (e.key === '[' || e.key === ']') {
+    Brush.size = clamp(Math.round(Brush.size * (e.key === ']' ? 1.15 : 1 / 1.15)), 2, 2000);
+    const el = $('#bsize');
+    if (el) { el.value = Brush.size; $('#bsize-v').textContent = el.value; Brush.size = +el.value; fillRange(el); }
+    drawGuide();
+  }
+  else if (e.key === '0') fit();
+  else if (e.key === 'Escape' && S.mode.escape) S.mode.escape();
+});
+document.addEventListener('keyup', e => {
+  if (e.code === 'Space' && S.space) { S.space = false; if (!drag && S.mode) stage.style.cursor = curTool().cursor || 'crosshair'; }
+});
+document.addEventListener('paste', e => {
+  const it = [...(e.clipboardData ? e.clipboardData.items : [])].find(i => i.type.startsWith('image/'));
+  if (it) { e.preventDefault(); openFile(it.getAsFile()); }
+});
+let dragDepth = 0;
+document.addEventListener('dragenter', e => { e.preventDefault(); dragDepth++; document.body.classList.add('dragging'); });
+document.addEventListener('dragleave', () => { if (--dragDepth <= 0) { dragDepth = 0; document.body.classList.remove('dragging'); } });
+document.addEventListener('dragover', e => e.preventDefault());
+document.addEventListener('drop', e => {
+  e.preventDefault(); dragDepth = 0; document.body.classList.remove('dragging');
+  const f = e.dataTransfer && e.dataTransfer.files[0];
+  if (f) openFile(f);
+});
+
+/* ---------- ผูกปุ่ม ---------- */
+$('#cards').innerHTML = ORDER.map(k => {
+  const m = MODES[k];
+  return `<button class="card${m.soon ? ' soon' : ''}" data-k="${k}" style="--mc:${m.color}">
+    <span class="ic"><i class="ti ${m.icon}"></i></span>
+    <span class="ct">${m.title}</span><span class="cd">${m.desc}</span>
+    ${m.soon ? '<span class="badge">เร็วๆ นี้</span>' : '<i class="ti ti-arrow-right go"></i>'}</button>`;
+}).join('');
+$('#cards').onclick = e => { const c = e.target.closest('.card'); if (c) openMode(c.dataset.k); };
+$('#drop').onclick = () => { S.pendingMode = null; $('#file').click(); };
+$('#file').onchange = e => { openFile(e.target.files[0]); e.target.value = ''; };
+$('#open2').onclick = () => $('#file').click();
+$('#home-btn').onclick = goHome;
+$('#tools').onclick = e => { const b = e.target.closest('.tool'); if (b) setTool(b.dataset.t); };
+$('#undo').onclick = undo;
+$('#redo').onclick = redo;
+$('#zin').onclick = () => zoomCenter(1.25);
+$('#zout').onclick = () => zoomCenter(.8);
+$('#zlabel').onclick = fit;
+$('#zfit').onclick = fit;
+$('#act').onclick = async () => { if (S.busy) return; if (S.done) return save(); await S.mode.apply(); };
+$('#save').onclick = save;
+$('#copy').onclick = copyImg;
+$('#fmt').onchange = () => { $('#qrow').hidden = $('#fmt').value !== 'jpg'; };
+onSlider('q', () => {});
+const cmp = $('#cmp');
+cmp.addEventListener('pointerdown', () => showCompare(true));
+['pointerup', 'pointerleave', 'pointercancel'].forEach(ev => cmp.addEventListener(ev, () => showCompare(false)));
+window.addEventListener('resize', () => { if (S.mode) fit(); });
+
+if (IS_TOUCH) {
+  $('#drop-title').textContent = 'แตะเพื่อเลือกรูป';
+  $('#drop-sub').textContent = 'เลือกจากอัลบั้ม หรือถ่ายรูปใหม่ได้เลย';
+}
+
+// สำหรับทดสอบจาก console
+window.app = {
+  S, MODES, openMode, loadURL: async (u, n) => setImage(await loadImg(u), n || 'test.png'), maskCtx: mctx,
+  setCanvasFilter: v => { CANVAS_FILTER = v; },
+};
+</script>
+</body>
+</html>
